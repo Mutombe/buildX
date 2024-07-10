@@ -1,31 +1,46 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-class Image(models.Model):
-    name = models.CharField(max_length=1000, default=None, blank=True, null=True)
-    images = models.FileField(upload_to='', blank=False)
+class Category(models.Model):
+    TYPE = [
+        ("Commercial", "Commercial"),
+        ("House", "House"),
+        ("Shop", "Shop"),
+        ("Cabin", "Cabin"),
+        ("Warehouse", "Warehouse"),
+        ("Tent", "Tent"),
+    ]
+    name = models.CharField(max_length=12, choices=TYPE)
 
     def __str__(self) -> str:
-        if type(self.name) != None:
-            return self.name  
-        else: return self.images.url
+        return self.name
     
-class Building(models.Model):
+class Property(models.Model):
     name = models.CharField(max_length=100, blank=True)
     location = models.CharField(max_length=500, blank=False, null=True)
-    images = models.OneToOneField(
-        Image,
-        on_delete=models.CASCADE,
-        verbose_name="images", null=True
-    )
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='building', blank=True,  null=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    booked_count = models.IntegerField(blank=True, default=0)
+    subscribers_count = models.IntegerField(blank=True, default=0)
     
     
     def __str__(self) -> str:
         return self.name
     
+    
+class PropertyImages(models.Model):
+    name = models.CharField(max_length=1000, default=None, blank=True, null=True)
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='images', blank=False, null=True)
+    file = models.FileField(upload_to='', blank=False)
+
+    def __str__(self) -> str:
+        if type(self.name) != None:
+            return self.name  
+        else: return self.file.url
+    
 class Unit(models.Model):
     name = models.CharField(max_length=100, blank=True, )
-    unit_building = models.ForeignKey(Building, 
-                              verbose_name="building", 
+    unit_property = models.ForeignKey(Property,
                               null=True, 
                               on_delete=models.SET_NULL, 
                               blank=True)
@@ -35,18 +50,29 @@ class Unit(models.Model):
     water = models.BooleanField(default=False)
     solar = models.BooleanField(default=False)
     occupied = models.BooleanField(default=False)
-    images = models.OneToOneField(
-        Image,
-        on_delete=models.CASCADE,
-        verbose_name="images", null=True
-    )
+    booked_count = models.IntegerField(blank=True, default=0)
 
     def __str__(self) -> str:
         return self.name
     
     @property
     def location(self):
-        return self.unit_building.location
+        return self.unit_property.location
+    
+class UnitImages(models.Model):
+    name = models.CharField(max_length=1000, default=None, blank=True, null=True)
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='images', blank=False, null=True)
+    file = models.FileField(upload_to='', blank=False)
+
+    def __str__(self) -> str:
+        if type(self.name) != None:
+            return self.name  
+        else: return self.file.url 
+
+
+
+
+
 
     
 
