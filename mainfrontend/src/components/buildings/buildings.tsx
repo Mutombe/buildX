@@ -1,10 +1,11 @@
-import useDataFetcher from "../../utils/api";
-import { PROPERTIES_URL } from "../../utils/constants";
+import { useDataFetcher } from "../../utils/apiUtil";
 import Card from "react-bootstrap/Card";
 import CardGroup from "react-bootstrap/CardGroup";
 
 function Buildings() {
-  const { data, loading, error } = useDataFetcher(PROPERTIES_URL);
+  const { data, loading, error } = useDataFetcher(
+    "http://127.0.0.1:8000/properties"
+  );
   if (loading) {
     return <div className="my-div">Loading...</div>;
   }
