@@ -1,2 +1,2 @@
 # buildX
-A unique property rental app
+A unique property rental web app
