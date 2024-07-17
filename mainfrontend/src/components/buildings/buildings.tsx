@@ -1,6 +1,7 @@
 import { useDataFetcher } from "../../utils/apiUtil";
 import Card from "react-bootstrap/Card";
 import CardGroup from "react-bootstrap/CardGroup";
+import Gallery from "../authentication/pratice";
 
 function Properties() {
   const { data, loading, error } = useDataFetcher(
@@ -15,6 +16,10 @@ function Properties() {
   }
 
   return (
+    <>
+      <Gallery />
+      <Gallery />
+
     <CardGroup>
       {data.map((properties: any) => (
         <Card>
@@ -32,7 +37,8 @@ function Properties() {
           </Card.Footer>
         </Card>
       ))}
-    </CardGroup>
+      </CardGroup>
+    </>
   );
 }
 
