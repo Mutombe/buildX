@@ -2,9 +2,9 @@ import { useDataFetcher } from "../../utils/apiUtil";
 import Card from "react-bootstrap/Card";
 import CardGroup from "react-bootstrap/CardGroup";
 
-function Buildings() {
+function Properties() {
   const { data, loading, error } = useDataFetcher(
-    "http://127.0.0.1:8000/properties"
+    "http://127.0.0.1:8000/properties/"
   );
   if (loading) {
     return <div className="my-div">Loading...</div>;
@@ -36,4 +36,4 @@ function Buildings() {
   );
 }
 
-export default Buildings;
+export default Properties;

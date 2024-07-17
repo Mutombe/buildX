@@ -32,8 +32,9 @@ export const AuthProvider = ({ children }) => {
     password: string
   ) => {
     try {
-      await signup(username, email, password);
+      const response = await signup(username, email, password);
       setIsAuthenticated(true);
+      localStorage.setItem("token", response.data.token);
     } catch (error) {
       console.error(error);
     }
@@ -43,9 +44,9 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         isAuthenticated,
-        login: handleLogin,
-        logout: handleLogout,
-        signup: handleSignup,
+        userlogin: handleLogin,
+        userlogout: handleLogout,
+        usersignup: handleSignup,
       }}
     >
       {children}

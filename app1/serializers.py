@@ -25,7 +25,6 @@ class UnitSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "images",
-            "unit_building",
             "kitchen",
             "bathroom",
             "toilet",

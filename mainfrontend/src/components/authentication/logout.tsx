@@ -1,21 +1,18 @@
-import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { AuthContext } from "./authContext";
 import { useContext } from "react";
 
 const Logout = () => {
-  const authContext: any = useContext(AuthContext);
+  const { userlogout } = useContext(AuthContext);
   const handleLogout = async (event: any) => {
     event.preventDefault();
-    authContext.logout();
+    userlogout();
   };
 
   return (
-    <Form onSubmit={handleLogout}>
-      <Button variant="primary" type="submit">
-        Logout
+      <Button variant="primary" type="submit" onClick={handleLogout}>
+          Logout
       </Button>
-    </Form>
   );
 };
 
