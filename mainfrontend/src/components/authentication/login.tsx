@@ -2,11 +2,8 @@ import { useState } from "react";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { login } from "./baseAuthApi";
-//import { AuthContext } from "./authContext";
 
 const Login = () => {
-  //const { userlogin } = useContext(AuthContext);
-  
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -14,8 +11,7 @@ const Login = () => {
     event.preventDefault();
     const response = await login(username, password);
     localStorage.setItem("token", response.data.token);
-    console.log("Your response: ", response);
-    console.log("Your Local Storage: ",localStorage);
+    console.log(response);
   };
 
   return (

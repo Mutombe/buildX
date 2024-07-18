@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-//import { AuthContext } from "./authContext";
 import { signup } from "./baseAuthApi";
 
 const Signup = () => {
-  //const { usersignup } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,8 +11,7 @@ const Signup = () => {
   const handleSignup = async (event: any) => {
     event.preventDefault();
     const response = signup(username, email, password);
-    console.log('Your Response Simba', response);
-    //localStorage.setItem("token", response.data.token);
+    console.log(response)
   }
 
   return (
