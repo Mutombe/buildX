@@ -27,8 +27,6 @@ class UserLogin(APIView):
 
     def post(self, request):
         data = request.data
-        #assert validate_email(data)
-        #assert validate_password(data)
         serializer = UserLoginSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.check_user(data)

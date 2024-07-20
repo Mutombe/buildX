@@ -9,6 +9,11 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         model = UserModel
         fields = ('username', 'email', 'password')
 
+    def validate_email(self, email):
+        if UserModel.objects.filter(email=email).exists():
+            raise serializers.ValidationError('Email address is already registered ')
+        return email
+
     def create(self, clean_data):
         user_obj = UserModel.objects.create_user(username=clean_data['username'],
                                                  email=clean_data['email'],
@@ -17,13 +22,13 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         return user_obj
     
 class UserLoginSerializer(serializers.Serializer):
-    email = serializers.EmailField()
+    username = serializers.CharField()
     password = serializers.CharField()
 
     def check_user(self, clean_data):
         user = authenticate(username=clean_data['username'], password=clean_data['password'])
         if not user:
-            raise ValueError('User not found')
+            raise serializers.ValidationError('User not found')
         return user
     
 class UserSerializer(serializers.ModelSerializer):

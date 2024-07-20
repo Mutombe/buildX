@@ -1,4 +1,4 @@
-import Properties from "./components/buildings/buildings";
+import Properties from "./components/properties/properties";
 import MainNavBar from "./components/navbar/nav";
 import Login from "./components/authentication/login";
 import Logout from "./components/authentication/logout";

@@ -1,11 +1,10 @@
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-//import { useContext } from 'react';
-//import { AuthContext } from '../authentication/authContext';
+import { useSelector } from 'react-redux';
 
 function MainNavBar() {
-  //const { isAuthenticated, logout} = useContext(AuthContext)
+  const isLoggedIn = useSelector(state => state.isLoggedIn)
 
 
   return (
@@ -31,7 +30,9 @@ function MainNavBar() {
           <Container>
           <Nav className="me-auto">
             <Nav.Link href="/signup">SignIn</Nav.Link>
-            <Nav.Link href="/login">Login</Nav.Link>
+              <Nav.Link href="/login">Login</Nav.Link>
+              <Nav.Link href="/logout">Logout</Nav.Link>
+              <Nav.Link href="">Logout</Nav.Link>
           </Nav>
           </Container>
           </>

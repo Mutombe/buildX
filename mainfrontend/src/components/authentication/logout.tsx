@@ -1,18 +1,42 @@
 import Button from "react-bootstrap/Button";
-import { AuthContext } from "./authContext";
-import { useContext } from "react";
+import { logout } from "../../utils/api";
+import { useState } from "react";
+import { Alert } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 const Logout = () => {
-  const { userlogout } = useContext(AuthContext);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+
+  const dispatch = useDispatch()
   const handleLogout = async (event: any) => {
-    event.preventDefault();
-    userlogout();
+    try {
+      event.preventDefault();
+      const response = await logout();
+      dispatch({ type: 'LOGOUT' })
+      if (response.status === 200) {
+        setSuccess(true);
+        console.log(response)
+      }
+    } catch (error: any) {
+      setError(error.message);
+    }
   };
 
   return (
-      <Button variant="primary" type="submit" onClick={handleLogout}>
-          Logout
-      </Button>
+    <>
+      {success ? (
+        <Alert variant="success">You're Logged Out <Link to="/login"> Login</Link></Alert>
+      ) : (
+        <>
+          {error && <Alert variant="danger">{error}</Alert>}
+          <Button variant="primary" type="submit" onClick={handleLogout}>
+            Logout
+          </Button>
+        </>
+      )}
+    </>
   );
 };
 
