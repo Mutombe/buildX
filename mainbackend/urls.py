@@ -15,10 +15,12 @@ router.register(r'units', views.UnitView, 'units')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
-    path('', ListProperties.as_view(), name='list-properties'),
+    path('list', ListProperties.as_view(), name='list-properties'),
     path('<int:pk>/', PropertyDetail.as_view()),
     path('units/<int:pk>/', UnitDetail.as_view()),
+    path('uploads/', UserListPropertyView.as_view()),
     path('api-auth/', include('rest_framework.urls')),
+    
     path('', include('mainauth.urls')), 
 ]
 

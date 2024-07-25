@@ -1,8 +1,8 @@
-//import { useDataFetcher } from "../../utils/apiUtil";
 import Card from "react-bootstrap/Card";
 import CardGroup from "react-bootstrap/CardGroup";
 import { getProperties } from "../../data-layer/properties";
 import { useState, useEffect } from "react";
+import App from "../practice";
 
 function Properties() {
   const [properties, setProperties] = useState([]);
@@ -32,24 +32,28 @@ function Properties() {
   }
 
   return (
-    <CardGroup>
-      {properties.map((property: any) => (
-        <Card>
-          <Card.Body key={property.id}>
-            <Card.Img variant="top" src={""} />
-            <Card.Title>{property.name}</Card.Title>
-            <Card.Text>
-              This is a wider card with supporting text below as a natural
-              lead-in to additional content. This content is a little bit
-              longer.
-            </Card.Text>
-          </Card.Body>
-          <Card.Footer>
-            <small>{property.location}</small>
-          </Card.Footer>
-        </Card>
-      ))}
-    </CardGroup>
+    <>
+      
+      <App/>
+      <CardGroup>
+        {properties.map((property: any) => (
+          <Card>
+            <Card.Body key={property.id}>
+              <Card.Img variant="top" src={""} />
+              <Card.Title>{property.name}</Card.Title>
+              <Card.Text>
+                This is a wider card with supporting text below as a natural
+                lead-in to additional content. This content is a little bit
+                longer.
+              </Card.Text>
+            </Card.Body>
+            <Card.Footer>
+              <small>{property.location}</small>
+            </Card.Footer>
+          </Card>
+        ))}
+      </CardGroup>
+    </>
   );
 }
 

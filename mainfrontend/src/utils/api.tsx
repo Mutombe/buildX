@@ -1,5 +1,4 @@
 import { client } from "./baseApiUtil";
-import { useState, useEffect } from "react";
 
 export const signup = (username: string, email: string, password: string) => {
   return client.post("/register", {
@@ -37,31 +36,4 @@ export const createProperties = async (property: any) => {
     console.error("Error creating properties: ", error);
     throw error;
   }
-};
-
-export const useDataFetcher = (url: any) => {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error("Request failed");
-        }
-        const jsonData = await response.json();
-        setData(jsonData);
-      } catch (error: any) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [url]);
-
-  return { data, loading, error };
 };

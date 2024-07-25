@@ -1,16 +1,20 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Form } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
 import { signup } from "../../utils/api";
 import { Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+import MainButton from "../button/button";
+import { AuthContext } from "./authContext";
 
 const Signup = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState<boolean>(false);
+  const { setIsAuthenticated } = useContext(AuthContext);
+
+  const navigate = useNavigate();
 
   const handleSignup = async (event: any) => {
     event.preventDefault();
@@ -18,8 +22,9 @@ const Signup = () => {
       const response = await signup(username, email, password);
       if (response.status === 200) {
         setSuccess(true);
+        setIsAuthenticated(true);
+        navigate("/");
       }
-      setSuccess(true);
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.email) {
         setError(error.response.data.email[0]);
@@ -35,7 +40,11 @@ const Signup = () => {
         <Alert variant="success">You're signed In</Alert>
       ) : (
         <>
-          {error && <Alert variant="warning">{error} <Link to="/login"> Login</Link></Alert>}
+          {error && (
+            <Alert variant="warning">
+              {error} <Link to="/login"> Login</Link>
+            </Alert>
+          )}
           <Form onSubmit={handleSignup}>
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Email Address</Form.Label>
@@ -72,9 +81,12 @@ const Signup = () => {
                 onChange={(event: any) => setPassword(event.target.value)}
               />
             </Form.Group>
-            <Button variant="primary" type="submit">
-              Signup
-            </Button>
+            <MainButton
+              variant="primary"
+              type="submit"
+              text="Login"
+              onClick={handleSignup}
+            />
           </Form>
         </>
       )}

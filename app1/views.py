@@ -4,6 +4,7 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework import authentication, permissions, mixins, generics, status
 from rest_framework.response import Response
+from .permissions import IsOwner
 from .utils import get_object
 
 class PropertyView(viewsets.ModelViewSet):
@@ -26,6 +27,17 @@ class ListProperties(APIView):
         """
         all_properties = [property.name for property in Property.objects.all()]
         return Response(all_properties)
+
+class UserListPropertyView(APIView):
+  serializer_class = PropertySerializer
+  permission_classes = [IsOwner]
+  
+  def get_queryset(self):
+
+      user_property = [x.name for x in Property.objects.for_user(owner=self.request.user)]
+      return Response({'User Uploads': user_property}, status=status.HTTP_200_OK)
+      
+
     
 class PropertyDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
@@ -40,8 +52,8 @@ class UnitDetail(generics.RetrieveUpdateDestroyAPIView):
 class DeleteProperty(APIView):
     pass
 
-class UpdateProperty(APIView):
-    pass 
+class PropertyUpdateView(APIView):
+   permission_classes = [IsOwner]
 
 class BookUnit(APIView):
     pass
