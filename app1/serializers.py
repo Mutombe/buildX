@@ -35,6 +35,7 @@ class UnitSerializer(serializers.ModelSerializer):
         ]
 
 class PropertySerializer(serializers.ModelSerializer):
+    owner = serializers.HiddenField(default=serializers.CurrentUserDefault())
     images = PropertyImageSerializer(many=True)
     
     class Meta:
@@ -42,6 +43,7 @@ class PropertySerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "name",
+            "owner",
             "location",
             "category",
             "booked_count",

@@ -14,6 +14,10 @@ class Category(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+class PropertyManager(models.Manager):
+  def for_user(self, user):
+    return self.filter(owner=user)
     
 class Property(models.Model):
     name = models.CharField(max_length=100, blank=True)
@@ -22,11 +26,10 @@ class Property(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
     booked_count = models.IntegerField(blank=True, default=0)
     subscribers_count = models.IntegerField(blank=True, default=0)
-    
+    objects = PropertyManager()
     
     def __str__(self) -> str:
         return self.name
-    
     
 class PropertyImages(models.Model):
     name = models.CharField(max_length=1000, default=None, blank=True, null=True)
