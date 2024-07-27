@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from app1.models import Property, UnitImages, Unit, PropertyImages
 
+
 class UnitImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = UnitImages
@@ -11,17 +12,19 @@ class UnitImageSerializer(serializers.ModelSerializer):
             "name",
         ]
 
+
 class PropertyImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = PropertyImages
-        fields = '__all__'
+        fields = "__all__"
+
 
 class UnitSerializer(serializers.ModelSerializer):
     images = UnitImageSerializer(many=True)
 
     class Meta:
         model = Unit
-        fields = [  
+        fields = [
             "id",
             "name",
             "images",
@@ -34,10 +37,11 @@ class UnitSerializer(serializers.ModelSerializer):
             "booked_count",
         ]
 
+
 class PropertySerializer(serializers.ModelSerializer):
     owner = serializers.HiddenField(default=serializers.CurrentUserDefault())
     images = PropertyImageSerializer(many=True)
-    
+
     class Meta:
         model = Property
         fields = [

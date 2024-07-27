@@ -9,19 +9,18 @@ from app1.views import *
 import mainauth
 
 router = routers.DefaultRouter()
-router.register(r'properties', views.PropertyView, 'properties')
-router.register(r'units', views.UnitView, 'units')
+router.register(r"properties", views.PropertyView, "properties")
+router.register(r"units", views.UnitView, "units")
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include(router.urls)),
-    path('list', ListProperties.as_view(), name='list-properties'),
-    path('<int:pk>/', PropertyDetail.as_view()),
-    path('units/<int:pk>/', UnitDetail.as_view()),
-    path('uploads/', UserListPropertyView.as_view()),
-    path('api-auth/', include('rest_framework.urls')),
-    
-    path('', include('mainauth.urls')), 
+    path("admin/", admin.site.urls),
+    path("", include(router.urls)),
+    path("list", ListProperties.as_view(), name="list-properties"),
+    path("<int:pk>/", PropertyDetail.as_view()),
+    path("units/<int:pk>/", UnitDetail.as_view()),
+    path("uploads/", UserListPropertyView.as_view()),
+    path("api-auth/", include("rest_framework.urls")),
+    path("", include("mainauth.urls")),
 ]
 
 if settings.DEBUG:
