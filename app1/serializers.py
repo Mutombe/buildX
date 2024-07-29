@@ -40,12 +40,5 @@ class PropertySerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Property
-        fields = [
-            "id",
-            "name",
-            "owner",
-            "location",
-            "category",
-            "booked_count",
-            "images",
-        ]
+        fields = '__all__'
+        read_only_fields = ['owner']

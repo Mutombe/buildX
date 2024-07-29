@@ -2,12 +2,14 @@ import Card from "react-bootstrap/Card";
 import CardGroup from "react-bootstrap/CardGroup";
 import { getProperties } from "../../data-layer/properties";
 import { useState, useEffect } from "react";
-import App from "../practice";
+import MainButton from "../button/button";
+import { Carousel } from "react-bootstrap";
 
 function Properties() {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState(null);
+  const [allunits, setUnits] = useState(null);
 
   useEffect(() => {
     const fetchPropertyData = async () => {
@@ -15,6 +17,7 @@ function Properties() {
         const response: any = await getProperties();
         setProperties(response.data);
         setLoading(false);
+        setUnits(response.data.Units);
       } catch (error: any) {
         setErrors(error.message);
       }
@@ -33,13 +36,22 @@ function Properties() {
 
   return (
     <>
-      
-      <App/>
       <CardGroup>
         {properties.map((property: any) => (
           <Card>
             <Card.Body key={property.id}>
-              <Card.Img variant="top" src={""} />
+            <Carousel>
+                {property.images.map(image => (
+                  <Carousel.Item key={image.id}>
+                        <img
+                            className="d-block w-100"
+                            src={image.file}
+                            alt={image.name}
+                        />
+                    </Carousel.Item>
+                ))}
+            </Carousel>
+              
               <Card.Title>{property.name}</Card.Title>
               <Card.Text>
                 This is a wider card with supporting text below as a natural
@@ -48,7 +60,24 @@ function Properties() {
               </Card.Text>
             </Card.Body>
             <Card.Footer>
-              <small>{property.location}</small>
+              <small>{property.location}</small>{" "}
+              {allunits ? (
+                <small>
+                  <span>
+                    <MainButton
+                      variant="secondary"
+                      onClick={""}
+                      text="See Units"
+                    />
+                  </span>
+                </small>
+              ) : (
+                <small>
+                  <span>
+                    <MainButton variant="secondary" onClick={""} text="Book" />
+                  </span>
+                </small>
+              )}
             </Card.Footer>
           </Card>
         ))}

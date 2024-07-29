@@ -11,15 +11,24 @@ class PropertyView(viewsets.ModelViewSet):
     serializer_class = PropertySerializer
     queryset = Property.objects.all() 
 
+class PropertyListCreateView(generics.ListCreateAPIView):
+    queryset = Property.objects.all()
+    serializer_class = PropertySerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+class PropertyDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Property.objects.all()
+    serializer_class = PropertySerializer
+    permission_classes = [permissions.IsAuthenticated]
+
 class UnitView(viewsets.ModelViewSet):
     serializer_class = UnitSerializer
     queryset = Unit.objects.all()
 
 class ListProperties(APIView):
-    """
-    View to list all users in the system.
-    Requires token authentication.
-    """
 
     def get(self, request, format=None):
         """
@@ -27,16 +36,13 @@ class ListProperties(APIView):
         """
         all_properties = [property.name for property in Property.objects.all()]
         return Response(all_properties)
-
-class UserListPropertyView(APIView):
-  serializer_class = PropertySerializer
-  permission_classes = [IsOwner]
   
-  def get_queryset(self):
+class UserPropertiesView(generics.ListAPIView):
+    serializer_class = PropertySerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-      user_property = [x.name for x in Property.objects.for_user(owner=self.request.user)]
-      return Response({'User Uploads': user_property}, status=status.HTTP_200_OK)
-      
+    def get_queryset(self):
+        return Property.objects.filter(owner=self.request.user)
 
     
 class PropertyDetail(generics.RetrieveUpdateDestroyAPIView):

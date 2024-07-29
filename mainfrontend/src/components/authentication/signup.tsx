@@ -20,7 +20,7 @@ const Signup = () => {
     event.preventDefault();
     try {
       const response = await signup(username, email, password);
-      if (response.status === 200) {
+      if (response.status === 200 || 201) {
         setSuccess(true);
         setIsAuthenticated(true);
         navigate("/");
@@ -84,7 +84,7 @@ const Signup = () => {
             <MainButton
               variant="primary"
               type="submit"
-              text="Login"
+              text="Register"
               onClick={handleSignup}
             />
           </Form>
