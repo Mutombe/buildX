@@ -13,7 +13,7 @@ from bookings.views import (
 )
 
 router = routers.DefaultRouter()
-router.register(r'properties', views.PropertyView, 'properties')
+router.register(r'property', views.PropertyView, 'property')
 router.register(r'units', views.UnitView, 'units')
 
 urlpatterns = [

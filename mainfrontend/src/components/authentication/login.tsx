@@ -1,34 +1,29 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Alert, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import MainButton from "../button/button";
-import { AuthContext } from "./authContext";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../utils/api";
+import { login } from "../../redux/authSlice";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
-  const { setIsAuthenticated } = useContext(AuthContext);
+
+  const { loading, error, success } = useSelector((state: any) => state.auth);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogin = async (event: any) => {
     event.preventDefault();
-
-    try {
-      const response = await login(username, password);
-      if ((response.status = 200)) {
-        setSuccess(true);
-        setIsAuthenticated(true);
-        navigate("/");
+    dispatch(login({ username, password })).then((result: any) => {
+      if (result.payload) {
+        if (!error) {
+          navigate("/");
+        }
       }
-    } catch (error: any) {
-      setError(error.message);
-      console.log(error.message);
-    }
+    });
   };
 
   return (
@@ -67,7 +62,7 @@ const Login = () => {
             <MainButton
               variant="primary"
               type="submit"
-              text="Login"
+              text={loading ? "Loading..." : "Login"}
               onClick={handleLogin}
             />
           </Form>

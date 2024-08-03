@@ -1,4 +1,6 @@
 import { client } from "./baseApiUtil";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import axios from "axios";
 
 export const signup = (username: string, email: string, password: string) => {
   return client.post("/register", {
@@ -16,24 +18,64 @@ export const logout = () => {
   return client.post("/logout", { withCredentials: true });
 };
 
-export const fetchProperties = async () => {
-  try {
-    const response: any = await client.get("/properties");
-    if (response.status === 200) {
-      return response;
-    }
-  } catch (error: any) {
-    console.error("Error fetching properties: ", error.message);
-    throw error;
-  }
-};
 
-export const createProperties = async (property: any) => {
+
+export const fetchProperties = createAsyncThunk('properties/fetchProperties', async (_, { rejectWithValue }) => {
+    try {
+        const response = await axios.get('http://127.0.0.1:8000/properties/');
+        return response.data;
+    } catch (error: any) {
+        return rejectWithValue(error.response.data);
+    }
+});
+
+export const fetchUserProperties = createAsyncThunk('properties/fetchUserProperties', async (_, { rejectWithValue }) => {
+    try {
+        const response = await axios.get('/user/properties/');
+        return response.data;
+    } catch (error: any) {
+        return rejectWithValue(error.response.data);
+    }
+});
+
+export const createProperty = createAsyncThunk('properties/createProperty', async (propertyData: any, { rejectWithValue }) => {
   try {
-    const response = await client.post("/properties", property);
-    return response;
-  } catch (error) {
-    console.error("Error creating properties: ", error);
-    throw error;
+      const formData = new FormData();
+      for (const key in propertyData) {
+          if (key === 'images') {
+              propertyData[key].forEach((image: File) => {
+                  formData.append('images', image);
+              });
+          } else {
+              formData.append(key, propertyData[key]);
+          }
+      }
+
+      const response = await axios.post('/properties/', formData, {
+          headers: {
+              'Content-Type': 'multipart/form-data',
+          },
+      });
+      return response.data;
+  } catch (error: any) {
+      return rejectWithValue(error.response.data);
   }
-};
+});
+
+export const updateProperty = createAsyncThunk('properties/updateProperty', async ({ id, propertyData }, { rejectWithValue }) => {
+    try {
+        const response = await axios.put(`/properties/${id}/`, propertyData);
+        return response.data;
+    } catch (error: any) {
+        return rejectWithValue(error.response.data);
+    }
+});
+
+export const deleteProperty = createAsyncThunk('properties/deleteProperty', async (id, { rejectWithValue }) => {
+    try {
+        await axios.delete(`/properties/${id}/`);
+        return id;
+    } catch (error: any) {
+        return rejectWithValue(error.response.data);
+    }
+});

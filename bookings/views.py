@@ -7,7 +7,7 @@ from app1.models import Property, Unit
 from bookings.models import Booking
 from bookings.serializers import BookingSerializer
 
-# Create your views here.
+# 
 class BookingListCreateView(generics.ListCreateAPIView):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer

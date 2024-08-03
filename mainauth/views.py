@@ -38,7 +38,7 @@ class UserLogin(APIView):
 class UserLogout(APIView):
     def post(self, request):
         logout(request)
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class UserView(APIView):
     permission_classes = (permissions.IsAuthenticated,)

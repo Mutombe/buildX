@@ -4,6 +4,11 @@ from django.core.mail import send_mail
 from app1.models import Property, Unit
 
 class Booking(models.Model):
+
+    """
+    Booking model
+    """
+
     unit = models.ForeignKey(Unit, null=True, blank=True, on_delete=models.CASCADE)
     property = models.ForeignKey(Property, null=True, blank=True, on_delete=models.CASCADE)
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bookings')

@@ -1,10 +1,9 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Form } from "react-bootstrap";
-import { signup } from "../../utils/api";
 import { Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import MainButton from "../button/button";
-import { AuthContext } from "./authContext";
+import { signup } from "../../redux/authSlice";
 
 const Signup = () => {
   const [username, setUsername] = useState("");
@@ -12,19 +11,15 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState<boolean>(false);
-  const { setIsAuthenticated } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
   const handleSignup = async (event: any) => {
     event.preventDefault();
     try {
-      const response = await signup(username, email, password);
-      if (response.status === 200 || 201) {
-        setSuccess(true);
-        setIsAuthenticated(true);
-        navigate("/");
-      }
+      dispatch(signup({ username, email, password }));
+      setSuccess(true);
+      navigate("/");
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.email) {
         setError(error.response.data.email[0]);
