@@ -18,8 +18,6 @@ export const logout = () => {
   return client.post("/logout", { withCredentials: true });
 };
 
-
-
 export const fetchProperties = createAsyncThunk('properties/fetchProperties', async (_, { rejectWithValue }) => {
     try {
         const response = await axios.get('http://127.0.0.1:8000/properties/');
@@ -28,6 +26,11 @@ export const fetchProperties = createAsyncThunk('properties/fetchProperties', as
         return rejectWithValue(error.response.data);
     }
 });
+
+export const fetchUnits = createAsyncThunk('units/fetchUnits', async (propertyId) => {
+    const response = await axios.get(`http://127.0.0.1:8000/properties/${propertyId}/units/`);
+    return response.data;
+  });
 
 export const fetchUserProperties = createAsyncThunk('properties/fetchUserProperties', async (_, { rejectWithValue }) => {
     try {

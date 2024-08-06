@@ -37,6 +37,7 @@ class UnitSerializer(serializers.ModelSerializer):
 class PropertySerializer(serializers.ModelSerializer):
     owner = serializers.HiddenField(default=serializers.CurrentUserDefault())
     images = PropertyImageSerializer(many=True)
+    units = UnitSerializer(many=True, read_only=True)
     
     class Meta:
         model = Property
