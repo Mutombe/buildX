@@ -1,20 +1,27 @@
 from rest_framework import serializers
-from app1.models import Property, UnitImages, Unit, PropertyImages
+from app1.models import Property, Category, UnitImages, Unit, PropertyImages
+from .models import Subscription
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'name']
 
 class UnitImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = UnitImages
         fields = [
             "id",
+            "name",
             "unit",
             "file",
-            "name",
         ]
 
 class PropertyImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = PropertyImages
         fields = '__all__'
+
 
 class UnitSerializer(serializers.ModelSerializer):
     images = UnitImageSerializer(many=True)
@@ -43,3 +50,8 @@ class PropertySerializer(serializers.ModelSerializer):
         model = Property
         fields = '__all__'
         read_only_fields = ['owner']
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subscription
+        fields = ['id', 'user', 'property', 'subscribed_at']

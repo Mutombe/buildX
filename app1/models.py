@@ -1,6 +1,8 @@
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from django.db.models.functions import Now
 
 class Category(models.Model):
     TYPE = [
@@ -69,12 +71,14 @@ class UnitImages(models.Model):
 class Subscription(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='subscribers')
+    subscribed_at = models.DateTimeField(auto_now_add=True)
+
 
     class Meta:
         unique_together = ('user', 'property')
     
     def __str__(self):
-        return f'{self.user.username} -> {self.property.name}'
+        return f"{self.user.username} subscribed to {self.property.name}"
 
 
 

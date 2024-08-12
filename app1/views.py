@@ -1,5 +1,5 @@
 from app1.serializers import PropertySerializer, UnitSerializer, UnitImageSerializer, PropertyImageSerializer
-from app1.models import Property, Unit, PropertyImages
+from app1.models import Category, Property, Subscription, Unit, PropertyImages
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework import authentication, permissions, mixins, generics, status
@@ -8,6 +8,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from .permissions import IsOwner
 from .utils import get_object
+from .serializers import CategorySerializer, SubscriptionSerializer
+
+class CategoryListView(generics.ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
 
 class PropertyView(viewsets.ModelViewSet):
     serializer_class = PropertySerializer
@@ -101,3 +106,19 @@ def subscribe_property(request, property_id):
         return Response({"message": "Subscribed successfully!"}, status=status.HTTP_200_OK)
     except Property.DoesNotExist:
         return Response({"error": "Property not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+      
+class SubscriptionViewSet(viewsets.ModelViewSet):
+    queryset = Subscription.objects.all()
+    serializer_class = SubscriptionSerializer
+
+    def get_queryset(self):
+        """
+        Optionally restricts the returned subscriptions to a given user,
+        by filtering against a `user` query parameter in the URL.
+        """
+        queryset = Subscription.objects.all()
+        user = self.request.query_params.get('user', None)
+        if user is not None:
+            queryset = queryset.filter(user=user)
+        return queryset

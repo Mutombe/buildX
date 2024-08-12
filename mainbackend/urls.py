@@ -14,12 +14,14 @@ from bookings.views import (
 
 router = routers.DefaultRouter()
 router.register(r'property', views.PropertyView, 'property')
+router.register(r'subscriptions', SubscriptionViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
     path('list', ListProperties.as_view(), name='list-properties'),
     path('units/<int:pk>/', UnitDetailView.as_view()),
+    path('categories/', CategoryListView.as_view(), name='category-list'),
     path('uploads/', UserPropertiesView.as_view()),
     path('properties/', PropertyListCreateView.as_view(), name='property-list-create'),
     path('properties/<int:property_id>/units/', UnitListCreateView.as_view(), name='unit-list-create'),

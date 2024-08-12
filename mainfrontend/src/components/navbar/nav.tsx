@@ -6,13 +6,14 @@ import Avatar from "@mui/material/Avatar";
 import "./nav.css";
 import { useSelector } from "react-redux";
 import Logout from "../authentication/logout";
-import { Fab, Tooltip } from "@mui/material";
+import { Fab, Link, Tooltip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
 function MainNavBar() {
   const token = useSelector((state: any) => state.auth.token);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  //const navigate = useNavigate();
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -20,16 +21,22 @@ function MainNavBar() {
     setAnchorEl(null);
   };
 
+  
+
   return (
     <nav className="navbar">
       <h1>homer</h1>
       <ul>
         <li>homer</li>{" "}
+        <Link href="/postProperty">
         <Fab size="small" color="primary" aria-label="add">
           <Tooltip title="Add Property" placement="top-start">
-            <AddIcon />
+
+              <AddIcon />
+
           </Tooltip>
-        </Fab>
+          </Fab>
+        </Link>
         <li>
           <a href="/properties">Properties</a>
         </li>
