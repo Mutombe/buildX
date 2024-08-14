@@ -16,7 +16,7 @@ class CategoryListView(generics.ListAPIView):
 
 class PropertyView(viewsets.ModelViewSet):
     serializer_class = PropertySerializer
-    queryset = Property.objects.all() 
+    queryset = Property.objects.all()  
 
 class PropertyListCreateView(generics.ListCreateAPIView):
     queryset = Property.objects.all()

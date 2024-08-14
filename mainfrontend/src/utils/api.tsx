@@ -15,8 +15,12 @@ export const login = (username: string, password: string) => {
 };
 
 export const logout = () => {
-  return client.post("/logout", { withCredentials: true });
+  return client.post("/logout");
 };
+
+export const fetchUser = () => {
+    return api.get("/user/");
+  };
 
 export const fetchProperties = createAsyncThunk('properties/fetchProperties', async (_, { rejectWithValue }) => {
     try {
@@ -50,7 +54,9 @@ export const createProperty = createAsyncThunk('properties/createProperty', asyn
     try {
         const formData = new FormData();
         for (const key in propertyData) {
+            console.log(key)
             if (key === 'images') {
+                console.log("Images", key)
                 propertyData[key].forEach((image: File) => {
                     formData.append('images', image);
                 });
@@ -58,7 +64,7 @@ export const createProperty = createAsyncThunk('properties/createProperty', asyn
                 formData.append(key, propertyData[key]);
             }
         }
-
+ 
         const response = await api.post('/properties/', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',

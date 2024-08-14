@@ -9,6 +9,8 @@ import UnitForm from "../units/unitForm";
 const PropertyForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  //get category state
   const { categories, loading, error } = useSelector(
     (state) => state.categories
   );
@@ -20,7 +22,7 @@ const PropertyForm = () => {
     images: [],
   });
 
-  const [units, setUnits] = useState([]);
+  //const [units, setUnits] = useState([]);
   const [showUnitModal, setShowUnitModal] = useState(false);
   const [isAddingAnother, setIsAddingAnother] = useState(false);
   const [propertyCount, setPropertyCount] = useState(1);
@@ -41,7 +43,7 @@ const PropertyForm = () => {
         images: [],
       });
       //Increment the number of units added and display it
-      setUnits([]);
+      //setUnits([]);
       setShowUnitModal(false);
     }
   }, [isAddingAnother]);
@@ -57,12 +59,25 @@ const PropertyForm = () => {
 
   const handleUnitChange = (unitData: any) => {
     setUnitCount(unitCount + 1);
-    setUnits(unitData);
+    //setUnits(unitData);
   };
 
   //Submitting data through redux state management -> createProperty API function -> the backend
+  //const handleSubmit = async (saveAndAddAnother = false) => {
+    //const response = await dispatch(createProperty({ ...propertyData, units }));
+
+    //if (response?.payload?.id) {
+      //if (saveAndAddAnother) {
+        //setIsAddingAnother(true);
+        //setPropertyCount(propertyCount + 1);
+      //} else {
+        //navigate("/dashboard");
+      //}
+    //}
+  //};
+
   const handleSubmit = async (saveAndAddAnother = false) => {
-    const response = await dispatch(createProperty({ ...propertyData, units }));
+    const response = await dispatch(createProperty({ ...propertyData}));
 
     if (response?.payload?.id) {
       if (saveAndAddAnother) {
@@ -149,7 +164,6 @@ const PropertyForm = () => {
         <Modal.Header closeButton>
           <Modal.Title>Add Units</Modal.Title>
           <Modal.Title>Adding Unit {unitCount}</Modal.Title>
-
         </Modal.Header>
         <Modal.Body>
           <UnitForm onUnitChange={handleUnitChange} />

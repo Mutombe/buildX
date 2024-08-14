@@ -24,7 +24,7 @@ const propertySlice = createSlice({
             })
             .addCase(fetchProperties.rejected, (state:any, action) => {
                 state.loading = false;
-                state.success = false
+                state.success = false;
                 state.error = action.payload;
             })
             .addCase(fetchUnits.pending, (state) => {
@@ -54,6 +54,7 @@ const propertySlice = createSlice({
             })
             .addCase(createProperty.fulfilled, (state, action: any) => {
                 state.userProperties.push(action.payload);
+                console.log(action.payload)
             })
             .addCase(updateProperty.fulfilled, (state: any, action) => {
                 const index = state.userProperties.findIndex((property: any) => property.id === action.payload.id);

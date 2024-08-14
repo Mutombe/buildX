@@ -4,7 +4,7 @@ import { Alert, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import MainButton from "../button/button";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../redux/authSlice";
+import { userLogin } from "../../redux/authSlice";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -17,11 +17,9 @@ const Login = () => {
 
   const handleLogin = async (event: any) => {
     event.preventDefault();
-    dispatch(login({ username, password })).then((result: any) => {
-      if (result.payload) {
-        if (!error) {
+    dispatch(userLogin({ username, password })).then((result: any) => {
+      if (result.meta.requestStatus === "fulfilled") {
           navigate("/");
-        }
       }
     });
   };
@@ -45,7 +43,7 @@ const Login = () => {
                 placeholder="Enter Username"
                 value={username}
                 required
-                onChange={(event) => setUsername(event.target.value)}
+                onChange={(e) => setUsername(e.target.value)}
               />
               <Form.Text className="text-muted"></Form.Text>
             </Form.Group>
@@ -56,7 +54,7 @@ const Login = () => {
                 placeholder="Password"
                 value={password}
                 required
-                onChange={(event) => setPassword(event.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </Form.Group>
             <MainButton
