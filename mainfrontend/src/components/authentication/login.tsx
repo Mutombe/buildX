@@ -15,11 +15,11 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: any) => {
     e.preventDefault();
     dispatch(userLogin({ username, password })).then((result: any) => {
       if (result.meta.requestStatus === "fulfilled") {
-          navigate("/");
+        navigate("/");
       }
     });
   };

@@ -1,6 +1,6 @@
 from django.contrib.auth import login, logout
 from rest_framework.authtoken.models import Token
-from rest_framework.authentication import SessionAuthentication
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer, AllUsersSerializer
@@ -18,12 +18,13 @@ class UserRegister(APIView):
             user.save()
             token, _ = Token.objects.get_or_create(user=user)
             if user:
-                return Response({'token': token.key}, status=status.HTTP_201_CREATED)
+                print(token.user)
+                return Response({'token': token.key, 'user': UserSerializer(user).data}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserLogin(APIView):
     permission_classes = (permissions.AllowAny,)
-    authentication_classes = (SessionAuthentication,)
+    authentication_classes = (TokenAuthentication,)
 
     def post(self, request):
         data = request.data
@@ -32,17 +33,20 @@ class UserLogin(APIView):
             user = serializer.check_user(data)
             login(request, user)
             token, _ = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key}, status=status.HTTP_200_OK)
+            print(token.user)
+            return Response({'token': token.key, user: UserSerializer(user).data}, status=status.HTTP_200_OK)
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
 class UserLogout(APIView):
+    authentication_classes = (TokenAuthentication,)
+
     def post(self, request):
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class UserView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
-    authentication_classes = (SessionAuthentication,)
+    authentication_classes = (TokenAuthentication,)
 
     def get(self, request):
         serializer = UserSerializer(request.user)
@@ -50,7 +54,7 @@ class UserView(APIView):
     
 class AllUsers(APIView):
     permission_classes = (permissions.IsAdminUser,)
-    authentication_classes = (SessionAuthentication,)
+    authentication_classes = (TokenAuthentication,)
 
     def get(self, request, format=None):
         """

@@ -1,18 +1,27 @@
-import * as React from "react";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Avatar from "@mui/material/Avatar";
 import "./nav.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Logout from "../authentication/logout";
 import { Fab, Link, Tooltip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import { fetchUserData } from "../../redux/authSlice";
+import { useEffect } from "react";
+import React from "react";
 
 function MainNavBar() {
-  const token = useSelector((state: any) => state.auth.token);
+  const dispatch = useDispatch();
+  const token  = useSelector((state: any) => state.auth.token);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
+  useEffect(() => {
+    if (token) {
+      dispatch(fetchUserData());
+    }
+  }, [token, dispatch]);
   //const navigate = useNavigate();
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -21,20 +30,16 @@ function MainNavBar() {
     setAnchorEl(null);
   };
 
-  
-
   return (
     <nav className="navbar">
       <h1>homer</h1>
       <ul>
         <li>homer</li>{" "}
         <Link href="/postProperty">
-        <Fab size="small" color="primary" aria-label="add">
-          <Tooltip title="Add Property" placement="top-start">
-
+          <Fab size="small" color="primary" aria-label="add">
+            <Tooltip title="Add Property" placement="top-start">
               <AddIcon />
-
-          </Tooltip>
+            </Tooltip>
           </Fab>
         </Link>
         <li>
@@ -94,7 +99,9 @@ function MainNavBar() {
               <MenuItem onClick={handleClose}>
                 <a href="/login">Login</a>
               </MenuItem>
-              <MenuItem onClick={handleClose}>SignUp</MenuItem>
+              <MenuItem onClick={handleClose}>
+                <Link href="signup">SignUp</Link>
+              </MenuItem>
             </Menu>
           </>
         )}

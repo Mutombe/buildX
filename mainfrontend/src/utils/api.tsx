@@ -1,4 +1,3 @@
-import { client } from "./baseApiUtil";
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import api from "./axiosConfig";
 
@@ -11,15 +10,17 @@ export const signup = (username: string, email: string, password: string) => {
 };
 
 export const login = (username: string, password: string) => {
-  return client.post("/login", { username: username, password: password });
+  return api.post("/login", { username: username, password: password });
 };
 
 export const logout = () => {
-  return client.post("/logout");
+  return api.post("/logout");
 };
 
 export const fetchUser = () => {
-    return api.get("/user/");
+    const response = api.get('/user')
+    console.log(response);
+    return response;
   };
 
 export const fetchProperties = createAsyncThunk('properties/fetchProperties', async (_, { rejectWithValue }) => {
