@@ -3,37 +3,28 @@ import { Form } from "react-bootstrap";
 import { Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import MainButton from "../button/button";
-import { signup } from "../../redux/authSlice";
+import { userSignup } from "../../redux/authSlice";
+import { useSelector } from "react-redux";
 
 const Signup = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState<boolean>(false);
+  const { loading, error } = useSelector((state: any) => state.auth);
 
   const navigate = useNavigate();
 
-  const handleSignup = async (event: any) => {
-    event.preventDefault();
-    try {
-      dispatch(signup({ username, email, password }));
-      setSuccess(true);
-      navigate("/");
-    } catch (error: any) {
-      if (error.response && error.response.data && error.response.data.email) {
-        setError(error.response.data.email[0]);
-      } else {
-        setError("An error occurred");
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    dispatch(userSignup({ username, email, password })).then((result: any) => {
+      if (result.meta.requestStatus === "fulfilled") {
+        navigate("/");
       }
-    }
+    });
   };
 
   return (
     <>
-      {success ? (
-        <Alert variant="success">You're signed In</Alert>
-      ) : (
         <>
           {error && (
             <Alert variant="warning">
@@ -49,7 +40,7 @@ const Signup = () => {
                 autoComplete="off"
                 value={email}
                 required
-                onChange={(event: any) => setEmail(event.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
               />
               <Form.Text className="text-muted">
                 We will never share your email with anyone
@@ -63,7 +54,7 @@ const Signup = () => {
                 autoComplete="off"
                 value={username}
                 required
-                onChange={(event: any) => setUsername(event.target.value)}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -73,18 +64,17 @@ const Signup = () => {
                 placeholder="Password"
                 value={password}
                 required
-                onChange={(event: any) => setPassword(event.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </Form.Group>
             <MainButton
               variant="primary"
               type="submit"
-              text="Register"
+              text={loading ? "Loading..." : "Register"}
               onClick={handleSignup}
             />
           </Form>
         </>
-      )}
     </>
   );
 };
