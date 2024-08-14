@@ -1,15 +1,19 @@
 import { useDispatch } from "react-redux";
-import { clearAuth, logout } from "../../redux/authSlice";
+import { useNavigate } from "react-router-dom";
+import { userLogout } from "../../redux/authSlice";
+import { Button } from "@mui/material";
 
 const Logout = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    dispatch(logout());
-    dispatch(clearAuth());
+    dispatch(userLogout()).then(() => {
+      navigate("/login");
+    });
   };
 
-  return <button onClick={handleLogout}>Logout</button>;
+  return <Button onClick={handleLogout}>Logout</Button>;
 };
 
 export default Logout;

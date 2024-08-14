@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import api, { login, signup, logout } from "../utils/api";
+import { login, signup, logout, fetchUser } from "../utils/api";
 
 export const userLogin = createAsyncThunk(
   "auth/login",
@@ -30,6 +30,18 @@ export const userLogout = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await logout();
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const fetchUserData = createAsyncThunk(
+  "auth/fetchUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetchUser();
+      return response.data.user;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
     }
