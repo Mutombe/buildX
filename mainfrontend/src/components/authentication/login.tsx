@@ -15,8 +15,8 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleLogin = async (event: any) => {
-    event.preventDefault();
+  const handleLogin = async (e) => {
+    e.preventDefault();
     dispatch(userLogin({ username, password })).then((result: any) => {
       if (result.meta.requestStatus === "fulfilled") {
           navigate("/");
