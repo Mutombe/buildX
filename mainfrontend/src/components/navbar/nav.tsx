@@ -13,7 +13,7 @@ import React from "react";
 
 function MainNavBar() {
   const dispatch = useDispatch();
-  const token  = useSelector((state: any) => state.auth.token);
+  const token = useSelector((state: any) => state.auth.token);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
