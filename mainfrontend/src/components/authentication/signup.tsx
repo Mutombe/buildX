@@ -22,6 +22,9 @@ const Signup = () => {
       if (result.meta.requestStatus === "fulfilled") {
         navigate("/");
       }
+      else if (result.meta.requestStatus === "rejected") {
+        console.log("SignUp Display", error)
+      }
     });
   };
 

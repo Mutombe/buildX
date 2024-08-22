@@ -1,5 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import api from "./axiosConfig";
+import api from './axiosConfig';
+
+const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Token ${localStorage.getItem("token")}`,
+    },
+  };
 
 export const signup = (username: string, email: string, password: string) => {
   return api.post("/register", {
@@ -18,15 +25,17 @@ export const logout = () => {
 };
 
 export const fetchUser = () => {
-    const response = api.get('/user')
+    const response = api.get('/user' );
     console.log(response);
     return response;
-  };
+};
 
 export const fetchProperties = createAsyncThunk('properties/fetchProperties', async (_, { rejectWithValue }) => {
     try {
         const response = await api.get('/properties/');
+        console.log(response)
         return response.data;
+        
     } catch (error: any) {
         return rejectWithValue(error.response.data);
     }

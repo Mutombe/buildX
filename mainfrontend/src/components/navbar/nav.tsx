@@ -7,21 +7,16 @@ import { useDispatch, useSelector } from "react-redux";
 import Logout from "../authentication/logout";
 import { Fab, Link, Tooltip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { fetchUserData } from "../../redux/authSlice";
-import { useEffect } from "react";
+//import { fetchUserData } from "../../redux/authSlice";
+//import { useEffect } from "react";
 import React from "react";
 
 function MainNavBar() {
-  const dispatch = useDispatch();
+  //const dispatch = useDispatch();
   const token = useSelector((state: any) => state.auth.token);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
-  useEffect(() => {
-    if (token) {
-      dispatch(fetchUserData());
-    }
-  }, [token, dispatch]);
   //const navigate = useNavigate();
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { login, signup, logout, fetchUser } from "../utils/api";
+import { login, signup, logout } from "../utils/api";
 
 export const userLogin = createAsyncThunk(
   "auth/login",
@@ -36,23 +36,11 @@ export const userLogout = createAsyncThunk(
   }
 );
 
-export const fetchUserData = createAsyncThunk(
-  "auth/fetchUser",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await fetchUser();
-      console.log(response)
-      return response.data.user;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
 
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
+    user: JSON.parse(localStorage.getItem('user')) || null,
     token: localStorage.getItem("token") || null,
     error: null,
     loading: false,
@@ -75,26 +63,26 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.loading = false;
         localStorage.setItem("token", action.payload.token);
+        localStorage.setItem('user', JSON.stringify(action.payload.user));
       })
       .addCase(userLogin.rejected, (state, action) => {
         state.error = action.payload;
+        console.log("Login", state.error)
         state.loading = false;
       })
       .addCase(userSignup.fulfilled, (state, action) => {
         state.token = action.payload.token;
         state.user = action.payload.user;
         localStorage.setItem("token", action.payload.token);
+        localStorage.setItem("user", action.payload.user);
       })
       .addCase(userSignup.rejected, (state, action) => {
-        state.error = action.payload;
+        state.error =  action.payload.email|| action.payload.username || action.payload.password;
       })
       .addCase(userLogout.fulfilled, (state) => {
         state.token = null;
-        state.user = null;
         localStorage.removeItem("token");
-      })
-      .addCase(fetchUserData.fulfilled, (state, action) => {
-        state.user = action.payload;
+        localStorage.removeItem("user");
       });
   },
 });

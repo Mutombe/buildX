@@ -1,9 +1,10 @@
-from app1.serializers import PropertySerializer, UnitSerializer, UnitImageSerializer, PropertyImageSerializer
+from app1.serializers import PropertySerializer, UnitSerializer
 from app1.models import Category, Property, Subscription, Unit, PropertyImages
 from rest_framework import viewsets
 from rest_framework.views import APIView
-from rest_framework import authentication, permissions, mixins, generics, status
+from rest_framework import permissions, generics, status
 from rest_framework.response import Response
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from .permissions import IsOwner
@@ -21,16 +22,18 @@ class PropertyView(viewsets.ModelViewSet):
 class PropertyListCreateView(generics.ListCreateAPIView):
     queryset = Property.objects.all()
     serializer_class = PropertySerializer
-    #permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         category = self.request.query_params.get('category', None)
         if category:
             return Property.objects.filter(category__name=category)
-        return super().get_queryset()
+        return self.queryset.filter(owner=self.request.user)
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        property_instance = serializer.save(owner=self.request.user)
+        for image_data in self.request.FILES.getlist('images'):
+            PropertyImages.objects.create(property=property_instance, file=image_data)
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
@@ -45,6 +48,7 @@ class PropertyListCreateView(generics.ListCreateAPIView):
 class PropertyDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Property.objects.all()
     serializer_class = PropertySerializer
+    authentication_classes = [TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
 class UnitListCreateView(generics.ListCreateAPIView):
@@ -68,7 +72,7 @@ class ListProperties(APIView):
   
 class UserPropertiesView(generics.ListAPIView):
     serializer_class = PropertySerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Property.objects.filter(owner=self.request.user)
@@ -82,8 +86,10 @@ class UnitDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Unit.objects.all()
     serializer_class = UnitSerializer
     
+
 class DeleteProperty(APIView):
     pass
+
 
 class PropertyUpdateView(APIView):
    permission_classes = [IsOwner]
@@ -91,8 +97,10 @@ class PropertyUpdateView(APIView):
 class BookUnit(APIView):
     pass
 
+
 class NotifyOwner(APIView):
     pass 
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

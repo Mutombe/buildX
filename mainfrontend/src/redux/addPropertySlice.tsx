@@ -1,17 +1,11 @@
-// src/features/property/propertySlice.js
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import api from "../utils/axiosConfig";
 
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-
-// Async thunk to handle the property upload
 export const uploadProperty = createAsyncThunk(
-  'property/uploadProperty',
+  "property/uploadProperty",
   async (propertyData, { rejectWithValue }) => {
     try {
-      const response = await axios.post('/api/properties/', propertyData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+      const response = await api.post("/properties/", propertyData, {
       });
       return response.data;
     } catch (error) {
@@ -21,24 +15,28 @@ export const uploadProperty = createAsyncThunk(
 );
 
 const propertySlice = createSlice({
-  name: 'property',
+  name: "property",
   initialState: {
     properties: [],
-    status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
+    loading: false,
     error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(uploadProperty.pending, (state) => {
-        state.status = 'loading';
+        state.loading = true;
       })
       .addCase(uploadProperty.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.loading = false;
         state.properties.push(action.payload);
+        console.log(
+          "Property data getting pushed to the database: ",
+          action.payload
+        );
       })
       .addCase(uploadProperty.rejected, (state, action) => {
-        state.status = 'failed';
+        state.loading = false;
         state.error = action.payload;
       });
   },

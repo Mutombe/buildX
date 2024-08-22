@@ -6,6 +6,7 @@ const propertySlice = createSlice({
     initialState: {
         properties: [],
         userProperties: [],
+        token: localStorage.getItem("token") || null,
         units: [],
         loading: false,
         success: false,
@@ -21,6 +22,7 @@ const propertySlice = createSlice({
                 state.loading = false;
                 state.success = true;
                 state.properties = action.payload;
+                console.log(action.payload)
             })
             .addCase(fetchProperties.rejected, (state:any, action) => {
                 state.loading = false;
