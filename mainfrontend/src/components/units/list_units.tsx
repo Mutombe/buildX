@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import { fetchUnits } from '../../utils/api';
+import { fetchUnits } from '../../redux/propertySlice';
 
 const UnitList = () => {
   const { propertyId } = useParams();

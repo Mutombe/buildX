@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { fetchProperties } from "../../utils/api";
+import { fetchProperties } from "../../redux/propertySlice";
 import { useDispatch, useSelector } from "react-redux";
 import PropertyCard from "./propertyCard";
 import { Col, Row, Container } from "react-bootstrap";

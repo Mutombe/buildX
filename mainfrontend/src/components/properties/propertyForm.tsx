@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories } from "../../utils/api";
-import { createProperty } from "../../utils/api";
+import { fetchProperties } from "../../redux/propertySlice";
+import { createProperty } from "../../redux/propertySlice";
 import { Form, Button, Modal, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import UnitForm from "../units/unitForm";

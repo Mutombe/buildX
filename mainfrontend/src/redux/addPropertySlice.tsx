@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import api from "../utils/axiosConfig";
+import api from "../utils/baseApiUtil";
 
 export const uploadProperty = createAsyncThunk(
   "property/uploadProperty",

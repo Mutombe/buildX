@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { uploadProperty } from "../../redux/addPropertySlice";
 import { Button, Form } from "react-bootstrap";
-import { fetchCategories } from "../../utils/api";
+import { fetchCategories } from "../../redux/categorySlice";
 
 const PropertyUploadForm = () => {
   const dispatch = useDispatch();
