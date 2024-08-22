@@ -1,0 +1,5 @@
+.card-img {
+    width: 100%;
+    height: 200px; /* Adjust this as needed */
+    object-fit: cover; /* Or use `contain` if you prefer not to crop */
+}

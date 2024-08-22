@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Property, Unit, PropertyImages, UnitImages, Category
+from .models import Property, Unit, PropertyImages, UnitImages, Category, Subscription
 
 
 class AdminPropertyOverview(admin.ModelAdmin):
@@ -54,8 +54,15 @@ class AdminCategoryOverview(admin.ModelAdmin):
     )
 
 
+class AdminSubscriptionOverview(admin.ModelAdmin):
+    list_display = ("id", "user", "property", "subscribed_at",)
+
 admin.site.register(Property, AdminPropertyOverview)
 admin.site.register(Unit, AdminUnitsOverview)
 admin.site.register(PropertyImages, AdminPropertyImagesOverview)
 admin.site.register(UnitImages, AdminUnitImagesOverview)
 admin.site.register(Category, AdminCategoryOverview)
+<<<<<<< HEAD
+=======
+admin.site.register(Subscription, AdminSubscriptionOverview)
+>>>>>>> branch-01

@@ -1,8 +1,9 @@
 from django.contrib import admin
-from .models import Book
+from .models import Booking
 
 
 class AdminBookingOverview(admin.ModelAdmin):
+<<<<<<< HEAD
     list_display = (
         "id",
         "user",
@@ -18,5 +19,11 @@ class AdminBookingOverview(admin.ModelAdmin):
         "property",
     )
 
+=======
+    list_display = ("id","customer", "property",)
+    search_fields = ("customer", "property",)
+    ordering = ("property",)
+    list_filter = ("customer", "property",)
+>>>>>>> branch-01
 
-admin.site.register(Book, AdminBookingOverview)
+admin.site.register(Booking, AdminBookingOverview)

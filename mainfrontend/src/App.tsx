@@ -1,27 +1,34 @@
-import Properties from "./components/properties/properties";
 import MainNavBar from "./components/navbar/nav";
 import Login from "./components/authentication/login";
 import Signup from "./components/authentication/signup";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import WelcomeAlert from "./components/main-page/mainpage";
-import { AuthProvider } from "./components/authentication/authContext";
-import handleLogout from "./components/authentication/logout";
+//import PropertyForm from "./components/properties/propertyForm";
+import PropertyList from "./components/properties/listProperties";
+import AddPro from "./components/properties/form";
+import "./App.css";
+import UnitList from "./components/units/list_units";
 
 function App() {
   return (
     <>
-      <AuthProvider>
+      <div className="container">
         <MainNavBar />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<WelcomeAlert />} />
-            <Route path="properties" element={<Properties />} />
+            <Route path="properties" element={<PropertyList />} />
+            <Route
+              path="/properties/:propertyId/units"
+              element={<UnitList />}
+            />
             <Route path="login" element={<Login />} />
-            <Route path="logout" action={handleLogout} />
+            <Route path="logout" />
             <Route path="signup" element={<Signup />} />
+            <Route path="/postProperty" element={<AddPro />} />
           </Routes>
         </BrowserRouter>
-      </AuthProvider>
+      </div>
     </>
   );
 }
