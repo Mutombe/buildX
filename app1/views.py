@@ -16,8 +16,8 @@ class CategoryListView(generics.ListAPIView):
     serializer_class = CategorySerializer
 
 class PropertyView(viewsets.ModelViewSet):
-    serializer_class = PropertySerializer
     queryset = Property.objects.all()  
+    serializer_class = PropertySerializer
 
 class PropertyListCreateView(generics.ListCreateAPIView):
     queryset = Property.objects.all()
@@ -50,6 +50,10 @@ class PropertyDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PropertySerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
+
+class UnitListView(viewsets.ModelViewSet):
+    queryset = Unit.objects.all()  
+    serializer_class = UnitSerializer
 
 class UnitListCreateView(generics.ListCreateAPIView):
     queryset = Unit.objects.all()

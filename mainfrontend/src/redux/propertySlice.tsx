@@ -5,7 +5,7 @@ export const fetchProperties = createAsyncThunk(
   "properties/fetchProperties",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get("/properties/");
+      const response = await api.get("/property/");
       console.log(response);
       return response.data;
     } catch (error: any) {
@@ -88,6 +88,19 @@ export const createProperty = createAsyncThunk(
   }
 );
 
+export const uploadProperty = createAsyncThunk(
+  "property/uploadProperty",
+  async (propertyData, { rejectWithValue }) => {
+    try {
+      const response = await api.post("/properties/", propertyData, {
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const propertySlice = createSlice({
   name: "properties",
   initialState: {
@@ -141,9 +154,20 @@ const propertySlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(createProperty.fulfilled, (state, action: any) => {
-        state.userProperties.push(action.payload);
-        console.log(action.payload);
+      .addCase(uploadProperty.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(uploadProperty.fulfilled, (state, action) => {
+        state.loading = false;
+        state.properties.push(action.payload);
+        console.log(
+          "Property data getting pushed to the database: ",
+          action.payload
+        );
+      })
+      .addCase(uploadProperty.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
       .addCase(updateProperty.fulfilled, (state: any, action) => {
         const index = state.userProperties.findIndex(

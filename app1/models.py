@@ -44,7 +44,7 @@ class PropertyImages(models.Model):
 
 class Unit(models.Model):
     name = models.CharField(max_length=100, blank=True)
-    unit_property = models.ForeignKey(Property, null=True, on_delete=models.SET_NULL, blank=True)
+    unit_property = models.ForeignKey(Property, null=True, on_delete=models.SET_NULL, related_name='units', blank=True)
     kitchen = models.BooleanField(default=False)
     bathroom = models.BooleanField(default=False)
     toilet = models.BooleanField(default=False)

@@ -1,4 +1,4 @@
-import api from "./baseApiUtil";
+import api from "./axiosConfig";
 
 export const signup = (username: string, email: string, password: string) => {
   return api.post("/register", {

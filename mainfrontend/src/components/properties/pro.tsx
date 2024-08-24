@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { uploadProperty } from "../../redux/addPropertySlice";
+import { uploadProperty } from "../../redux/propertySlice";
 import { Button, Form } from "react-bootstrap";
 import { fetchCategories } from "../../redux/categorySlice";
 
@@ -10,10 +10,10 @@ const PropertyUploadForm = () => {
   const [location, setLocation] = useState("");
   const [category, setCategory] = useState();
     const [images, setImages] = useState([]);
-
-  const loading = useSelector((state) => state.property);
+  
   const { categories } = useSelector((state) => state.categories);
   const { user } = useSelector((state) => state.auth);
+  const { loading, error } = useSelector((state) => state.properties);
   console.log("Property Upload", user.id)  
 
   useEffect(() => {
@@ -38,6 +38,7 @@ const PropertyUploadForm = () => {
 
     dispatch(uploadProperty(formData));
     console.log(formData);
+    console.log('Uploading the Property', error);
   };
 
   return (
@@ -89,7 +90,7 @@ const PropertyUploadForm = () => {
         />
       </Form.Group>
 
-      <Button onClick={handleSubmit} disabled={loading}>
+      <Button onClick={handleSubmit}>
         {loading ? "Uploading..." : "Upload Property"}
       </Button>
     </form>
