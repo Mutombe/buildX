@@ -36,7 +36,7 @@ class PropertyListCreateView(generics.ListCreateAPIView):
             PropertyImages.objects.create(property=property_instance, file=image_data)
 
     def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
+        queryset = Property.objects.all()
         serializer = self.get_serializer(queryset, many=True)
         data = serializer.data
         for property_data in data:

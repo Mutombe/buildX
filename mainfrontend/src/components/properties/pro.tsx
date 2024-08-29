@@ -9,7 +9,7 @@ const PropertyUploadForm = () => {
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [category, setCategory] = useState();
-    const [images, setImages] = useState([]);
+  const [images, setImages] = useState([]);
   
   const { categories } = useSelector((state) => state.categories);
   const { user } = useSelector((state) => state.auth);
@@ -40,6 +40,7 @@ const PropertyUploadForm = () => {
     console.log(formData);
     console.log('Uploading the Property', error);
   };
+  
 
   return (
     <form>

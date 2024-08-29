@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProperties } from "../../redux/propertySlice";
 import { createProperty } from "../../redux/propertySlice";
 import { Form, Button, Modal, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";

@@ -10,23 +10,32 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import "./properties.css";
 import { useNavigate } from "react-router-dom";
 import ImagePreviewModal from "../image-preview/imagePreview";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Accordion from "@mui/material/Accordion";
-import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
+import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 
 const PropertyCard = ({ property }) => {
   const [showModal, setShowModal] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [hasImages, setHasImages] = useState(false);
+  //const canSave = [property.images].every(Boolean);
+  //console.log("Images", !canSave)
 
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
+  useEffect(() => {
+    if (property.images !== undefined) {
+      setHasImages(true);
+    }
+  }, [setHasImages]);
+
 
   const navigate = useNavigate();
   return (
     <>
       <Card style={{ width: "18rem" }} className="mb-2">
         <Card.Body>
-          {property.has_images ? (
+          {hasImages ? (
             <Carousel fade>
               {property.images.map((image, index) => (
                 <Carousel.Item
@@ -89,9 +98,13 @@ const PropertyCard = ({ property }) => {
                   <Typography>Details</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <Typography><strong>{property.name}</strong></Typography>
+                  <Typography>
+                    <strong>{property.name}</strong>
+                  </Typography>
                   <Typography>{property.booked_count}</Typography>
-                  <Typography><FmdGoodOutlinedIcon/> {property.location}</Typography>
+                  <Typography>
+                    <FmdGoodOutlinedIcon /> {property.location}
+                  </Typography>
                 </AccordionDetails>
               </Accordion>
             </>
