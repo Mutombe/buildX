@@ -1,4 +1,5 @@
 import api from "./axiosConfig";
+import authAxios from "./authAxios";
 
 export const signup = (username: string, email: string, password: string) => {
   return api.post("/register", {
@@ -13,7 +14,7 @@ export const login = (username: string, password: string) => {
 };
 
 export const logout = () => {
-  return api.post("/logout");
+  return authAxios.post("/logout");
 };
 
 export const fetchUser = () => {

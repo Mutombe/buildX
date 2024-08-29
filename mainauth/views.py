@@ -37,7 +37,8 @@ class UserLogin(APIView):
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
 class UserLogout(APIView):
-    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+    #authentication_classes = (TokenAuthentication,)
 
     def post(self, request):
         logout(request)

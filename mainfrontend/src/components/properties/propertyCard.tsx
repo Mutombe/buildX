@@ -10,32 +10,23 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import "./properties.css";
 import { useNavigate } from "react-router-dom";
 import ImagePreviewModal from "../image-preview/imagePreview";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Accordion from "@mui/material/Accordion";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 
 const PropertyCard = ({ property }) => {
   const [showModal, setShowModal] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [hasImages, setHasImages] = useState(false);
-  //const canSave = [property.images].every(Boolean);
-  //console.log("Images", !canSave)
 
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
-  useEffect(() => {
-    if (property.images !== undefined) {
-      setHasImages(true);
-    }
-  }, [setHasImages]);
-
 
   const navigate = useNavigate();
   return (
     <>
       <Card style={{ width: "18rem" }} className="mb-2">
         <Card.Body>
-          {hasImages ? (
+          {property.has_images ? (
             <Carousel fade>
               {property.images.map((image, index) => (
                 <Carousel.Item
@@ -62,13 +53,6 @@ const PropertyCard = ({ property }) => {
         </Card.Body>
         <Card.Footer>
           <small>{property.location}</small>{" "}
-          {property.has_units ? (
-            ""
-          ) : (
-            <small>
-              Booked<strong> {property.booked_count}</strong> times{" "}
-            </small>
-          )}
           <span>
             {property.has_units ? (
               <Button
@@ -79,13 +63,18 @@ const PropertyCard = ({ property }) => {
                 View Units
               </Button>
             ) : (
-              <Button
-                variant="outlined"
-                className="ms-2"
-                onClick={() => navigate(`/properties/${property.id}/book`)}
-              >
-                Book Property
-              </Button>
+              <>
+                <small>
+                  Booked<strong> {property.booked_count}</strong> times{" "}
+                </small>
+                <Button
+                  variant="outlined"
+                  className="ms-2"
+                  onClick={() => navigate(`/properties/${property.id}/book`)}
+                >
+                  Book Property
+                </Button>
+              </>
             )}
 
             <>

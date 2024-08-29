@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import api from "../utils/baseApiUtil";
+import authAxios from "../utils/authAxios";
 
 export const fetchProperties = createAsyncThunk(
   "properties/fetchProperties",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get("/property/");
+      const response = await authAxios.get("/properties/");
       console.log(response);
       return response.data;
     } catch (error: any) {
@@ -17,7 +17,7 @@ export const fetchProperties = createAsyncThunk(
 export const fetchUnits = createAsyncThunk(
   "units/fetchUnits",
   async (propertyId) => {
-    const response = await api.get(`/properties/${propertyId}/units/`);
+    const response = await authAxios.get(`/properties/${propertyId}/units/`);
     return response.data;
   }
 );
@@ -26,7 +26,7 @@ export const fetchUserProperties = createAsyncThunk(
   "properties/fetchUserProperties",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get("/user/properties/");
+      const response = await authAxios.get("/user/properties/");
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -38,7 +38,7 @@ export const updateProperty = createAsyncThunk(
   "properties/updateProperty",
   async ({ id, propertyData }, { rejectWithValue }) => {
     try {
-      const response = await api.put(`/properties/${id}/`, propertyData);
+      const response = await authAxios.put(`/properties/${id}/`, propertyData);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -50,7 +50,7 @@ export const deleteProperty = createAsyncThunk(
   "properties/deleteProperty",
   async (id, { rejectWithValue }) => {
     try {
-      await api.delete(`/properties/${id}/`);
+      await authAxios.delete(`/properties/${id}/`);
       return id;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -75,7 +75,7 @@ export const createProperty = createAsyncThunk(
         }
       }
 
-      const response = await api.post("/properties/", formData, {
+      const response = await authAxios.post("/properties/", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -92,8 +92,7 @@ export const uploadProperty = createAsyncThunk(
   "property/uploadProperty",
   async (propertyData, { rejectWithValue }) => {
     try {
-      const response = await api.post("/properties/", propertyData, {
-      });
+      const response = await authAxios.post("/properties/", propertyData, {});
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

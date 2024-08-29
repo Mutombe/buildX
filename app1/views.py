@@ -90,21 +90,8 @@ class UnitDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Unit.objects.all()
     serializer_class = UnitSerializer
     
-
-class DeleteProperty(APIView):
-    pass
-
-
 class PropertyUpdateView(APIView):
    permission_classes = [IsOwner]
-
-class BookUnit(APIView):
-    pass
-
-
-class NotifyOwner(APIView):
-    pass 
-
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

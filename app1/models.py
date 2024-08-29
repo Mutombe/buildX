@@ -2,12 +2,13 @@ from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
-from django.db.models.functions import Now
+
 
 class Category(models.Model):
     """
     Category model
     """
+
     TYPE = [
         ("Commercial", "Commercial"),
         ("House", "House"),
@@ -21,17 +22,26 @@ class Category(models.Model):
     def __str__(self) -> str:
         return self.name
 
+
 class PropertyManager(models.Manager):
     def for_user(self, user):
         return self.filter(owner=user)
+
 
 class Property(models.Model):
     """
     Property model
     """
+
     name = models.CharField(max_length=100, blank=True)
     location = models.CharField(max_length=500, blank=False, null=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='building', blank=True, null=True)
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE,
+        related_name="building",
+        blank=True,
+        null=True,
+    )
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     booked_count = models.IntegerField(blank=True, default=0)
     subscribers_count = models.IntegerField(blank=True, default=0)
@@ -39,30 +49,49 @@ class Property(models.Model):
 
     def __str__(self) -> str:
         return self.name
-    
+
     def notify_subscribers(self):
         subscribers = self.subscribers.all()
         for subscriber in subscribers:
             # Send notification about the rental update
-            pass
+            if self.has_units:
+                send_mail(
+                    "Property Availability Notification",
+                    f'The property "{self.name}" has a unit available for rental',
+                    "simbarashemutombe1@gmail.com",
+                    [subscriber.user.email],
+                    fail_silently=False,
+                )
+
 
 class PropertyImages(models.Model):
     """
     Property Images model
     """
+
     name = models.CharField(max_length=1000, default=None, blank=True, null=True)
-    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='images', blank=False, null=True)
-    file = models.FileField(upload_to='', blank=False)
+    property = models.ForeignKey(
+        Property,
+        on_delete=models.CASCADE,
+        related_name="images",
+        blank=False,
+        null=True,
+    )
+    file = models.FileField(upload_to="", blank=False)
 
     def __str__(self) -> str:
         return self.name if self.name else self.file.url
+
 
 class Unit(models.Model):
     """
     Unit model
     """
+
     name = models.CharField(max_length=100, blank=True)
-    unit_property = models.ForeignKey(Property, null=True, on_delete=models.SET_NULL, related_name='units', blank=True)
+    unit_property = models.ForeignKey(
+        Property, null=True, on_delete=models.SET_NULL, related_name="units", blank=True
+    )
     kitchen = models.BooleanField(default=False)
     bathroom = models.BooleanField(default=False)
     toilet = models.BooleanField(default=False)
@@ -77,45 +106,41 @@ class Unit(models.Model):
     @property
     def location(self):
         return self.unit_property.location
-    
+
     def save(self, *args, **kwargs):
         if not self.occupied:
             self.unit_property.notify_subscribers()
         super().save(*args, **kwargs)
 
-class UnitImages(models.Model):
 
+class UnitImages(models.Model):
     """
     Unit Images model
     """
+
     name = models.CharField(max_length=1000, default=None, blank=True, null=True)
-    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='images', blank=False, null=True)
-    file = models.FileField(upload_to='', blank=False)
+    unit = models.ForeignKey(
+        Unit, on_delete=models.CASCADE, related_name="images", blank=False, null=True
+    )
+    file = models.FileField(upload_to="", blank=False)
 
     def __str__(self) -> str:
         return self.name if self.name else self.file.url
+
 
 class Subscription(models.Model):
     """
     Subscription model
     """
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='subscribers')
+    property = models.ForeignKey(
+        Property, on_delete=models.CASCADE, related_name="subscribers"
+    )
     subscribed_at = models.DateTimeField(auto_now_add=True)
 
-
     class Meta:
-        unique_together = ('user', 'property')
-    
+        unique_together = ("user", "property")
+
     def __str__(self):
         return f"{self.user.username} subscribed to {self.property.name}"
-
-
-
-
-
-
-
-    
-
-

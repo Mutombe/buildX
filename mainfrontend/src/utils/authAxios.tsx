@@ -4,7 +4,7 @@ axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 axios.defaults.withCredentials = true;
 
-export const api = axios.create({
+export const authAxios = axios.create({
   baseURL: "http://127.0.0.1:8000",
 
   headers: {
@@ -12,4 +12,4 @@ export const api = axios.create({
   },
 });
 
-export default api;
+export default authAxios;
