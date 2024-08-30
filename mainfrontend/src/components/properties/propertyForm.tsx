@@ -1,198 +1,170 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createProperty } from "../../redux/propertySlice";
-import { Form, Button, Modal, Spinner } from "react-bootstrap";
+import { uploadProperty } from "../../redux/propertySlice";
+import { Button, Form, Modal } from "react-bootstrap";
+import { fetchCategories } from "../../redux/categorySlice";
 import { useNavigate } from "react-router-dom";
+import useForm from "../../hooks/useForm";
+import useImages from "../../hooks/useImages";
 import UnitForm from "../units/unitForm";
+import { Alert } from "@mui/material";
 
-const PropertyForm = () => {
+const PropertyUploadForm = () => {
+
+  const initialPropertyData = { name: "", location: "", category: "" };
+  const [propertyId, setPropertyId] = useState(null);
+  const [showUnitModal, setShowUnitModal] = useState(false);
+  const [propertyCount, setPropertyCount] = useState(1);
+  const [unitCount, setUnitCount] = useState(1);
+
+  const { values: propertyData, handleChange, resetForm } = useForm(initialPropertyData);
+  const { images, handleImageChange, resetImages } = useImages();
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  //get category state
-  const { categories, loading, error } = useSelector(
-    (state) => state.categories
-  );
-
-  const [propertyData, setPropertyData] = useState({
-    name: "",
-    category: "",
-    location: "",
-    images: [],
-  });
-
-  //const [units, setUnits] = useState([]);
-  const [showUnitModal, setShowUnitModal] = useState(false);
-  const [isAddingAnother, setIsAddingAnother] = useState(false);
-  const [propertyCount, setPropertyCount] = useState(1);
-  const [unitCount, setUnitCount] = useState(1);
+  const { categories } = useSelector((state) => state.categories);
+  const { loading, error } = useSelector((state) => state.properties);
 
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (!isAddingAnother) {
-      // Reset form fields when adding another property
-      // Save the already added property and label how many have been added
-      setPropertyData({
-        name: "",
-        category: "",
-        location: "",
-        images: [],
-      });
-      //Increment the number of units added and display it
-      //setUnits([]);
-      setShowUnitModal(false);
-    }
-  }, [isAddingAnother]);
-
-  const handleChange = (e: any) => {
-    const { name, value } = e.target;
-    setPropertyData({ ...propertyData, [name]: value });
-  };
-
-  const handleImageChange = (e: any) => {
-    setPropertyData({ ...propertyData, images: e.target.files });
-  };
-
-  const handleUnitChange = (unitData: any) => {
-    setUnitCount(unitCount + 1);
-    //setUnits(unitData);
-  };
-
-  //Submitting data through redux state management -> createProperty API function -> the backend
-  //const handleSubmit = async (saveAndAddAnother = false) => {
-    //const response = await dispatch(createProperty({ ...propertyData, units }));
-
-    //if (response?.payload?.id) {
-      //if (saveAndAddAnother) {
-        //setIsAddingAnother(true);
-        //setPropertyCount(propertyCount + 1);
-      //} else {
-        //navigate("/dashboard");
-      //}
-    //}
-  //};
-
-  const handleSubmit = async (saveAndAddAnother = false) => {
-    const response = await dispatch(createProperty({ ...propertyData}));
-
-    if (response?.payload?.id) {
-      if (saveAndAddAnother) {
-        setIsAddingAnother(true);
-        setPropertyCount(propertyCount + 1);
-      } else {
-        navigate("/dashboard");
-      }
-    }
-  };
-
-  const handleAddUnitsClick = () => {
-    // Only show the unit modal if the category supports units
-    if (["House", "Commercial", "Shop"].includes(propertyData.category)) {
-      setShowUnitModal(true);
-    } else {
-      handleSubmit(false);
-    }
-  };
+  const supportsUnits = (category) =>
+    ["House", "Commercial", "Shop"].includes(category);
 
   const handleModalClose = () => {
     setShowUnitModal(false);
   };
 
-  if (loading) return <Spinner animation="border" />;
-  if (error) return <div>Error: {error}</div>;
+
+  const handleSubmit = async (e: React.FormEvent, saveAndAddAnother = false, saveAndAddUnit = false) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    Object.entries(propertyData).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+    images.forEach((image, i) => {
+      formData.append(`images[${i}]file`, image);
+    });
+
+    //const result = await dispatch(uploadProperty(formData)).unwrap();
+    try {
+      const result = await dispatch(uploadProperty(formData)).unwrap();
+      if (result.id) {
+        setPropertyId(result.id);
+        localStorage.setItem("propertyId", result.id);
+        if (saveAndAddAnother) {
+          setPropertyCount(propertyCount + 1)
+          resetForm();
+          resetImages();
+          console.log("Property ID", propertyId)
+        } else if (saveAndAddUnit) {
+            setShowUnitModal(true);
+        } else {
+          navigate("/dashboard");
+        }
+          
+        }
+    } catch (error) {
+      console.error("Failed to upload property:", error);
+    }
+  };
+
+  useEffect(() => {
+    console.log("Updated Property ID:", localStorage.getItem("propertyId"));
+    setPropertyId(localStorage.getItem("propertyId"));
+    console.log("Property ID", propertyId);
+  }, [localStorage]);
 
   return (
-    <div>
-      <h3>Add New Property</h3>
-      <h2>Adding Property {propertyCount}</h2>
-      <Form.Group>
-        <Form.Label>Property Name</Form.Label>
-        <Form.Control
-          type="text"
-          name="name"
-          value={propertyData.name}
-          onChange={handleChange}
-          required
-        />
-      </Form.Group>
-      <Form.Group>
-        <Form.Label>Category</Form.Label>
-        <Form.Control
-          as="select"
-          name="category"
-          value={propertyData.category}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Select Category</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.name}>
-              {category.name}
-            </option>
-          ))}
-        </Form.Control>
-      </Form.Group>
-      <Form.Group>
-        <Form.Label>Location</Form.Label>
-        <Form.Control
-          type="text"
-          name="location"
-          value={propertyData.location}
-          onChange={handleChange}
-          required
-        />
-      </Form.Group>
-      <Form.Group>
-        <Form.Label>Images</Form.Label>
-        <Form.Control
-          type="file"
-          name="images"
-          multiple
-          onChange={handleImageChange}
-        />
-      </Form.Group>
+    <>
+      <div>
+        <strong>Uploading property {propertyCount}</strong>
+        {error && (
+            <Alert>
+              {error}
+            </Alert>
+          )}
+        <Form.Group>
+          <Form.Label>Property Name</Form.Label>
+          <Form.Control
+            type="text"
+            name="name"
+            value={propertyData.name}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Category</Form.Label>
+          <Form.Control
+            as="select"
+            name="category"
+            value={propertyData.category}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Category</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.name}>
+                {category.name}
+              </option>
+            ))}
+          </Form.Control>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Location</Form.Label>
+          <Form.Control
+            type="text"
+            name="location"
+            value={propertyData.location}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Images</Form.Label>
+          <Form.Control
+            type="file"
+            name="images"
+            multiple
+            onChange={handleImageChange}
+          />
+        </Form.Group>
+        <hr></hr>
+      </div>
 
-      <Button onClick={() => handleSubmit(false)}>Save</Button>
-      <Button onClick={() => handleSubmit(true)}>Save & Add Another</Button>
-      <Button onClick={handleAddUnitsClick}>Add Units</Button>
+      <Button onClick={(e) => handleSubmit(e)}>
+        {loading ? "Uploading..." : "Save"}
+      </Button>
+
+      <Button onClick={(e) => handleSubmit(e, true, false)}>
+        {loading ? "Uploading..." : "Save & Add Another"}
+      </Button>
+
+      {supportsUnits(propertyData.category) && (
+        <Button onClick={(e) => handleSubmit(e, false, true)}> Save & Add Unit</Button>
+      )}
 
       <Modal show={showUnitModal} onHide={handleModalClose}>
         <Modal.Header closeButton>
           <Modal.Title>Add Units</Modal.Title>
-          <Modal.Title>Adding Unit {unitCount}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <UnitForm onUnitChange={handleUnitChange} />
+          <Modal.Title>
+          </Modal.Title>
+          <UnitForm propertyId={localStorage.getItem("propertyId")} />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleModalClose}>
             Close
           </Button>
-          <Button
-            variant="primary"
-            onClick={() => {
-              handleSubmit(false);
-              handleModalClose();
-            }}
-          >
-            Save & Close
-          </Button>
-          <Button
-            variant="primary"
-            onClick={() => {
-              handleSubmit(true);
-              handleModalClose();
-            }}
-          >
-            Save & Add Another Property
-          </Button>
         </Modal.Footer>
       </Modal>
-    </div>
+    </>
   );
 };
 
-export default PropertyForm;
+export default PropertyUploadForm;

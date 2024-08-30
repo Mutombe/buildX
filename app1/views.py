@@ -48,8 +48,9 @@ class PropertyListCreateView(generics.ListCreateAPIView):
 class PropertyDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Property.objects.all()
     serializer_class = PropertySerializer
-    authentication_classes = [TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+    
 
 class UnitListView(viewsets.ModelViewSet):
     queryset = Unit.objects.all()  

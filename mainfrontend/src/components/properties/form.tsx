@@ -1,4 +1,4 @@
-import PropertyUploadForm from "./pro2";
+import PropertyUploadForm from "./propertyForm";
 
 function AddPro() {
   return (

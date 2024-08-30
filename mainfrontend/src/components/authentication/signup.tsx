@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Form } from "react-bootstrap";
-import { Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import MainButton from "../button/button";
 import { userSignup } from "../../redux/authSlice";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import { Alert } from "@mui/material";
 
 const Signup = () => {
   const [username, setUsername] = useState("");
@@ -32,7 +32,7 @@ const Signup = () => {
     <>
       <>
         {error && (
-          <Alert variant="warning">
+          <Alert severity="warning">
             {error} <Link to="/login"> Login</Link>
           </Alert>
         )}

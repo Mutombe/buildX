@@ -11,12 +11,24 @@ export const addUnit = createAsyncThunk(
 
 const unitSlice = createSlice({
   name: "units",
-  initialState: [],
+  initialState: {
+    units: [],
+    loading: false,
+    error: null,
+  },
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(addUnit.fulfilled, (state, action) => {
-      state.push(action.payload);
-    });
+    builder
+      .addCase(addUnit.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(addUnit.fulfilled, (state, action) => {
+        state.units = action.payload;
+      })
+      .addCase(addUnit.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 

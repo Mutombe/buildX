@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Alert, Form } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import MainButton from "../button/button";
 import { useNavigate } from "react-router-dom";
 import { userLogin } from "../../redux/authSlice";
+import { Alert } from "@mui/material";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -27,11 +28,11 @@ const Login = () => {
   return (
     <>
       {success ? (
-        <Alert variant="success">Logged In</Alert>
+        <Alert severity="success">Logged In</Alert>
       ) : (
         <>
           {error && (
-            <Alert variant="warning">
+            <Alert severity="warning">
               {error} <Link to="/signup">Sign Up</Link>
             </Alert>
           )}

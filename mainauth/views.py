@@ -38,7 +38,7 @@ class UserLogin(APIView):
 
 class UserLogout(APIView):
     permission_classes = (permissions.IsAuthenticated,)
-    #authentication_classes = (TokenAuthentication,)
+    authentication_classes = (TokenAuthentication,)
 
     def post(self, request):
         logout(request)

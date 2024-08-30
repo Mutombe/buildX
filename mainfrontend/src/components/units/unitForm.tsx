@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUnit } from "../../redux/unitSlice";
 
 const UnitForm = ({ propertyId }) => {
-  //const { propertyId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [unitCount, setUnitCount] = useState(1);
@@ -34,7 +33,7 @@ const UnitForm = ({ propertyId }) => {
 
   const handleAddUnit = async () => {
     setUnitCount(unitCount + 1);
-    await dispatch(addUnit({ ...unitData, property_id: propertyId }));
+    await dispatch(addUnit({ property_id: propertyId, ...unitData,  }));
     navigate("/dashboard");
   };
 
@@ -55,6 +54,7 @@ const UnitForm = ({ propertyId }) => {
   return (
     <div>
       <Form.Group controlId="unitName">
+         <h4>Adding Unit <strong>{unitCount}</strong></h4>
         <Form.Label>Unit Name</Form.Label>
         <Form.Control
           type="text"
@@ -70,6 +70,7 @@ const UnitForm = ({ propertyId }) => {
             type="checkbox"
             name="kitchen"
             label="Kitchen"
+            required
             onChange={handleChange}
           />
           <Form.Check
@@ -84,18 +85,21 @@ const UnitForm = ({ propertyId }) => {
             type="checkbox"
             name="toilet"
             label="Toilet"
+            required
             onChange={handleChange}
           />
           <Form.Check
             type="checkbox"
             name="water"
             label="Water"
+            required
             onChange={handleChange}
           />
           <Form.Check
             type="checkbox"
             name="solar"
             label="Solar"
+            required
             onChange={handleChange}
           />
         </Col>
