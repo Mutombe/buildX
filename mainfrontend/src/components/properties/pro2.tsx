@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import UnitForm from "../units/unitForm";
 
 const PropertyUploadForm = () => {
-  const [propertyId, setPropertyId] = useState(null);
+  const [propertyId, setPropertyId] = useState(0);
   const [showUnitModal, setShowUnitModal] = useState(false);
   const [propertyCount, setPropertyCount] = useState(1);
   const [unitCount, setUnitCount] = useState(1);
@@ -15,7 +15,7 @@ const PropertyUploadForm = () => {
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [category, setCategory] = useState();
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState<File[]>([]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ const PropertyUploadForm = () => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     setImages([...e.target.files]);
   };
 
@@ -37,7 +37,7 @@ const PropertyUploadForm = () => {
     setShowUnitModal(false);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Creating FormData to send files along with property data
     const formData = new FormData();
@@ -50,15 +50,17 @@ const PropertyUploadForm = () => {
     });
 
     //if (["House", "Commercial", "Shop"].includes(category)) {
-     // setShowUnitModal(true);
-     // setUnitAdding(true);
+    // setShowUnitModal(true);
+    // setUnitAdding(true);
     //}
 
     const result = await dispatch(uploadProperty(formData)).unwrap();
-    setPropertyId(result?.payload?.id);
-    if (propertyId) {
+    
+    console.log("Uploaded Property ID", result.id);
+    if (result.id) {
       setPropertyCount(propertyCount + 1);
-      //console.log("Uploaded Property ID", propertyId)
+      setPropertyId(result.id);
+      console.log("Uploaded Property ID.. dash", propertyId);
       navigate("/dashboard");
     }
     //navigate("/dashboard");
@@ -77,12 +79,11 @@ const PropertyUploadForm = () => {
   };
 
   useEffect(() => {
-     if (["House", "Commercial", "Shop"].includes(category)) {
-    setUnitAdding(true);
-  } 
+    if (["House", "Commercial", "Shop"].includes(category)) {
+      setUnitAdding(true);
+    }
   }, [category, setUnitAdding]);
 
-  
   const handleAddUnitsClick = () => {
     setShowUnitModal(true);
   };
@@ -105,7 +106,7 @@ const PropertyUploadForm = () => {
 
   return (
     <>
-      <form>
+      <div>
         <Form.Group>
           <Form.Label>Property Name</Form.Label>
           <Form.Control
@@ -152,48 +153,31 @@ const PropertyUploadForm = () => {
             onChange={handleFileChange}
           />
         </Form.Group>
+        <hr></hr>
+      </div>
 
-        <Button onClick={handleSubmit}>
-          {loading ? "Uploading..." : "Upload Property"}
-        </Button>
+      <Button onClick={handleSubmit}>
+        {loading ? "Uploading..." : "Upload Property"}
+      </Button>
 
-        <Button onClick={() => handleSaveAndAddAnother}>
-          {loading ? "Uploading..." : "Save & Add Another"}
-        </Button>
-        {unitAdding && (
-          <Button onClick={() => handleAddUnitsClick()}>Add Unit</Button>
-        )}
-      </form>
+      <Button onClick={() => handleSaveAndAddAnother}>
+        {loading ? "Uploading..." : "Save & Add Another"}
+      </Button>
+      {unitAdding && (
+        <Button onClick={() => handleAddUnitsClick()}>Add Unit</Button>
+      )}
 
       <Modal show={showUnitModal} onHide={handleModalClose}>
         <Modal.Header closeButton>
           <Modal.Title>Add Units</Modal.Title>
-          <Modal.Title>Adding Unit {unitCount}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <UnitForm onUnitChange={handleUnitChange} />
+          <Modal.Title>Adding Unit <strong>{unitCount}</strong></Modal.Title>
+          <UnitForm />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleModalClose}>
             Close
-          </Button>
-          <Button
-            variant="primary"
-            onClick={() => {
-              handleSubmit(false);
-              handleModalClose();
-            }}
-          >
-            Save & Close
-          </Button>
-          <Button
-            variant="primary"
-            onClick={() => {
-              handleSubmit(true);
-              handleModalClose();
-            }}
-          >
-            Save & Add Another Unit
           </Button>
         </Modal.Footer>
       </Modal>
