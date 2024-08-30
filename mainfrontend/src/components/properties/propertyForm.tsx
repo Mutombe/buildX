@@ -10,20 +10,20 @@ import UnitForm from "../units/unitForm";
 import { Alert, Button, Stack } from "@mui/material";
 import AddHomeIcon from "@mui/icons-material/AddHome";
 import Badge from "@mui/material/Badge";
+import "../css/imagePreview.css";
 
 const PropertyUploadForm = () => {
   const initialPropertyData = { name: "", location: "", category: "" };
   const [propertyId, setPropertyId] = useState(null);
   const [showUnitModal, setShowUnitModal] = useState(false);
   const [propertyCount, setPropertyCount] = useState(1);
-  const [unitCount, setUnitCount] = useState(1);
 
   const {
     values: propertyData,
     handleChange,
     resetForm,
   } = useForm(initialPropertyData);
-  const { images, handleImageChange, resetImages } = useImages();
+  const { images, handleImageChange, resetImages, removeImage } = useImages();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -144,6 +144,17 @@ const PropertyUploadForm = () => {
             onChange={handleImageChange}
           />
         </Form.Group>
+        <br></br>
+        {/*<div className="image-previews">
+          {images.map((image, index) => (
+            <div key={index} className="image-preview">
+              <img src={image.preview} alt={`preview-${index}`} />
+              <button type="button" onClick={() => removeImage(index)}>
+                &times;
+              </button>
+            </div>
+          ))}
+        </div>*/}
       </div>
       <br></br>
       <Stack direction="row" spacing={1}>
@@ -183,7 +194,7 @@ const PropertyUploadForm = () => {
           <UnitForm propertyId={localStorage.getItem("propertyId")} />
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleModalClose}>
+          <Button onClick={handleModalClose}>
             Close
           </Button>
         </Modal.Footer>

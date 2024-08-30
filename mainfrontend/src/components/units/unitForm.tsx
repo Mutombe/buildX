@@ -26,7 +26,7 @@ const UnitForm = ({ propertyId }) => {
     handleChange,
     resetForm: resetUnitForm,
   } = useForm(initialUnitData);
-  const { images, handleImageChange, resetImages } = useImages();
+  const { images, handleImageChange, resetImages, removeImage } = useImages();
 
   const handleAddUnit = async () => {
     setUnitCount(unitCount + 1);
@@ -105,9 +105,19 @@ const UnitForm = ({ propertyId }) => {
           onChange={handleImageChange}
         />
       </Form.Group>
+
+      {/*<div className="image-previews">
+        {images.map((image, index) => (
+          <div key={index} className="image-preview">
+            <img src={image.preview} alt={`preview-${index}`} />
+            <button type="button" onClick={() => removeImage(index)}>
+              &times;
+            </button>
+          </div>
+        ))}
+      </div>*/}
       <br></br>
       <Stack direction="row" spacing={1}>
-        
         <Button
           variant="contained"
           onClick={() => {
