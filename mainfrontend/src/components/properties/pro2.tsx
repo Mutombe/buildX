@@ -4,28 +4,27 @@ import { uploadProperty } from "../../redux/propertySlice";
 import { Button, Form, Modal } from "react-bootstrap";
 import { fetchCategories } from "../../redux/categorySlice";
 import { useNavigate } from "react-router-dom";
+import useForm from "../../hooks/useForm";
+import useImages from "../../hooks/useImages";
 import UnitForm from "../units/unitForm";
+import { Alert } from "@mui/material";
 
 const PropertyUploadForm = () => {
-  const [propertyId, setPropertyId] = useState(0);
+
+  const initialPropertyData = { name: "", location: "", category: "" };
+  const [propertyId, setPropertyId] = useState(null);
   const [showUnitModal, setShowUnitModal] = useState(false);
   const [propertyCount, setPropertyCount] = useState(1);
   const [unitCount, setUnitCount] = useState(1);
-  const [images, setImages] = useState<File[]>([]);
 
-  const [propertyData, setPropertyData] = useState({
-    name: "",
-    location: "",
-    category: "",
-  });
+  const { values: propertyData, handleChange, resetForm } = useForm(initialPropertyData);
+  const { images, handleImageChange, resetImages } = useImages();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { categories } = useSelector((state) => state.categories);
-  const { user } = useSelector((state) => state.auth);
   const { loading, error } = useSelector((state) => state.properties);
-  console.log("Property Upload", user.id);
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -33,15 +32,6 @@ const PropertyUploadForm = () => {
 
   const supportsUnits = (category) =>
     ["House", "Commercial", "Shop"].includes(category);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setPropertyData({ ...propertyData, [name]: value });
-  };
-
-  const handleFileChange = (e, setter) => {
-    setter([...e.target.files]);
-  };
 
   const handleModalClose = () => {
     setShowUnitModal(false);
@@ -58,19 +48,22 @@ const PropertyUploadForm = () => {
       formData.append(`images[${i}]file`, image);
     });
 
-    const result = await dispatch(uploadProperty(formData)).unwrap();
-
-    console.log("Uploaded Property ID", result.id);
-    if (result.id) {
-      setPropertyCount(propertyCount + 1);
-      setPropertyId(result.id);
-      if (saveAndAddAnother) {
-        setPropertyData({ name: "", location: "", category: "" });
-        setImages([]);
-      } else {
-        navigate("/dashboard");
-       }
-      console.log("Uploaded Property ID.. dash", propertyId); 
+    //const result = await dispatch(uploadProperty(formData)).unwrap();
+    try {
+      const result = await dispatch(uploadProperty(formData)).unwrap();
+      if (result.id) {
+        setPropertyId(result.id);
+        if (saveAndAddAnother) {
+          setPropertyCount(propertyCount + 1)
+          resetForm();
+          resetImages();
+          console.log("Property ID", propertyId)
+        } else {
+          navigate("/dashboard");
+        }
+      }
+    } catch (error) {
+      console.error("Failed to upload property:", error);
     }
   };
 
@@ -79,13 +72,18 @@ const PropertyUploadForm = () => {
     <>
       <div>
         <strong>Uploading property {propertyCount}</strong>
+        {error && (
+            <Alert>
+              {error}
+            </Alert>
+          )}
         <Form.Group>
           <Form.Label>Property Name</Form.Label>
           <Form.Control
             type="text"
             name="name"
             value={propertyData.name}
-            onChange={handleInputChange}
+            onChange={handleChange}
             required
           />
         </Form.Group>
@@ -95,7 +93,7 @@ const PropertyUploadForm = () => {
             as="select"
             name="category"
             value={propertyData.category}
-            onChange={handleInputChange}
+            onChange={handleChange}
             required
           >
             <option value="">Select Category</option>
@@ -112,7 +110,7 @@ const PropertyUploadForm = () => {
             type="text"
             name="location"
             value={propertyData.location}
-            onChange={handleInputChange}
+            onChange={handleChange}
             required
           />
         </Form.Group>
@@ -122,14 +120,14 @@ const PropertyUploadForm = () => {
             type="file"
             name="images"
             multiple
-            onChange={(e) => handleFileChange(e, setImages)}
+            onChange={handleImageChange}
           />
         </Form.Group>
         <hr></hr>
       </div>
 
       <Button onClick={(e) => handleSubmit(e)}>
-        {loading ? "Uploading..." : "Upload Property"}
+        {loading ? "Uploading..." : "Save"}
       </Button>
 
       <Button onClick={(e) => handleSubmit(e, true)}>
@@ -137,7 +135,7 @@ const PropertyUploadForm = () => {
       </Button>
 
       {supportsUnits(propertyData.category) && (
-        <Button onClick={() => setShowUnitModal(true)}>Add Unit</Button>
+        <Button onClick={() => setShowUnitModal(true)}> Save & Add Unit</Button>
       )}
 
       <Modal show={showUnitModal} onHide={handleModalClose}>
