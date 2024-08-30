@@ -4,8 +4,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUnit } from "../../redux/unitSlice";
 
-const UnitForm = () => {
-  const { propertyId } = useParams();
+const UnitForm = ({ propertyId }) => {
+  //const { propertyId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [unitCount, setUnitCount] = useState(1);
