@@ -1,60 +1,52 @@
 import { useState } from "react";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import { Form, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUnit } from "../../redux/unitSlice";
+import useForm from "../../hooks/useForm";
+import useImages from "../../hooks/useImages";
+import { Button, Stack } from "@mui/material";
 
 const UnitForm = ({ propertyId }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [unitCount, setUnitCount] = useState(1);
 
-  const [unitData, setUnitData] = useState({
+  const initialUnitData = {
     name: "",
     kitchen: false,
     bathroom: false,
     toilet: false,
     water: false,
     solar: false,
-    images: [],
-  });
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setUnitData({
-      ...unitData,
-      [name]: type === "checkbox" ? checked : value,
-    });
   };
 
-  const handleImageChange = (e) => {
-    setUnitData({ ...unitData, images: e.target.files });
-  };
+  const {
+    values: unitData,
+    handleChange,
+    resetForm: resetUnitForm,
+  } = useForm(initialUnitData);
+  const { images, handleImageChange, resetImages } = useImages();
 
   const handleAddUnit = async () => {
     setUnitCount(unitCount + 1);
-    await dispatch(addUnit({ property_id: propertyId, ...unitData,  }));
+    await dispatch(addUnit({ property_id: propertyId, ...unitData, images }));
     navigate("/dashboard");
   };
 
   const handleSaveAndAddAnother = async () => {
     await dispatch(addUnit({ ...unitData, property_id: propertyId }));
     setUnitCount(unitCount + 1);
-    setUnitData({
-      name: "",
-      kitchen: false,
-      bathroom: false,
-      toilet: false,
-      water: false,
-      solar: false,
-      images: [],
-    });
+    resetUnitForm();
+    resetImages();
   };
 
   return (
     <div>
       <Form.Group controlId="unitName">
-         <h4>Adding Unit <strong>{unitCount}</strong></h4>
+        <h4>
+          Adding Unit <strong>{unitCount}</strong>
+        </h4>
         <Form.Label>Unit Name</Form.Label>
         <Form.Control
           type="text"
@@ -113,22 +105,26 @@ const UnitForm = ({ propertyId }) => {
           onChange={handleImageChange}
         />
       </Form.Group>
-      <Button
-        variant="primary"
-        onClick={() => {
-          handleAddUnit();
-        }}
-      >
-        Save & Close
-      </Button>
-      <Button
-        variant="primary"
-        onClick={() => {
-          handleSaveAndAddAnother();
-        }}
-      >
-        Save & Add Another Unit
-      </Button>
+      <br></br>
+      <Stack direction="row" spacing={1}>
+        
+        <Button
+          variant="contained"
+          onClick={() => {
+            handleAddUnit();
+          }}
+        >
+          Save & Close
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() => {
+            handleSaveAndAddAnother();
+          }}
+        >
+          Save & Add Another Unit
+        </Button>
+      </Stack>
     </div>
   );
 };

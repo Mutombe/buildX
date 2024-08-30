@@ -1,12 +1,11 @@
 import PropertyUploadForm from "./propertyForm";
 
-function AddPro() {
+function AddProperty() {
   return (
     <div className="App">
-      <h1>Upload a New Property</h1>
       <PropertyUploadForm />
     </div>
   );
 }
 
-export default AddPro;
+export default AddProperty;

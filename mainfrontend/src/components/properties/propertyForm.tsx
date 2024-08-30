@@ -1,23 +1,28 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { uploadProperty } from "../../redux/propertySlice";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Form, Modal } from "react-bootstrap";
 import { fetchCategories } from "../../redux/categorySlice";
 import { useNavigate } from "react-router-dom";
 import useForm from "../../hooks/useForm";
 import useImages from "../../hooks/useImages";
 import UnitForm from "../units/unitForm";
-import { Alert } from "@mui/material";
+import { Alert, Button, Stack } from "@mui/material";
+import AddHomeIcon from "@mui/icons-material/AddHome";
+import Badge from "@mui/material/Badge";
 
 const PropertyUploadForm = () => {
-
   const initialPropertyData = { name: "", location: "", category: "" };
   const [propertyId, setPropertyId] = useState(null);
   const [showUnitModal, setShowUnitModal] = useState(false);
   const [propertyCount, setPropertyCount] = useState(1);
   const [unitCount, setUnitCount] = useState(1);
 
-  const { values: propertyData, handleChange, resetForm } = useForm(initialPropertyData);
+  const {
+    values: propertyData,
+    handleChange,
+    resetForm,
+  } = useForm(initialPropertyData);
   const { images, handleImageChange, resetImages } = useImages();
 
   const dispatch = useDispatch();
@@ -37,8 +42,11 @@ const PropertyUploadForm = () => {
     setShowUnitModal(false);
   };
 
-
-  const handleSubmit = async (e: React.FormEvent, saveAndAddAnother = false, saveAndAddUnit = false) => {
+  const handleSubmit = async (
+    e: React.FormEvent,
+    saveAndAddAnother = false,
+    saveAndAddUnit = false
+  ) => {
     e.preventDefault();
 
     const formData = new FormData();
@@ -56,17 +64,16 @@ const PropertyUploadForm = () => {
         setPropertyId(result.id);
         localStorage.setItem("propertyId", result.id);
         if (saveAndAddAnother) {
-          setPropertyCount(propertyCount + 1)
+          setPropertyCount(propertyCount + 1);
           resetForm();
           resetImages();
-          console.log("Property ID", propertyId)
+          console.log("Property ID", propertyId);
         } else if (saveAndAddUnit) {
-            setShowUnitModal(true);
+          setShowUnitModal(true);
         } else {
           navigate("/dashboard");
         }
-          
-        }
+      }
     } catch (error) {
       console.error("Failed to upload property:", error);
     }
@@ -81,12 +88,16 @@ const PropertyUploadForm = () => {
   return (
     <>
       <div>
-        <strong>Uploading property {propertyCount}</strong>
-        {error && (
-            <Alert>
-              {error}
-            </Alert>
-          )}
+        <br></br>
+        <strong>
+          Uploading Property
+          <Badge badgeContent={propertyCount} color="primary">
+            <AddHomeIcon />
+          </Badge>
+        </strong>
+        <br></br>
+        <br></br>
+        {error && <Alert>{error}</Alert>}
         <Form.Group>
           <Form.Label>Property Name</Form.Label>
           <Form.Control
@@ -133,28 +144,42 @@ const PropertyUploadForm = () => {
             onChange={handleImageChange}
           />
         </Form.Group>
-        <hr></hr>
       </div>
+      <br></br>
+      <Stack direction="row" spacing={1}>
+        <Button
+          onClick={(e) => handleSubmit(e)}
+          variant="contained"
+          size="small"
+        >
+          {loading ? "Uploading..." : "Save"}
+        </Button>
 
-      <Button onClick={(e) => handleSubmit(e)}>
-        {loading ? "Uploading..." : "Save"}
-      </Button>
+        <Button
+          onClick={(e) => handleSubmit(e, true, false)}
+          variant="contained"
+          size="small"
+        >
+          {loading ? "Uploading..." : "Save & Add Another"}
+        </Button>
 
-      <Button onClick={(e) => handleSubmit(e, true, false)}>
-        {loading ? "Uploading..." : "Save & Add Another"}
-      </Button>
-
-      {supportsUnits(propertyData.category) && (
-        <Button onClick={(e) => handleSubmit(e, false, true)}> Save & Add Unit</Button>
-      )}
+        {supportsUnits(propertyData.category) && (
+          <Button
+            onClick={(e) => handleSubmit(e, false, true)}
+            variant="contained"
+            size="small"
+          >
+            Save & Add Unit
+          </Button>
+        )}
+      </Stack>
 
       <Modal show={showUnitModal} onHide={handleModalClose}>
         <Modal.Header closeButton>
           <Modal.Title>Add Units</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Modal.Title>
-          </Modal.Title>
+          <Modal.Title></Modal.Title>
           <UnitForm propertyId={localStorage.getItem("propertyId")} />
         </Modal.Body>
         <Modal.Footer>
