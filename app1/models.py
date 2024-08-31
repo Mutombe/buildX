@@ -90,7 +90,7 @@ class Unit(models.Model):
 
     name = models.CharField(max_length=100, blank=True)
     unit_property = models.ForeignKey(
-        Property, null=True, on_delete=models.SET_NULL, related_name="units", blank=True
+        Property, on_delete=models.SET_NULL, related_name="units", blank=True,  null=True
     )
     kitchen = models.BooleanField(default=False)
     bathroom = models.BooleanField(default=False)
@@ -107,10 +107,10 @@ class Unit(models.Model):
     def location(self):
         return self.unit_property.location
 
-    def save(self, *args, **kwargs):
-        if not self.occupied:
-            self.unit_property.notify_subscribers()
-        super().save(*args, **kwargs)
+    #def save(self, *args, **kwargs):
+     #   if not self.occupied:
+     #       self.unit_property.notify_subscribers()
+     #   super().save(*args, **kwargs)
 
 
 class UnitImages(models.Model):

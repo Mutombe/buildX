@@ -18,15 +18,15 @@ const PropertyUploadForm = () => {
   const [showUnitModal, setShowUnitModal] = useState(false);
   const [propertyCount, setPropertyCount] = useState(1);
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const {
     values: propertyData,
     handleChange,
     resetForm,
   } = useForm(initialPropertyData);
   const { images, handleImageChange, resetImages, removeImage } = useImages();
-
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const { categories } = useSelector((state) => state.categories);
   const { loading, error } = useSelector((state) => state.properties);
@@ -57,7 +57,6 @@ const PropertyUploadForm = () => {
       formData.append(`images[${i}]file`, image);
     });
 
-    //const result = await dispatch(uploadProperty(formData)).unwrap();
     try {
       const result = await dispatch(uploadProperty(formData)).unwrap();
       if (result.id) {

@@ -8,10 +8,6 @@ import useImages from "../../hooks/useImages";
 import { Button, Stack } from "@mui/material";
 
 const UnitForm = ({ propertyId }) => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [unitCount, setUnitCount] = useState(1);
-
   const initialUnitData = {
     name: "",
     kitchen: false,
@@ -21,6 +17,10 @@ const UnitForm = ({ propertyId }) => {
     solar: false,
   };
 
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [unitCount, setUnitCount] = useState(1);
+
   const {
     values: unitData,
     handleChange,
@@ -28,17 +28,29 @@ const UnitForm = ({ propertyId }) => {
   } = useForm(initialUnitData);
   const { images, handleImageChange, resetImages, removeImage } = useImages();
 
-  const handleAddUnit = async () => {
-    setUnitCount(unitCount + 1);
-    await dispatch(addUnit({ property_id: propertyId, ...unitData, images }));
-    navigate("/dashboard");
-  };
+  const handleAddUnit = async (
+    e: React.FormEvent,
+    saveAndAddAnother = false
+  ) => {
+    e.preventDefault();
 
-  const handleSaveAndAddAnother = async () => {
-    await dispatch(addUnit({ ...unitData, property_id: propertyId }));
-    setUnitCount(unitCount + 1);
-    resetUnitForm();
-    resetImages();
+    const formData = new FormData();
+    Object.entries(unitData).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+    images.forEach((image, i) => {
+      formData.append(`images[${i}]file`, image);
+    });
+
+    await dispatch(addUnit({ property_id: propertyId, formData }));
+
+    if (saveAndAddAnother) {
+      setUnitCount(unitCount + 1);
+      resetUnitForm();
+      resetImages();
+    } else {
+      navigate("/dashboard");
+    }
   };
 
   return (
@@ -120,16 +132,16 @@ const UnitForm = ({ propertyId }) => {
       <Stack direction="row" spacing={1}>
         <Button
           variant="contained"
-          onClick={() => {
-            handleAddUnit();
+          onClick={(e) => {
+            handleAddUnit(e, false);
           }}
         >
           Save & Close
         </Button>
         <Button
           variant="contained"
-          onClick={() => {
-            handleSaveAndAddAnother();
+          onClick={(e) => {
+            handleAddUnit(e, true);
           }}
         >
           Save & Add Another Unit
