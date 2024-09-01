@@ -44,7 +44,7 @@ const unitSlice = createSlice({
       })
       .addCase(addUnit.fulfilled, (state, action) => {
         state.unit = action.payload;
-        console.log("Uploaded Unit", state.unit)
+        console.log("Uploaded Unit", action.payload)
       })
       .addCase(addUnit.rejected, (state, action) => {
         state.loading = false;

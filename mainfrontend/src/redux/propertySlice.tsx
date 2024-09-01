@@ -148,6 +148,7 @@ const propertySlice = createSlice({
         state.loading = false;
         state.success = true;
         state.userProperties = action.payload;
+        console.log("User Properties", action.payload)
       })
       .addCase(fetchUserProperties.rejected, (state, action) => {
         state.loading = false;

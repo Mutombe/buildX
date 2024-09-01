@@ -1,97 +1,88 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import Box from "@mui/material/Box";
+import RestoreIcon from "@mui/icons-material/Restore";
+import TimelineIcon from "@mui/icons-material/Timeline";
+import HomeIcon from "@mui/icons-material/Home";
+import { useTheme } from "@mui/material/styles";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import { ReactNode, SyntheticEvent, useState } from "react";
+import { Typography } from "@mui/material";
 
+interface TabPanelProps {
+  children?: ReactNode;
+  dir?: string;
+  index: number;
+  value: number;
+}
 
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import BottomNavigation from '@mui/material/BottomNavigation';
-import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import RestoreIcon from '@mui/icons-material/Restore';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-
-export default function SimpleBottomNavigation() {
-  const [value, setValue] = React.useState(0);
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
 
   return (
-    <Box sx={{ width: 500 }}>
-      <BottomNavigation
-        showLabels
-        value={value}
-        onChange={(event, newValue) => {
-          setValue(newValue);
-        }}
-      >
-        <BottomNavigationAction label="Booking History" icon={<RestoreIcon />} />
-        <BottomNavigationAction label="Analytics" icon={<FavoriteIcon />} />
-        <BottomNavigationAction label="Locations" icon={<LocationOnIcon />} />
-      </BottomNavigation>
-    </Box>
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`full-width-tabpanel-${index}`}
+      aria-labelledby={`full-width-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
   );
 }
 
+function a11yProps(index: number) {
+  return {
+    id: `full-width-tab-${index}`,
+    "aria-controls": `full-width-tabpanel-${index}`,
+  };
+}
 
-const columns: GridColDef<(typeof rows)[number]>[] = [
-  { field: 'id', headerName: 'ID', width: 90 },
-  {
-    field: 'firstName',
-    headerName: 'First name',
-    width: 150,
-    editable: true,
-  },
-  {
-    field: 'lastName',
-    headerName: 'Last name',
-    width: 150,
-    editable: true,
-  },
-  {
-    field: 'age',
-    headerName: 'Age',
-    type: 'number',
-    width: 110,
-    editable: true,
-  },
-  {
-    field: 'fullName',
-    headerName: 'Full name',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 160,
-    valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
-  },
-];
+export default function FullWidthTabs() {
+  const theme = useTheme();
+  const [value, setValue] = useState(0);
 
-const rows = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 14 },
-  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 31 },
-  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 31 },
-  { id: 4, lastName: 'Stark', firstName: 'Arya', age: 11 },
-  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-  { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-  { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-  { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-];
+  const handleChange = (event: SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
 
-export default function DataGridDemo() {
   return (
-    <Box sx={{ height: 400, width: '100%' }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5,
-            },
-          },
-        }}
-        pageSizeOptions={[5]}
-        checkboxSelection
-        disableRowSelectionOnClick
-      />
-    </Box>
+    <>
+      <br></br>
+      <Box sx={{ maxWidth: { xs: 320, sm: 480 }, bgcolor: "background.paper" }}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          textColor="inherit"
+          variant="fullWidth"
+          aria-label="full width tabs example"
+        >
+          <Tab label="Properties" {...a11yProps(0)} icon={<HomeIcon color="primary" />} />
+          <Tab label="Analytics" {...a11yProps(1)} icon={<TimelineIcon color="primary" />} />
+          <Tab
+            label="History"
+            {...a11yProps(2)}
+            icon={<RestoreIcon color="primary"/>}
+          />
+        </Tabs>
+
+        <TabPanel value={value} index={0} dir={theme.direction}>
+          <small>My Properties</small>
+          <Typography variant="h6" gutterBottom>
+            h6. Heading
+          </Typography>
+        </TabPanel>
+        <TabPanel value={value} index={1} dir={theme.direction}>
+          <small>Analytics</small>
+        </TabPanel>
+        <TabPanel value={value} index={2} dir={theme.direction}>
+          <small>Booking History</small>
+        </TabPanel>
+      </Box>
+    </>
   );
 }

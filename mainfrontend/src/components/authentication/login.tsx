@@ -2,10 +2,9 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import MainButton from "../button/button";
 import { useNavigate } from "react-router-dom";
 import { userLogin } from "../../redux/authSlice";
-import { Alert } from "@mui/material";
+import { Alert, Button } from "@mui/material";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -27,46 +26,39 @@ const Login = () => {
 
   return (
     <>
-      {success ? (
-        <Alert severity="success">Logged In</Alert>
-      ) : (
-        <>
-          {error && (
-            <Alert severity="warning">
-              {error} <Link to="/signup">Sign Up</Link>
-            </Alert>
-          )}
-          <Form onSubmit={handleLogin}>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Username</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter Username"
-                value={username}
-                required
-                onChange={(e) => setUsername(e.target.value)}
-              />
-              <Form.Text className="text-muted"></Form.Text>
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Password"
-                value={password}
-                required
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </Form.Group>
-            <MainButton
-              variant="primary"
-              type="submit"
-              text={loading ? "Loading..." : "Login"}
-              onClick={handleLogin}
+      <>
+        {error && (
+          <Alert severity="warning">
+            {error} <Link to="/signup">Sign Up</Link>
+          </Alert>
+        )}
+        <Form onSubmit={handleLogin}>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>Username</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter Username"
+              value={username}
+              required
+              onChange={(e) => setUsername(e.target.value)}
             />
-          </Form>
-        </>
-      )}
+            <Form.Text className="text-muted"></Form.Text>
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type="password"
+              placeholder="Password"
+              value={password}
+              required
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </Form.Group>
+          <Button onClick={handleLogin}>
+            {loading ? "Loading..." : "Login"}
+          </Button>
+        </Form>
+      </>
     </>
   );
 };

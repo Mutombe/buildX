@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import MainButton from "../button/button";
 import { userSignup } from "../../redux/authSlice";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { Alert } from "@mui/material";
+import { Alert, Button } from "@mui/material";
 
 const Signup = () => {
   const [username, setUsername] = useState("");
@@ -21,9 +20,8 @@ const Signup = () => {
     dispatch(userSignup({ username, email, password })).then((result: any) => {
       if (result.meta.requestStatus === "fulfilled") {
         navigate("/");
-      }
-      else if (result.meta.requestStatus === "rejected") {
-        console.log("SignUp Display", error)
+      } else if (result.meta.requestStatus === "rejected") {
+        console.log("SignUp Display", error);
       }
     });
   };
@@ -72,12 +70,9 @@ const Signup = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </Form.Group>
-          <MainButton
-            variant="primary"
-            type="submit"
-            text={loading ? "Loading..." : "Register"}
-            onClick={handleSignup}
-          />
+          <Button onClick={handleSignup}>
+            {loading ? "Loading..." : "Register"}
+          </Button>
         </Form>
       </>
     </>

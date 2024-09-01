@@ -17,7 +17,7 @@ router.register(r'property', views.PropertyView, 'property')
 router.register(r'subscriptions', SubscriptionViewSet)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls), 
     path('', include(router.urls)),
     path('categories/', CategoryListView.as_view(), name='category-list'),
     path('list', ListProperties.as_view(), name='list-properties'),

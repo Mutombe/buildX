@@ -1,4 +1,3 @@
-// useImages.js
 import { useState } from "react";
 
 const useImages = () => {

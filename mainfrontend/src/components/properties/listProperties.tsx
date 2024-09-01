@@ -5,7 +5,6 @@ import PropertyCard from "./propertyCard";
 import { Col, Row, Container } from "react-bootstrap";
 import "./properties.css";
 import "../css/listProperties.css";
-import Form from "./details";
 
 function PropertyList() {
   const dispatch = useDispatch();
@@ -39,7 +38,6 @@ function PropertyList() {
     <Container className="properties">
       <Row className="g-4">
         {content}
-      <Form/>
       </Row>
     </Container>
   );
