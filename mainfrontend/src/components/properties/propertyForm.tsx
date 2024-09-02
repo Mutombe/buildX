@@ -56,9 +56,11 @@ const PropertyUploadForm = () => {
     images.forEach((image, i) => {
       formData.append(`images[${i}]file`, image);
     });
+    
 
     try {
       const result = await dispatch(uploadProperty(formData)).unwrap();
+      console.log("Property result", result)
       if (result.id) {
         setPropertyId(result.id);
         localStorage.setItem("propertyId", result.id);

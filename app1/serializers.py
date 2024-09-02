@@ -22,7 +22,7 @@ class PropertyImageSerializer(serializers.ModelSerializer):
 
 class UnitSerializer(serializers.ModelSerializer):
     images = UnitImageSerializer(many=True, required=False)
-
+    
     class Meta:
         model = Unit
         fields = [  

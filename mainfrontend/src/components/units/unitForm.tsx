@@ -11,7 +11,7 @@ import ExtensionIcon from "@mui/icons-material/Extension";
 const UnitForm = ({ propertyId }) => {
   const initialUnitData = {
     name: "",
-    kitchen: false,
+    kitchen: true,
     bathroom: false,
     toilet: false,
     water: false,
@@ -22,11 +22,8 @@ const UnitForm = ({ propertyId }) => {
   const dispatch = useDispatch();
   const [unitCount, setUnitCount] = useState(1);
 
-  const {
-    values: unitData,
-    handleChange,
-    resetForm: resetUnitForm,
-  } = useForm(initialUnitData);
+  const { values: unitData, handleChange, resetForm: resetUnitForm } = useForm(initialUnitData);
+
   const { images, handleImageChange, resetImages, removeImage } = useImages();
 
   const handleAddUnit = async (
@@ -43,11 +40,13 @@ const UnitForm = ({ propertyId }) => {
       formData.append(`images[${i}]file`, image);
     });
 
-    await dispatch(addUnit({ property_id: propertyId, formData }));
+    console.log("Unit form data", formData.getAll("images"));
+
+    await dispatch(addUnit({property_id: propertyId, formData}));
 
     if (saveAndAddAnother) {
       setUnitCount(unitCount + 1);
-      resetUnitForm();
+      resetUnitForm(); 
       resetImages();
     } else {
       navigate("/dashboard");

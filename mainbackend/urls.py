@@ -23,7 +23,7 @@ urlpatterns = [
     path('list', ListProperties.as_view(), name='list-properties'),
     path('properties/', PropertyListCreateView.as_view(), name='property-list-create'),
     path('properties/<int:pk>/', PropertyDetailView.as_view(), name='property-detail'),
-    path('properties/<int:property_id>/units/', UnitListCreateView.as_view(), name='unit-list-create'),
+    path('property/<int:property_id>/units/', UnitListCreateView.as_view(), name='unit-list-create'),
     path('units/<int:pk>/', UnitDetailView.as_view(), name='unit-detail'),
     path('units/', UnitListCreateView.as_view(), name='units'),
     path('uploads/', UserPropertiesView.as_view()),

@@ -7,6 +7,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { ReactNode, SyntheticEvent, useState } from "react";
 import { Typography } from "@mui/material";
+import { useSelector } from "react-redux";
 
 interface TabPanelProps {
   children?: ReactNode;
@@ -45,6 +46,8 @@ function a11yProps(index: number) {
 export default function FullWidthTabs() {
   const theme = useTheme();
   const [value, setValue] = useState(0);
+  const userProperties = useSelector((state) => state.properties.userProperties);
+  console.log("User's Properties", userProperties)
 
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -53,7 +56,7 @@ export default function FullWidthTabs() {
   return (
     <>
       <br></br>
-      <Box sx={{ maxWidth: { xs: 320, sm: 480 }, bgcolor: "background.paper" }}>
+      <Box sx={{ maxWidth: { xs: 320, sm: 580 }, bgcolor: "background.paper" }}>
         <Tabs
           value={value}
           onChange={handleChange}
@@ -73,7 +76,7 @@ export default function FullWidthTabs() {
         <TabPanel value={value} index={0} dir={theme.direction}>
           <small>My Properties</small>
           <Typography variant="h6" gutterBottom>
-            h6. Heading
+            All my properties
           </Typography>
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>

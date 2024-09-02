@@ -3,12 +3,14 @@ import authAxios from "../utils/authAxios";
 
 export const addUnit = createAsyncThunk(
   "units/addUnit",
-  async ({ property_id, ...unitData }) => {
+  async ({ property_id, formData }) => {
     try {
       const response = await authAxios.post(
-        `/properties/${property_id}/units/`,
-        unitData,
+        `/property/${property_id}/units/`,
+        formData,
       );
+      console.log("Unit data and Property ID", formData, property_id)
+      console.log("Response.data", response.data);
       return response.data;
     } catch (error: any) {
       if (error.response) {
@@ -43,7 +45,7 @@ const unitSlice = createSlice({
         state.loading = true;
       })
       .addCase(addUnit.fulfilled, (state, action) => {
-        state.unit = action.payload;
+        state.unit.push(action.payload);
         console.log("Uploaded Unit", action.payload)
       })
       .addCase(addUnit.rejected, (state, action) => {
