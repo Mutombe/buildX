@@ -7,7 +7,8 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { ReactNode, SyntheticEvent, useState } from "react";
 import { Typography } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteProperty } from "../../redux/propertySlice";
 
 interface TabPanelProps {
   children?: ReactNode;
@@ -47,10 +48,15 @@ export default function FullWidthTabs() {
   const theme = useTheme();
   const [value, setValue] = useState(0);
   const userProperties = useSelector((state) => state.properties.userProperties);
+  const dispatch = useDispatch()
   console.log("User's Properties", userProperties)
 
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
+  };
+
+  const handleDelete = (id) => {
+    dispatch(deleteProperty(id));
   };
 
   return (
