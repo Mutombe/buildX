@@ -22,7 +22,11 @@ const UnitForm = ({ propertyId }) => {
   const dispatch = useDispatch();
   const [unitCount, setUnitCount] = useState(1);
 
-  const { values: unitData, handleChange, resetForm: resetUnitForm } = useForm(initialUnitData);
+  const {
+    values: unitData,
+    handleChange,
+    resetForm: resetUnitForm,
+  } = useForm(initialUnitData);
 
   const { images, handleImageChange, resetImages, removeImage } = useImages();
 
@@ -42,11 +46,11 @@ const UnitForm = ({ propertyId }) => {
 
     console.log("Unit form data", formData.getAll("images"));
 
-    await dispatch(addUnit({property_id: propertyId, formData}));
+    await dispatch(addUnit({ property_id: propertyId, formData }));
 
     if (saveAndAddAnother) {
       setUnitCount(unitCount + 1);
-      resetUnitForm(); 
+      resetUnitForm();
       resetImages();
     } else {
       navigate("/dashboard");

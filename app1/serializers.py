@@ -28,6 +28,7 @@ class UnitSerializer(serializers.ModelSerializer):
         fields = [  
             "id",
             "name",
+            "unit_property",
             "images",
             "kitchen",
             "bathroom",
