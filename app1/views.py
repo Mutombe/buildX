@@ -122,3 +122,14 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
         if user is not None:
             queryset = queryset.filter(user=user)
         return queryset
+    
+class SubscriptionListCreateCreateView(generics.ListCreateAPIView):
+    queryset = Subscription.objects.all()
+    serializer_class = SubscriptionSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class SubscriptionDetailView(generics.RetrieveDestroyAPIView):
+    queryset = Subscription.objects.all()
+    serializer_class = SubscriptionSerializer
