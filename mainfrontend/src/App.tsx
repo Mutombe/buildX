@@ -2,13 +2,20 @@ import MainNavBar from "./components/navbar/nav";
 import Login from "./components/authentication/login";
 import Signup from "./components/authentication/signup";
 import Dashboard from "./components/dashboard/dashboard";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import WelcomeAlert from "./components/main-page/mainpage";
 import PropertyList from "./components/properties/listProperties";
 import AddPro from "./components/properties/form";
 import UnitList from "./components/units/list_units";
 import "./App.css";
+import { useSelector } from "react-redux";
 
+const PrivateRoute = ({ children }) => {
+  const navigate = useNavigate();
+  const token = useSelector((state) => state.auth.token);
+
+  return token ? children : navigate("/login");
+};
 
 function App() {
   return (
@@ -26,7 +33,10 @@ function App() {
               path="/properties/:propertyId/units"
               element={<UnitList />}
             />
-            <Route path="/postProperty" element={<AddPro />} />
+            <PrivateRoute>
+              <Route path="/postProperty" element={<AddPro />} />
+            </PrivateRoute>
+
             <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
         </BrowserRouter>
