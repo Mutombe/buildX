@@ -63,7 +63,7 @@ class UnitListCreateView(generics.ListCreateAPIView):
     def get_queryset(self):
         property_id = self.kwargs.get('property_id')
         if property_id:
-            return Unit.objects.filter(unit_property_id=property_id)
+            return Unit.objects.filter(unit_property__id=property_id)
         return super().get_queryset()
 
 class ListProperties(APIView):

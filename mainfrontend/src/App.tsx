@@ -33,13 +33,13 @@ function App() {
               path="/properties/:propertyId/units"
               element={<UnitList />}
             />
-            <PrivateRoute>
+
               <Route path="/postProperty" element={<AddPro />} />
-            </PrivateRoute>
+
 
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/manage-bookings" element={<ManageBookings />} />
-            <Route path="/booking-status/:id" element={<BookingStatus />} />
+            {/*<Route path="/manage-bookings" element={<ManageBookings />} />
+            <Route path="/booking-status/:id" element={<BookingStatus />} />*/}
           </Routes>
         </BrowserRouter>
       </div>
