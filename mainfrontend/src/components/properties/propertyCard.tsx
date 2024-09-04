@@ -66,6 +66,10 @@ const PropertyCard = ({ property }) => {
               <>
                 <small>
                   Booked<strong> {property.booked_count}</strong> times{" "}
+                  </small>
+                  <small>
+                    <><br /></>
+                  <strong> {property.category}</strong>
                 </small>
                 <Button
                   variant="outlined"

@@ -25,6 +25,7 @@ function PropertyList() {
 
   const handleCategoryChange = async (event) => {
     setSelectedCategory(event.target.value);
+    console.log("Selected Category", selectedCategory);
   };
 
   let content;
@@ -36,7 +37,7 @@ function PropertyList() {
   if (success) {
     content = properties
       .filter((property) =>
-        selectedCategory ? property.category.name === selectedCategory : true
+        selectedCategory ? property.category === selectedCategory : true
       )
       .map((property) => (
         <>
@@ -53,7 +54,6 @@ function PropertyList() {
 
   return (
     <><Container className="properties">
-      <Row>
         <Col>
           <Form.Select value={selectedCategory} onChange={handleCategoryChange}>
             <option value="">All Categories</option>
@@ -64,7 +64,6 @@ function PropertyList() {
             ))}
           </Form.Select>
         </Col>
-      </Row>
       <br />
       <Row className="g-4">{content}</Row>
       </Container>

@@ -23,8 +23,8 @@ function MainNavBar() {
 
   return (
     <nav className="navbar">
-      <h1>
-        <> </>homer
+      <h1 id="brand">
+  homer
       </h1>
       <ul>
         <Link href="/postProperty">
