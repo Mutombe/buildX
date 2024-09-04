@@ -90,7 +90,7 @@ class Unit(models.Model):
 
     name = models.CharField(max_length=100, blank=True)
     unit_property = models.ForeignKey(
-        Property, on_delete=models.SET_NULL, related_name="units", blank=True,  null=True
+        Property, related_name="units", blank=True, on_delete=models.CASCADE, null=True
     )
     kitchen = models.BooleanField(default=False)
     bathroom = models.BooleanField(default=False)

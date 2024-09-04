@@ -5,6 +5,8 @@ import Dashboard from "./components/dashboard/dashboard";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import WelcomeAlert from "./components/main-page/mainpage";
 import PropertyList from "./components/properties/listProperties";
+import ManageBookings from "./components/bookings/manageBookings";
+import BookingStatus from "./components/bookings/bookingStatus";
 import AddPro from "./components/properties/form";
 import UnitList from "./components/units/list_units";
 import "./App.css";
@@ -38,8 +40,8 @@ function App() {
 
 
             <Route path="/dashboard" element={<Dashboard />} />
-            {/*<Route path="/manage-bookings" element={<ManageBookings />} />
-            <Route path="/booking-status/:id" element={<BookingStatus />} />*/}
+            <Route path="/manage-bookings" element={<ManageBookings />} />
+            <Route path="/booking-status/:id" element={<BookingStatus />} />
           </Routes>
         </BrowserRouter>
       </div>

@@ -19,16 +19,18 @@ const BookingStatus = () => {
         <Container>
             <Card>
                 <Card.Body>
-                    <Card.Title>Status: {booking.status}</Card.Title>
-                    {booking.status === 'approved' && (
-                        <Card.Text>Your booking has been approved @{booking.unit.location}</Card.Text>
+                    <Card.Title>Status: {booking}</Card.Title>
+                    {booking === 'approved' && (
+                        <Card.Text>Your booking has been approved @{booking}</Card.Text>
                     )}
 
-                    {booking.pending === 'approved' && (
+                    {booking === 'approved' && (
                         <Card.Text>Your booking is pending approval from the owner</Card.Text>
                     )}
                 </Card.Body>
             </Card>
         </Container>
     )
-}
+};
+
+export default BookingStatus;

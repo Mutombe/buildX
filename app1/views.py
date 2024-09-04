@@ -66,6 +66,11 @@ class UnitListCreateView(generics.ListCreateAPIView):
             return Unit.objects.filter(unit_property__id=property_id)
         return super().get_queryset()
 
+    def perform_create(self, serializer):
+        property_id = self.kwargs.get('property_id')
+        unit_instance = serializer.save(unit_property=property_id)
+        Unit.objects.create(unit_instance)
+
 class ListProperties(APIView):
 
     def get(self, request, format=None):
