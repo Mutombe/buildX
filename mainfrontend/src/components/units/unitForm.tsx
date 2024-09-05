@@ -41,7 +41,7 @@ const UnitForm = ({ propertyId }) => {
       formData.append(key, value);
     });
     images.forEach((image, i) => {
-      formData.append(`images[${i}]file`, image);
+      formData.append(`images[${i}]file`, image.file);
     });
 
     console.log("Unit form data", formData.getAll("images"));
@@ -129,7 +129,7 @@ const UnitForm = ({ propertyId }) => {
         />
       </Form.Group>
 
-      {/*<div className="image-previews">
+      <div className="image-previews">
         {images.map((image, index) => (
           <div key={index} className="image-preview">
             <img src={image.preview} alt={`preview-${index}`} />
@@ -138,7 +138,7 @@ const UnitForm = ({ propertyId }) => {
             </button>
           </div>
         ))}
-      </div>*/}
+      </div>
       <br></br>
       <Stack direction="row" spacing={1}>
         <Button
