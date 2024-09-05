@@ -44,6 +44,7 @@ class Property(models.Model):
     )
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     booked_count = models.IntegerField(blank=True, default=0)
+    occupied = models.BooleanField(default=False)
     subscribers_count = models.IntegerField(blank=True, default=0)
     objects = PropertyManager()
 

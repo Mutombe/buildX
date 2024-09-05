@@ -59,6 +59,8 @@ def approve_booking(request, booking_id):
     if booking.unit:
         booking.unit.occupied = True
         booking.unit.save()
+    elif booking.property:
+        booking.property.occupied = True
     booking.save()
     return Response({"detail": "Booking approved."})
 

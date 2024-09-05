@@ -86,7 +86,7 @@ export default function FullWidthTabs() {
           </Typography>
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-          <small>Analytics</small>
+          <small>Bookings</small>
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
           <small>Booking History</small>
