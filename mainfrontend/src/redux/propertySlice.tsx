@@ -5,7 +5,7 @@ export const fetchProperties = createAsyncThunk(
   "properties/fetchProperties",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await authAxios.get("/properties/");
+      const response = await authAxios.get("/property/");
       console.log(response);
       return response.data;
     } catch (error: any) {
@@ -17,7 +17,7 @@ export const fetchProperties = createAsyncThunk(
 export const fetchUnits = createAsyncThunk(
   "units/fetchUnits",
   async (propertyId) => {
-    const response = await authAxios.get(`/properties/${propertyId}/units/`);
+    const response = await authAxios.get(`/property/${propertyId}/units/`);
     return response.data;
   }
 );

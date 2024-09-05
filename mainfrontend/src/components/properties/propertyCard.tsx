@@ -58,7 +58,7 @@ const PropertyCard = ({ property }) => {
               <Button
                 variant="outlined"
                 className="ms-2"
-                onClick={() => navigate(`/properties/${property.id}/units`)}
+                onClick={() => navigate(`/property/${property.id}/units`)}
               >
                 View Units
               </Button>

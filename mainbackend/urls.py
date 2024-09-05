@@ -29,7 +29,7 @@ urlpatterns = [
     path('uploads/', UserPropertiesView.as_view()),
     path('user/properties/', UserPropertiesView.as_view(), name='user-properties'),
     path('bookings/', BookingListCreateView.as_view(), name='booking-list-create'),
-    path('api/properties/<int:property_id>/subscribe/', subscribe_property, name='subscribe-property'),
+    path('properties/<int:property_id>/subscribe/', subscribe_property, name='subscribe-property'),
     path('book/unit/<int:unit_id>/', book_unit, name='book-unit'),
     path('book/property/<int:property_id>/', book_property, name='book-property'),
     path('booking/status/<int:booking_id>/', booking_status, name='booking-status'),

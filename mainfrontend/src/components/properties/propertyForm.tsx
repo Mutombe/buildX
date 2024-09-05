@@ -17,6 +17,11 @@ const PropertyUploadForm = () => {
   const [propertyId, setPropertyId] = useState(null);
   const [showUnitModal, setShowUnitModal] = useState(false);
   const [propertyCount, setPropertyCount] = useState(1);
+  //const [showModal, setShowModal] = useState(false);
+  //const [currentIndex, setCurrentIndex] = useState(0);
+
+  //const handleShow = () => setShowModal(true);
+  //const handleClose = () => setShowModal(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -56,11 +61,10 @@ const PropertyUploadForm = () => {
     images.forEach((image, i) => {
       formData.append(`images[${i}]file`, image.file);
     });
-    
 
     try {
       const result = await dispatch(uploadProperty(formData)).unwrap();
-      console.log("Property result", result)
+      console.log("Property result", result);
       if (result.id) {
         setPropertyId(result.id);
         localStorage.setItem("propertyId", result.id);
@@ -148,16 +152,18 @@ const PropertyUploadForm = () => {
         <br />
         <div className="image-previews">
           {images.map((image, index) => (
-            <div key={index} className="image-preview">
-              <img src={image.preview} alt={`preview-${index}`} />
-              <button type="button" onClick={() => removeImage(index)}>
-                &times;
-              </button>
-            </div>
+            <>
+              <div key={index} className="image-preview">
+                <img src={image.preview} alt={`preview-${index}`} />
+                <button type="button" onClick={() => removeImage(index)}>
+                  &times;
+                </button>
+              </div>
+            </>
           ))}
         </div>
       </div>
-      <br></br>
+      <br />
       <Stack direction="row" spacing={1}>
         <Button
           onClick={(e) => handleSubmit(e)}
@@ -195,9 +201,7 @@ const PropertyUploadForm = () => {
           <UnitForm propertyId={localStorage.getItem("propertyId")} />
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={handleModalClose}>
-            Close
-          </Button>
+          <Button onClick={handleModalClose}>Close</Button>
         </Modal.Footer>
       </Modal>
     </>

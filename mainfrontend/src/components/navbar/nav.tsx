@@ -34,7 +34,7 @@ function MainNavBar() {
             </Tooltip>
           </Fab>
         </Link>
-        <Link href="/properties" underline="none">
+        <Link href="/property" underline="none">
           {" "}
           Properties
         </Link>

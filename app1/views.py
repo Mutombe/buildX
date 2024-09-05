@@ -8,6 +8,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from .permissions import IsOwner
+from rest_framework import serializers
 from .utils import get_object
 from .serializers import CategorySerializer, SubscriptionSerializer
 
@@ -68,8 +69,13 @@ class UnitListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         property_id = self.kwargs.get('property_id')
-        unit_instance = serializer.save(unit_property=property_id)
-        Unit.objects.create(unit_instance)
+        try:
+            # Get the Property instance
+            property_instance = Property.objects.get(id=property_id)
+            # Save the unit with the property instance
+            serializer.save(unit_property=property_instance)
+        except Property.DoesNotExist:
+            raise serializers.ValidationError("Property does not exist.")
 
 class ListProperties(APIView):
 

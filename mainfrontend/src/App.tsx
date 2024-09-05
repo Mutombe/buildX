@@ -30,9 +30,9 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="logout" />
             <Route path="signup" element={<Signup />} />
-            <Route path="properties" element={<PropertyList />} />
+            <Route path="property" element={<PropertyList />} />
             <Route
-              path="/properties/:propertyId/units"
+              path="/property/:propertyId/units"
               element={<UnitList />}
             />
 

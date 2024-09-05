@@ -128,7 +128,7 @@ const UnitForm = ({ propertyId }) => {
           onChange={handleImageChange}
         />
       </Form.Group>
-
+      <br />
       <div className="image-previews">
         {images.map((image, index) => (
           <div key={index} className="image-preview">
