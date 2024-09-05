@@ -9,6 +9,7 @@ import { ReactNode, SyntheticEvent, useState } from "react";
 import { Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteProperty } from "../../redux/propertySlice";
+import { approveBooking, denyBooking, manageBookings } from "../../redux/bookingSlice";
 
 interface TabPanelProps {
   children?: ReactNode;
@@ -46,10 +47,24 @@ function a11yProps(index: number) {
 
 export default function FullWidthTabs() {
   const theme = useTheme();
+  const dispatch = useDispatch();
   const [value, setValue] = useState(0);
   const userProperties = useSelector((state) => state.properties.userProperties);
-  const dispatch = useDispatch()
+  const { allBookings, loading } = useSelector(state => state.bookings);
+
   console.log("User's Properties", userProperties)
+
+  useEffect(() => {
+    dispatch(manageBookings());
+  }, [dispatch]);
+
+  const handleApprove = (bookingId) => {
+    dispatch(approveBooking(bookingId));
+  };
+
+  const handleDisapprove = (bookingId) => {
+    dispatch(denyBooking(bookingId));
+  };
 
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue);

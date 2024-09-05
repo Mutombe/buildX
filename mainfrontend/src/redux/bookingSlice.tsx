@@ -25,17 +25,6 @@ export const bookUnit = createAsyncThunk(
   }
 );
 
-export const fetchBookings = createAsyncThunk(
-  "bookings/fetchOwnerBookings",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await authAxios.get("/api/booking/owner/");
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
 
 export const approveBooking = createAsyncThunk(
   "bookings/approveBooking",

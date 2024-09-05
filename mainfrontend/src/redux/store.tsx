@@ -3,6 +3,7 @@ import authReducer from "./authSlice";
 import propertyReducer from "./propertySlice"
 import categoryReducer from './categorySlice';
 import unitReducer from "./unitSlice"
+import bookingReducer from "./bookingSlice"
 
 const store: any = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store: any = configureStore({
     properties: propertyReducer,
     categories: categoryReducer,
     units: unitReducer,
+    bookings: bookingReducer,
   },
 });
 
