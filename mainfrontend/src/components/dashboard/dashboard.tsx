@@ -5,7 +5,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import { useTheme } from "@mui/material/styles";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import { ReactNode, SyntheticEvent, useState } from "react";
+import { ReactNode, SyntheticEvent, useEffect, useState } from "react";
 import { Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteProperty } from "../../redux/propertySlice";

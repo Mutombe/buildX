@@ -54,7 +54,7 @@ const PropertyUploadForm = () => {
       formData.append(key, value);
     });
     images.forEach((image, i) => {
-      formData.append(`images[${i}]file`, image);
+      formData.append(`images[${i}]file`, image.file);
     });
     
 
@@ -145,8 +145,8 @@ const PropertyUploadForm = () => {
             onChange={handleImageChange}
           />
         </Form.Group>
-        <br></br>
-        {/*<div className="image-previews">
+        <br />
+        <div className="image-previews">
           {images.map((image, index) => (
             <div key={index} className="image-preview">
               <img src={image.preview} alt={`preview-${index}`} />
@@ -155,7 +155,7 @@ const PropertyUploadForm = () => {
               </button>
             </div>
           ))}
-        </div>*/}
+        </div>
       </div>
       <br></br>
       <Stack direction="row" spacing={1}>
