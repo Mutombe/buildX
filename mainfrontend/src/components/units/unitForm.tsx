@@ -1,45 +1,75 @@
-import { useState } from 'react';
-import { Form, Button, Row, Col } from 'react-bootstrap';
+import { useState } from "react";
+import { Form, Row, Col } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUnit } from "../../redux/unitSlice";
+import useForm from "../../hooks/useForm";
+import useImages from "../../hooks/useImages";
+import { Badge, Button, Stack } from "@mui/material";
+import ExtensionIcon from "@mui/icons-material/Extension";
 
-const UnitForm = ({ onUnitChange }) => {
-  const [unitData, setUnitData] = useState({
-    name: '',
-    kitchen: false,
+const UnitForm = ({ propertyId }) => {
+  const initialUnitData = {
+    name: "",
+    kitchen: true,
     bathroom: false,
     toilet: false,
     water: false,
     solar: false,
-    images: [],
-  });
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setUnitData({
-      ...unitData,
-      [name]: type === 'checkbox' ? checked : value,
-    });
   };
 
-  const handleImageChange = (e) => {
-    setUnitData({ ...unitData, images: e.target.files });
-  };
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [unitCount, setUnitCount] = useState(1);
 
-  const handleAddUnit = () => {
-    onUnitChange(unitData);
-    setUnitData({
-      name: '',
-      kitchen: false,
-      bathroom: false,
-      toilet: false,
-      water: false,
-      solar: false,
-      images: [],
+  const {
+    values: unitData,
+    handleChange,
+    resetForm: resetUnitForm,
+  } = useForm(initialUnitData);
+
+  const { images, handleImageChange, resetImages, removeImage } = useImages();
+
+  const handleAddUnit = async (
+    e: React.FormEvent,
+    saveAndAddAnother = false
+  ) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    Object.entries(unitData).forEach(([key, value]) => {
+      formData.append(key, value);
     });
+    images.forEach((image, i) => {
+      formData.append(`images[${i}]file`, image.file);
+    });
+
+    console.log("Unit form data", formData.getAll("images"));
+
+    await dispatch(addUnit({ property_id: propertyId, formData }));
+
+    if (saveAndAddAnother) {
+      setUnitCount(unitCount + 1);
+      resetUnitForm();
+      resetImages();
+    } else {
+      navigate("/dashboard");
+    }
   };
 
   return (
     <div>
       <Form.Group controlId="unitName">
+        <strong>
+          Adding Unit
+          <span>
+            <Badge badgeContent={unitCount} color="primary">
+              <ExtensionIcon />
+            </Badge>
+          </span>
+        </strong>
+        <br></br>
+        <br></br>
         <Form.Label>Unit Name</Form.Label>
         <Form.Control
           type="text"
@@ -51,13 +81,42 @@ const UnitForm = ({ onUnitChange }) => {
       </Form.Group>
       <Row>
         <Col>
-          <Form.Check type="checkbox" name="kitchen" label="Kitchen" onChange={handleChange} />
-          <Form.Check type="checkbox" name="bathroom" label="Bathroom" onChange={handleChange} />
+          <Form.Check
+            type="checkbox"
+            name="kitchen"
+            label="Kitchen"
+            required
+            onChange={handleChange}
+          />
+          <Form.Check
+            type="checkbox"
+            name="bathroom"
+            label="Bathroom"
+            onChange={handleChange}
+          />
         </Col>
         <Col>
-          <Form.Check type="checkbox" name="toilet" label="Toilet" onChange={handleChange} />
-          <Form.Check type="checkbox" name="water" label="Water" onChange={handleChange} />
-          <Form.Check type="checkbox" name="solar" label="Solar" onChange={handleChange} />
+          <Form.Check
+            type="checkbox"
+            name="toilet"
+            label="Toilet"
+            required
+            onChange={handleChange}
+          />
+          <Form.Check
+            type="checkbox"
+            name="water"
+            label="Water"
+            required
+            onChange={handleChange}
+          />
+          <Form.Check
+            type="checkbox"
+            name="solar"
+            label="Solar"
+            required
+            onChange={handleChange}
+          />
         </Col>
       </Row>
       <Form.Group controlId="unitImages">
@@ -69,11 +128,38 @@ const UnitForm = ({ onUnitChange }) => {
           onChange={handleImageChange}
         />
       </Form.Group>
-      <Button onClick={handleAddUnit}>Add Unit</Button>
+      <br />
+      <div className="image-previews">
+        {images.map((image, index) => (
+          <div key={index} className="image-preview">
+            <img src={image.preview} alt={`preview-${index}`} />
+            <button type="button" onClick={() => removeImage(index)}>
+              &times;
+            </button>
+          </div>
+        ))}
+      </div>
+      <br></br>
+      <Stack direction="row" spacing={1}>
+        <Button
+          variant="contained"
+          onClick={(e) => {
+            handleAddUnit(e, false);
+          }}
+        >
+          Save & Close
+        </Button>
+        <Button
+          variant="contained"
+          onClick={(e) => {
+            handleAddUnit(e, true);
+          }}
+        >
+          Save & Add Another Unit
+        </Button>
+      </Stack>
     </div>
   );
 };
 
 export default UnitForm;
-
-

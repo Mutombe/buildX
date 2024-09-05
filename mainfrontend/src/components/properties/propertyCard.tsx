@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import ImagePreviewModal from "../image-preview/imagePreview";
 import { useState } from "react";
 import Accordion from "@mui/material/Accordion";
-import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
+import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 
 const PropertyCard = ({ property }) => {
   const [showModal, setShowModal] = useState(false);
@@ -53,30 +53,32 @@ const PropertyCard = ({ property }) => {
         </Card.Body>
         <Card.Footer>
           <small>{property.location}</small>{" "}
-          {property.has_units ? (
-            ""
-          ) : (
-            <small>
-              Booked<strong> {property.booked_count}</strong> times{" "}
-            </small>
-          )}
           <span>
             {property.has_units ? (
               <Button
                 variant="outlined"
                 className="ms-2"
-                onClick={() => navigate(`/properties/${property.id}/units`)}
+                onClick={() => navigate(`/property/${property.id}/units`)}
               >
                 View Units
               </Button>
             ) : (
-              <Button
-                variant="outlined"
-                className="ms-2"
-                onClick={() => navigate(`/properties/${property.id}/book`)}
-              >
-                Book Property
-              </Button>
+              <>
+                <small>
+                  Booked<strong> {property.booked_count}</strong> times{" "}
+                  </small>
+                  <small>
+                    <><br /></>
+                  <strong> {property.category}</strong>
+                </small>
+                <Button
+                  variant="outlined"
+                  className="ms-2"
+                  onClick={() => navigate(`/properties/${property.id}/book`)}
+                >
+                  Book Property
+                </Button>
+              </>
             )}
 
             <>
@@ -89,9 +91,13 @@ const PropertyCard = ({ property }) => {
                   <Typography>Details</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <Typography><strong>{property.name}</strong></Typography>
+                  <Typography>
+                    <strong>{property.name}</strong>
+                  </Typography>
                   <Typography>{property.booked_count}</Typography>
-                  <Typography><FmdGoodOutlinedIcon/> {property.location}</Typography>
+                  <Typography>
+                    <FmdGoodOutlinedIcon /> {property.location}
+                  </Typography>
                 </AccordionDetails>
               </Accordion>
             </>

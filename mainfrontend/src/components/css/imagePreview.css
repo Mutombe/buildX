@@ -1,0 +1,25 @@
+.image-previews {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Space between images */
+  }
+  
+  .image-preview {
+    position: relative; /* Position relative for absolute positioning of the button */
+  }
+  
+  .image-preview img {
+    width: 100px; /* Set a fixed width for image previews */
+    height: auto; /* Maintain aspect ratio */
+  }
+  
+  .image-preview button {
+    position: absolute; /* Position the button over the image */
+    top: 5px;
+    right: 5px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+  }

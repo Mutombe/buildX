@@ -18,6 +18,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from .permissions import IsOwner
+from rest_framework import serializers
 from .utils import get_object
 from .serializers import CategorySerializer, SubscriptionSerializer
 
@@ -27,12 +28,17 @@ class CategoryListView(generics.ListAPIView):
 
 
 class PropertyView(viewsets.ModelViewSet):
+<<<<<<< HEAD
     serializer_class = PropertySerializer
 <<<<<<< HEAD
     queryset = Property.objects.all()
 
 =======
     queryset = Property.objects.all()  
+>>>>>>> branch-01
+=======
+    queryset = Property.objects.all()  
+    serializer_class = PropertySerializer
 >>>>>>> branch-01
 
 class PropertyListCreateView(generics.ListCreateAPIView):
@@ -52,7 +58,7 @@ class PropertyListCreateView(generics.ListCreateAPIView):
             PropertyImages.objects.create(property=property_instance, file=image_data)
 
     def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
+        queryset = Property.objects.all()
         serializer = self.get_serializer(queryset, many=True)
         data = serializer.data
         for property_data in data:
@@ -64,8 +70,13 @@ class PropertyListCreateView(generics.ListCreateAPIView):
 class PropertyDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Property.objects.all()
     serializer_class = PropertySerializer
-    authentication_classes = [TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+    
+
+class UnitListView(viewsets.ModelViewSet):
+    queryset = Unit.objects.all()  
+    serializer_class = UnitSerializer
 
 class UnitListCreateView(generics.ListCreateAPIView):
     queryset = Unit.objects.all()
@@ -74,9 +85,21 @@ class UnitListCreateView(generics.ListCreateAPIView):
     def get_queryset(self):
         property_id = self.kwargs.get('property_id')
         if property_id:
-            return Unit.objects.filter(unit_property_id=property_id)
+            return Unit.objects.filter(unit_property__id=property_id)
         return super().get_queryset()
 
+<<<<<<< HEAD
+=======
+    def perform_create(self, serializer):
+        property_id = self.kwargs.get('property_id')
+        try:
+            # Get the Property instance
+            property_instance = Property.objects.get(id=property_id)
+            # Save the unit with the property instance
+            serializer.save(unit_property=property_instance)
+        except Property.DoesNotExist:
+            raise serializers.ValidationError("Property does not exist.")
+>>>>>>> branch-01
 
 class ListProperties(APIView):
 
@@ -128,16 +151,20 @@ class UnitDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Unit.objects.all()
     serializer_class = UnitSerializer
     
+<<<<<<< HEAD
 >>>>>>> branch-01
 
 class DeleteProperty(APIView):
     pass
 
 
+=======
+>>>>>>> branch-01
 class PropertyUpdateView(APIView):
     permission_classes = [IsOwner]
 
 
+<<<<<<< HEAD
 class BookUnit(APIView):
     pass
 
@@ -147,6 +174,8 @@ class NotifyOwner(APIView):
 
 
 
+=======
+>>>>>>> branch-01
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def subscribe_property(request, property_id):
@@ -175,3 +204,14 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
         if user is not None:
             queryset = queryset.filter(user=user)
         return queryset
+    
+class SubscriptionListCreateCreateView(generics.ListCreateAPIView):
+    queryset = Subscription.objects.all()
+    serializer_class = SubscriptionSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class SubscriptionDetailView(generics.RetrieveDestroyAPIView):
+    queryset = Subscription.objects.all()
+    serializer_class = SubscriptionSerializer

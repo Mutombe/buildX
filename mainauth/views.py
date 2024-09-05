@@ -39,7 +39,6 @@ class UserRegister(APIView):
 
 class UserLogin(APIView):
     permission_classes = (permissions.AllowAny,)
-    authentication_classes = (TokenAuthentication,)
 
     def post(self, request):
         data = request.data
@@ -61,6 +60,7 @@ class UserLogin(APIView):
 >>>>>>> branch-01
 
 class UserLogout(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (TokenAuthentication,)
 
     def post(self, request):

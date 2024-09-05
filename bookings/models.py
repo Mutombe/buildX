@@ -44,8 +44,8 @@ class Booking(models.Model):
         self.save()
         send_mail(
             'Booking Approved',
-            f'Your booking for {self.unit.name} at {self.unit.location} has been approved.',
-            'from@example.com',
+            f'Your booking for {self.unit.name} at {self.unit.location} has been approved. You can procede to make your initial payment',
+            'simbarashemutombe1@gmail.com',
             [self.customer.email],
             fail_silently=False,
         )
@@ -55,8 +55,8 @@ class Booking(models.Model):
         self.save()
         send_mail(
             'Booking Denied',
-            f'Your booking for {self.unit.name} has been denied.',
-            'from@example.com',
+            f'Your booking for {self.unit.name} has been denied. You can open the property owner messaging box for more info',
+            'simbarashemutombe1@gmail.com',
             [self.customer.email],
             fail_silently=False,
         )

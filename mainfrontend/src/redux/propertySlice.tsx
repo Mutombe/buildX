@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import api from "../utils/baseApiUtil";
+import authAxios from "../utils/authAxios";
 
 export const fetchProperties = createAsyncThunk(
   "properties/fetchProperties",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get("/properties/");
+      const response = await authAxios.get("/property/");
       console.log(response);
       return response.data;
     } catch (error: any) {
@@ -17,7 +17,7 @@ export const fetchProperties = createAsyncThunk(
 export const fetchUnits = createAsyncThunk(
   "units/fetchUnits",
   async (propertyId) => {
-    const response = await api.get(`/properties/${propertyId}/units/`);
+    const response = await authAxios.get(`/property/${propertyId}/units/`);
     return response.data;
   }
 );
@@ -26,7 +26,7 @@ export const fetchUserProperties = createAsyncThunk(
   "properties/fetchUserProperties",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get("/user/properties/");
+      const response = await authAxios.get("/user/properties/");
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -38,7 +38,7 @@ export const updateProperty = createAsyncThunk(
   "properties/updateProperty",
   async ({ id, propertyData }, { rejectWithValue }) => {
     try {
-      const response = await api.put(`/properties/${id}/`, propertyData);
+      const response = await authAxios.put(`/properties/${id}/`, propertyData);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -50,7 +50,7 @@ export const deleteProperty = createAsyncThunk(
   "properties/deleteProperty",
   async (id, { rejectWithValue }) => {
     try {
-      await api.delete(`/properties/${id}/`);
+      await authAxios.delete(`/properties/${id}/`);
       return id;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -75,7 +75,7 @@ export const createProperty = createAsyncThunk(
         }
       }
 
-      const response = await api.post("/properties/", formData, {
+      const response = await authAxios.post("/properties/", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -84,6 +84,18 @@ export const createProperty = createAsyncThunk(
     } catch (error: any) {
       console.error("Error in createProperty:", error);
       return rejectWithValue(error.response?.data);
+    }
+  }
+);
+
+export const uploadProperty = createAsyncThunk(
+  "property/uploadProperty",
+  async (propertyData, { rejectWithValue }) => {
+    try {
+      const response = await authAxios.post("/properties/", propertyData, {});
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -136,14 +148,26 @@ const propertySlice = createSlice({
         state.loading = false;
         state.success = true;
         state.userProperties = action.payload;
+        console.log("User Properties", action.payload)
       })
       .addCase(fetchUserProperties.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(createProperty.fulfilled, (state, action: any) => {
-        state.userProperties.push(action.payload);
-        console.log(action.payload);
+      .addCase(uploadProperty.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(uploadProperty.fulfilled, (state, action) => {
+        state.loading = false;
+        state.properties.push(action.payload);
+        console.log(
+          "Property data getting pushed to the database: ",
+          action.payload
+        );
+      })
+      .addCase(uploadProperty.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
       .addCase(updateProperty.fulfilled, (state: any, action) => {
         const index = state.userProperties.findIndex(

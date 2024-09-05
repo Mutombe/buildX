@@ -13,12 +13,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class UnitImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = UnitImages
-        fields = [
-            "id",
-            "name",
-            "unit",
-            "file",
-        ]
+        fields = '__all__'
 
 
 class PropertyImageSerializer(serializers.ModelSerializer):
@@ -29,13 +24,14 @@ class PropertyImageSerializer(serializers.ModelSerializer):
 
 
 class UnitSerializer(serializers.ModelSerializer):
-    images = UnitImageSerializer(many=True)
-
+    images = UnitImageSerializer(many=True, required=False)
+    
     class Meta:
         model = Unit
         fields = [
             "id",
             "name",
+            "unit_property",
             "images",
             "kitchen",
             "bathroom",
@@ -45,6 +41,14 @@ class UnitSerializer(serializers.ModelSerializer):
             "occupied",
             "booked_count",
         ]
+    
+    def create(self, validated_data):
+        images_data = validated_data.pop('images', [])
+        unit_instance = Unit.objects.create(**validated_data)
+        for image_data in images_data:
+            UnitImages.objects.create(unit=unit_instance, **image_data)
+        print(unit_instance)
+        return unit_instance
 
 
 class PropertySerializer(serializers.ModelSerializer):

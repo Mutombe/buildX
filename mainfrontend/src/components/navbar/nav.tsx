@@ -3,21 +3,17 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Avatar from "@mui/material/Avatar";
 import "./nav.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Logout from "../authentication/logout";
 import { Fab, Link, Tooltip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-//import { fetchUserData } from "../../redux/authSlice";
-//import { useEffect } from "react";
-import React from "react";
+import { useState } from "react";
 
 function MainNavBar() {
-  //const dispatch = useDispatch();
   const token = useSelector((state: any) => state.auth.token);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
-  //const navigate = useNavigate();
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -27,9 +23,10 @@ function MainNavBar() {
 
   return (
     <nav className="navbar">
-      <h1>homer</h1>
+      <h1 id="brand">
+  homer
+      </h1>
       <ul>
-        <li>homer</li>{" "}
         <Link href="/postProperty">
           <Fab size="small" color="primary" aria-label="add">
             <Tooltip title="Add Property" placement="top-start">
@@ -37,9 +34,11 @@ function MainNavBar() {
             </Tooltip>
           </Fab>
         </Link>
-        <li>
-          <a href="/properties">Properties</a>
-        </li>
+        <Link href="/property" underline="none">
+          {" "}
+          Properties
+        </Link>
+
         {token ? (
           <>
             <li>
@@ -51,7 +50,7 @@ function MainNavBar() {
                 onClick={handleClick}
               >
                 <Avatar src="/broken-image.jpg" />
-              </Button>{" "}
+              </Button>{"   "}
               <Menu
                 id="basic-menu"
                 anchorEl={anchorEl}
@@ -62,7 +61,12 @@ function MainNavBar() {
                 }}
               >
                 <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={handleClose}>My Account</MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <Link href="/dashboard" underline="none">
+                    Dashboard
+                  </Link>
+                </MenuItem>
                 <MenuItem onClick={handleClose}>
                   <Logout />
                 </MenuItem>
@@ -92,10 +96,14 @@ function MainNavBar() {
               }}
             >
               <MenuItem onClick={handleClose}>
-                <a href="/login">Login</a>
+                <Link href="/login" underline="none">
+                  Login
+                </Link>
               </MenuItem>
               <MenuItem onClick={handleClose}>
-                <Link href="signup">SignUp</Link>
+                <Link href="signup" underline="none">
+                  SignUp
+                </Link>
               </MenuItem>
             </Menu>
           </>

@@ -7,7 +7,7 @@ from app1.models import Property, Unit
 from bookings.models import Booking
 from bookings.serializers import BookingSerializer
 
-# 
+
 class BookingListCreateView(generics.ListCreateAPIView):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
@@ -59,6 +59,8 @@ def approve_booking(request, booking_id):
     if booking.unit:
         booking.unit.occupied = True
         booking.unit.save()
+    elif booking.property:
+        booking.property.occupied = True
     booking.save()
     return Response({"detail": "Booking approved."})
 

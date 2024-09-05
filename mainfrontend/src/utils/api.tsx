@@ -1,4 +1,6 @@
-import api from "./baseApiUtil";
+import api from "./axiosConfig";
+import authAxios from "./authAxios";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const signup = (username: string, email: string, password: string) => {
   return api.post("/register", {
@@ -13,7 +15,7 @@ export const login = (username: string, password: string) => {
 };
 
 export const logout = () => {
-  return api.post("/logout");
+  return authAxios.post("/logout");
 };
 
 export const fetchUser = () => {
@@ -37,3 +39,8 @@ export const subscribeToProperty = async (
     throw error;
   }
 };
+
+export const subscribing = createAsyncThunk('properties/subscribe', async (propertyId) => {
+  const response = await authAxios.post(`/api/properties/${propertyId}/subscribe/`);
+  return response.data
+});
