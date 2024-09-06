@@ -11,7 +11,7 @@ const Logout = () => {
     });
   };
 
-  return <Button variant="contained" onClick={handleLogout} size="small">Logout</Button>;
+  return <Button onClick={handleLogout} size="small">Logout</Button>;
 };
 
 export default Logout;

@@ -2,7 +2,7 @@ import MainNavBar from "./components/navbar/nav";
 import Login from "./components/authentication/login";
 import Signup from "./components/authentication/signup";
 import Dashboard from "./components/dashboard/dashboard";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import WelcomeAlert from "./components/main-page/mainpage";
 import PropertyList from "./components/properties/listProperties";
 //import ManageBookings from "./components/bookings/manageBookings";
@@ -10,14 +10,7 @@ import PropertyList from "./components/properties/listProperties";
 import AddPro from "./components/properties/form";
 import UnitList from "./components/units/list_units";
 import "./App.css";
-import { useSelector } from "react-redux";
-
-const PrivateRoute = ({ children }) => {
-  const navigate = useNavigate();
-  const token = useSelector((state) => state.auth.token);
-
-  return token ? children : navigate("/login");
-};
+//import ProtectedRoute from "./utils/protectedRoute";
 
 function App() {
   return (
@@ -31,17 +24,11 @@ function App() {
             <Route path="logout" />
             <Route path="signup" element={<Signup />} />
             <Route path="property" element={<PropertyList />} />
-            <Route
-              path="/property/:propertyId/units"
-              element={<UnitList />}
-            />
-
-              <Route path="/postProperty" element={<AddPro />} />
-
-
+            <Route path="/property/:propertyId/units" element={<UnitList />} />
+            <Route path="/postProperty" element={<AddPro />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/approve-booking" element={''} />
-            <Route path="/deny-booking" element={''} />
+            <Route path="/approve-booking" element={""} />
+            <Route path="/deny-booking" element={""} />
           </Routes>
         </BrowserRouter>
       </div>

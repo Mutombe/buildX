@@ -1,7 +1,5 @@
 import { Route } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-
-const navigate = useNavigate();
+import { redirect } from 'react-router-dom';
 
 // ProtectedRoute component that checks for an auth token
 const ProtectedRoute = ({ component: Component, ...rest }) => {
@@ -14,7 +12,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
                 token ? (
                     <Component {...props} />
                 ) : (
-                     navigate('/login')
+                     redirect('login')
                 )
             }
         />

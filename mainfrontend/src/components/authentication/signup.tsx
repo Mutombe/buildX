@@ -5,6 +5,7 @@ import { userSignup } from "../../redux/authSlice";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { Alert, Button } from "@mui/material";
+import '../css/signup.css'
 
 const Signup = () => {
   const [username, setUsername] = useState("");
@@ -27,8 +28,7 @@ const Signup = () => {
   };
 
   return (
-    <>
-      <>
+    <div id="signup">
         {error && (
           <Alert severity="warning">
             {error} <Link to="/login"> Login</Link>
@@ -45,9 +45,6 @@ const Signup = () => {
               required
               onChange={(e) => setEmail(e.target.value)}
             />
-            <Form.Text className="text-muted">
-              We will never share your email with anyone
-            </Form.Text>
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicUsername">
             <Form.Label>Username</Form.Label>
@@ -74,8 +71,7 @@ const Signup = () => {
             {loading ? "Loading..." : "Register"}
           </Button>
         </Form>
-      </>
-    </>
+    </div>
   );
 };
 

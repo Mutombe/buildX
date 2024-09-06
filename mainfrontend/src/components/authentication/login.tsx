@@ -16,6 +16,11 @@ import { userLogin } from "../../redux/authSlice";
 >>>>>>> branch-01
 =======
 import { Alert, Button } from "@mui/material";
+<<<<<<< HEAD
+>>>>>>> branch-01
+=======
+import '../css/login.css'
+import VpnKeyIcon from '@mui/icons-material/VpnKey';
 >>>>>>> branch-01
 
 const Login = () => {
@@ -53,8 +58,7 @@ const Login = () => {
   };
 
   return (
-    <>
-      <>
+    <div id="login">
         {error && (
           <Alert severity="warning">
             {error} <Link to="/signup">Sign Up</Link>
@@ -73,7 +77,7 @@ const Login = () => {
             <Form.Text className="text-muted"></Form.Text>
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Password</Form.Label>
+          <Form.Label>Password</Form.Label>
             <Form.Control
               type="password"
               placeholder="Password"
@@ -86,8 +90,7 @@ const Login = () => {
             {loading ? "Loading..." : "Login"}
           </Button>
         </Form>
-      </>
-    </>
+    </div>
   );
 };
 
