@@ -8,6 +8,8 @@ import Logout from "../authentication/logout";
 import { Fab, Link, Tooltip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import ExitToApp from "@mui/icons-material/ExitToApp";
 
 function MainNavBar() {
   const token = useSelector((state: any) => state.auth.token);
@@ -23,9 +25,7 @@ function MainNavBar() {
 
   return (
     <nav className="navbar">
-      <h1 id="brand">
-  homer
-      </h1>
+      <h1 id="brand">homer</h1>
       <ul>
         <Link href="/postProperty">
           <Fab size="small" color="primary" aria-label="add">
@@ -50,7 +50,8 @@ function MainNavBar() {
                 onClick={handleClick}
               >
                 <Avatar src="/broken-image.jpg" />
-              </Button>{"   "}
+              </Button>
+              {"   "}
               <Menu
                 id="basic-menu"
                 anchorEl={anchorEl}
@@ -69,6 +70,7 @@ function MainNavBar() {
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
                   <Logout />
+                  <ExitToApp />
                 </MenuItem>
               </Menu>
             </li>
@@ -102,7 +104,7 @@ function MainNavBar() {
               </MenuItem>
               <MenuItem onClick={handleClose}>
                 <Link href="signup" underline="none">
-                  SignUp
+                  Signup
                 </Link>
               </MenuItem>
             </Menu>

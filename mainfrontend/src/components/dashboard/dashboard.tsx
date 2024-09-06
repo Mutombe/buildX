@@ -6,15 +6,13 @@ import { useTheme } from "@mui/material/styles";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { ReactNode, SyntheticEvent, useEffect, useState } from "react";
-import { Typography } from "@mui/material";
+import { Chip, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteProperty } from "../../redux/propertySlice";
 import {
   approveBooking,
   denyBooking,
   manageBookings,
 } from "../../redux/bookingSlice";
-import { fetchUserProperties } from "../../redux/propertySlice";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -23,17 +21,8 @@ import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import CommentIcon from "@mui/icons-material/Comment";
-import './dashboard.css'
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
-import Text from "../typography/typography";
+import "./dashboard.css";
+import { PropertyTable } from "./propertyTable";
 
 interface TabPanelProps {
   children?: ReactNode;
@@ -69,54 +58,7 @@ function a11yProps(index: number) {
   };
 }
 
-export function PropertyTable() {
 
-const dispatch = useDispatch();
-  const userProperties = useSelector(
-    (state) => state.properties.userProperties
-    
-  );
-
-  useEffect(() => {
-    dispatch(fetchUserProperties());
-  }, [dispatch]);
-
-  const handleDelete = (id) => {
-    dispatch(deleteProperty(id));
-  };
-
-  return (
-    <>
-      {userProperties.length === 0 ? (
-        <Text size={"h6"} text={"You haven't uploaded any properties"}/>
-  
-      ) : (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableBody>
-              {userProperties.map((property) => (
-                <TableRow
-                  key={property.id}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {property.name}
-                  </TableCell>{property.accupied ? <TableCell align="right">Booked</TableCell> : <TableCell align="right">Open</TableCell>}
-              
-                  <TableCell align="right">{property.location}</TableCell>
-                  <TableCell align="right"><EditIcon color="primary" /></TableCell>
-      
-                  <TableCell align="right"><IconButton aria-label="delete" onClick={() => handleDelete(property.id)}><DeleteRoundedIcon color="error" /></IconButton></TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          </TableContainer>
-        )
-      };
-    </>
-  );
-}
 
 export function CheckboxList() {
   const [checked, setChecked] = useState([0]);
@@ -175,8 +117,7 @@ export function CheckboxList() {
   );
 }
 
-
-export default function FullWidthTabs() {
+export default function BookingsList() {
   const theme = useTheme();
   const dispatch = useDispatch();
   const [value, setValue] = useState(0);
@@ -199,12 +140,10 @@ export default function FullWidthTabs() {
     setValue(newValue);
   };
 
-
-
   return (
     <>
       <br></br>
-      <Box sx={{ width: '100%' , bgcolor: "background.paper" }}>
+      <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
         <Tabs
           value={value}
           onChange={handleChange}
@@ -230,45 +169,40 @@ export default function FullWidthTabs() {
         </Tabs>
 
         <TabPanel value={value} index={0} dir={theme.direction}>
-          <small>My Properties</small>
+          <Chip label="My Properties" size="small" />
           <br />
-<BasicTable/>
-  
+          <PropertyTable />
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-          <small>Bookings</small>
+        <Chip label="Bookings" size="small" />
+        <br />
           <CheckboxList />
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
-          <small>Booking History</small>
+          <Chip label="Booking History" size="small" />
+          <br />
           <table>
-              <tr>
-                <td>3741255</td>
-                <td>Jones, Martha</td>
-                <td>Computer Science</td>
-                <td>240</td>
-              </tr>
-              <tr>
-                <td>3971244</td>
-                <td>Nim, Victor</td>
-                <td>Russian Literature</td>
-                <td>220</td>
-              </tr>
-              <tr>
-                <td>4100332</td>
-                <td>Petrov, Alexandra</td>
-                <td>Astrophysics</td>
-                <td>260</td>
-              </tr>
-            </table>
+            <tr>
+              <td>3741255</td>
+              <td>Jones, Martha</td>
+              <td>Computer Science</td>
+              <td>240</td>
+            </tr>
+            <tr>
+              <td>3971244</td>
+              <td>Nim, Victor</td>
+              <td>Russian Literature</td>
+              <td>220</td>
+            </tr>
+            <tr>
+              <td>4100332</td>
+              <td>Petrov, Alexandra</td>
+              <td>Astrophysics</td>
+              <td>260</td>
+            </tr>
+          </table>
         </TabPanel>
       </Box>
     </>
   );
 }
-
-
-
-
-
-
