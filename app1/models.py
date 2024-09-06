@@ -46,6 +46,7 @@ class Property(models.Model):
     booked_count = models.IntegerField(blank=True, default=0)
     occupied = models.BooleanField(default=False)
     subscribers_count = models.IntegerField(blank=True, default=0)
+    price_per_month = models.DecimalField(max_digits=10, decimal_places=2)
     objects = PropertyManager()
 
     def __str__(self) -> str:
