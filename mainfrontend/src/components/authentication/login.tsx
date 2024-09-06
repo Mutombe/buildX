@@ -1,27 +1,12 @@
-<<<<<<< HEAD
-
-import { useState } from "react";
-import { Form } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
-import { login } from "./baseAuthApi";
-
-=======
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { userLogin } from "../../redux/authSlice";
-<<<<<<< HEAD
->>>>>>> branch-01
-=======
 import { Alert, Button } from "@mui/material";
-<<<<<<< HEAD
->>>>>>> branch-01
-=======
-import '../css/login.css'
+import '../css/login.css';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
->>>>>>> branch-01
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -32,26 +17,10 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-<<<<<<< HEAD
-  const handleLogin = async (event: any) => {
-    event.preventDefault();
-    const response = await login(username, password);
-    localStorage.setItem("token", response.data.token);
-    console.log("Your response: ", response);
-    console.log("Your Local Storage: ", localStorage);
-
-
-    try {
-      const response = await login(username, password);
-      if ((response.status = 200)) {
-        setSuccess(true);
-        setIsAuthenticated(true);
-=======
   const handleLogin = async (e: any) => {
     e.preventDefault();
     dispatch(userLogin({ username, password })).then((result: any) => {
       if (result.meta.requestStatus === "fulfilled") {
->>>>>>> branch-01
         navigate("/");
       }
     });

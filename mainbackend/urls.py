@@ -13,20 +13,6 @@ from bookings.views import (
 )
 
 router = routers.DefaultRouter()
-<<<<<<< HEAD
-router.register(r"properties", views.PropertyView, "properties")
-router.register(r"units", views.UnitView, "units")
-
-urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("", include(router.urls)),
-    path("list", ListProperties.as_view(), name="list-properties"),
-    path("<int:pk>/", PropertyDetail.as_view()),
-    path("units/<int:pk>/", UnitDetail.as_view()),
-    path("uploads/", UserListPropertyView.as_view()),
-    path("api-auth/", include("rest_framework.urls")),
-    path("", include("mainauth.urls")),
-=======
 router.register(r'property', views.PropertyView, 'property')
 router.register(r'subscriptions', SubscriptionViewSet)
 
@@ -52,7 +38,6 @@ urlpatterns = [
     path('deny/booking/<int:booking_id>/', deny_booking, name='deny-booking'),
     path('', include('mainauth.urls')), 
     path('api-auth/', include('rest_framework.urls')),
->>>>>>> branch-01
 ]
 
 if settings.DEBUG:

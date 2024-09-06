@@ -1,15 +1,5 @@
-<<<<<<< HEAD
-from app1.serializers import (
-    PropertySerializer,
-    UnitSerializer,
-    UnitImageSerializer,
-    PropertyImageSerializer,
-)
-from app1.models import Property, Unit
-=======
 from app1.serializers import PropertySerializer, UnitSerializer
 from app1.models import Category, Property, Subscription, Unit, PropertyImages
->>>>>>> branch-01
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework import permissions, generics, status
@@ -28,18 +18,9 @@ class CategoryListView(generics.ListAPIView):
 
 
 class PropertyView(viewsets.ModelViewSet):
-<<<<<<< HEAD
     serializer_class = PropertySerializer
-<<<<<<< HEAD
-    queryset = Property.objects.all()
-
-=======
-    queryset = Property.objects.all()  
->>>>>>> branch-01
-=======
-    queryset = Property.objects.all()  
-    serializer_class = PropertySerializer
->>>>>>> branch-01
+    queryset = Property.objects.all()   
+  
 
 class PropertyListCreateView(generics.ListCreateAPIView):
     queryset = Property.objects.all()
@@ -88,8 +69,6 @@ class UnitListCreateView(generics.ListCreateAPIView):
             return Unit.objects.filter(unit_property__id=property_id)
         return super().get_queryset()
 
-<<<<<<< HEAD
-=======
     def perform_create(self, serializer):
         property_id = self.kwargs.get('property_id')
         try:
@@ -99,7 +78,6 @@ class UnitListCreateView(generics.ListCreateAPIView):
             serializer.save(unit_property=property_instance)
         except Property.DoesNotExist:
             raise serializers.ValidationError("Property does not exist.")
->>>>>>> branch-01
 
 class ListProperties(APIView):
 
@@ -109,22 +87,6 @@ class ListProperties(APIView):
         """
         all_properties = [property.name for property in Property.objects.all()]
         return Response(all_properties)
-<<<<<<< HEAD
-
-
-class UserListPropertyView(APIView):
-    serializer_class = PropertySerializer
-    permission_classes = [IsOwner]
-
-    def get_queryset(self):
-
-        user_property = [
-            x.name for x in Property.objects.for_user(owner=self.request.user)
-        ]
-        return Response({"User Uploads": user_property}, status=status.HTTP_200_OK)
-
-
-=======
   
 class UserPropertiesView(generics.ListAPIView):
     serializer_class = PropertySerializer
@@ -133,49 +95,25 @@ class UserPropertiesView(generics.ListAPIView):
     def get_queryset(self):
         return Property.objects.filter(owner=self.request.user)
     
->>>>>>> branch-01
 class PropertyDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
     queryset = Property.objects.all()
     serializer_class = PropertySerializer
 
-<<<<<<< HEAD
 
 class UnitDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
     queryset = Unit.objects.all()
     serializer_class = UnitSerializer
 
-=======
 class UnitDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Unit.objects.all()
     serializer_class = UnitSerializer
-    
-<<<<<<< HEAD
->>>>>>> branch-01
 
-class DeleteProperty(APIView):
-    pass
-
-
-=======
->>>>>>> branch-01
 class PropertyUpdateView(APIView):
     permission_classes = [IsOwner]
 
 
-<<<<<<< HEAD
-class BookUnit(APIView):
-    pass
-
-
-class NotifyOwner(APIView):
-    pass
-
-
-
-=======
->>>>>>> branch-01
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def subscribe_property(request, property_id):

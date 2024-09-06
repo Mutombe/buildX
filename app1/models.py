@@ -28,8 +28,6 @@ class PropertyManager(models.Manager):
     def for_user(self, user):
         return self.filter(owner=user)
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 class Property(models.Model):
     name = models.CharField(max_length=100, blank=True)
@@ -42,10 +40,7 @@ class Property(models.Model):
         null=True,
     )
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
-=======
-=======
 
->>>>>>> branch-01
 class Property(models.Model):
     """
     Property model
@@ -61,7 +56,7 @@ class Property(models.Model):
         null=True,
     )
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
->>>>>>> branch-01
+
     booked_count = models.IntegerField(blank=True, default=0)
     occupied = models.BooleanField(default=False)
     subscribers_count = models.IntegerField(blank=True, default=0)
@@ -70,12 +65,6 @@ class Property(models.Model):
     def __str__(self) -> str:
         return self.name
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
->>>>>>> branch-01
-=======
     def notify_subscribers(self):
         subscribers = self.subscribers.all()
         for subscriber in subscribers:
@@ -90,7 +79,6 @@ class Property(models.Model):
                 )
 
 
->>>>>>> branch-01
 class PropertyImages(models.Model):
     """
     Property Images model
@@ -107,7 +95,6 @@ class PropertyImages(models.Model):
     file = models.FileField(upload_to="", blank=False)
 
     def __str__(self) -> str:
-<<<<<<< HEAD
         if type(self.name) != None:
             return self.name
         else:
@@ -122,8 +109,9 @@ class Unit(models.Model):
     unit_property = models.ForeignKey(
         Property, null=True, on_delete=models.SET_NULL, blank=True
     )
-=======
-        return self.name if self.name else self.file.url
+
+    def __str__(self):
+        return self.name 
 
 
 class Unit(models.Model):
@@ -132,14 +120,10 @@ class Unit(models.Model):
     """
 
     name = models.CharField(max_length=100, blank=True)
-<<<<<<< HEAD
     unit_property = models.ForeignKey(Property, null=True, on_delete=models.SET_NULL, blank=True)
->>>>>>> branch-01
-=======
     unit_property = models.ForeignKey(
         Property, related_name="units", blank=True, on_delete=models.CASCADE, null=True
     )
->>>>>>> branch-01
     kitchen = models.BooleanField(default=False)
     bathroom = models.BooleanField(default=False)
     toilet = models.BooleanField(default=False)
@@ -155,19 +139,12 @@ class Unit(models.Model):
     def location(self):
         return self.unit_property.location
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
->>>>>>> branch-01
-=======
     #def save(self, *args, **kwargs):
      #   if not self.occupied:
      #       self.unit_property.notify_subscribers()
      #   super().save(*args, **kwargs)
 
 
->>>>>>> branch-01
 class UnitImages(models.Model):
     """
     Unit Images model
@@ -180,13 +157,10 @@ class UnitImages(models.Model):
     file = models.FileField(upload_to="", blank=False)
 
     def __str__(self) -> str:
-<<<<<<< HEAD
         if type(self.name) != None:
             return self.name
         else:
             return self.file.url
-=======
-        return self.name if self.name else self.file.url
 
 
 class Subscription(models.Model):
@@ -205,17 +179,3 @@ class Subscription(models.Model):
 
     def __str__(self):
         return f"{self.user.username} subscribed to {self.property.name}"
-<<<<<<< HEAD
-
-
-
-
-
-
-
-    
-
-
->>>>>>> branch-01
-=======
->>>>>>> branch-01

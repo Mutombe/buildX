@@ -52,18 +52,12 @@ class UnitSerializer(serializers.ModelSerializer):
 
 
 class PropertySerializer(serializers.ModelSerializer):
-<<<<<<< HEAD
-    owner = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    images = PropertyImageSerializer(many=True)
-
-=======
     owner = serializers.ReadOnlyField(source='owner.username')
     images = PropertyImageSerializer(many=True, required=False)
     units = UnitSerializer(many=True, read_only=True, required=False)
     category = serializers.SlugRelatedField(slug_field='name',
                                             queryset=Category.objects.all())
     
->>>>>>> branch-01
     class Meta:
         model = Property
         fields = ['id', 'owner', 'name', 'location', 'category', 'images', 'units']
