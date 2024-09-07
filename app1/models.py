@@ -28,10 +28,6 @@ class PropertyManager(models.Manager):
     def for_user(self, user):
         return self.filter(owner=user)
 
-<<<<<<< HEAD
-
-=======
->>>>>>> f59a25ea94e14104336f06eea6475f782c90786f
 class Property(models.Model):
     name = models.CharField(max_length=100, blank=True)
     location = models.CharField(max_length=500, blank=False, null=True)
@@ -59,10 +55,6 @@ class Property(models.Model):
         null=True,
     )
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-<<<<<<< HEAD
-
-=======
->>>>>>> f59a25ea94e14104336f06eea6475f782c90786f
     booked_count = models.IntegerField(blank=True, default=0)
     occupied = models.BooleanField(default=False)
     subscribers_count = models.IntegerField(blank=True, default=0)
@@ -71,10 +63,6 @@ class Property(models.Model):
     def __str__(self) -> str:
         return self.name
 
-<<<<<<< HEAD
-=======
-
->>>>>>> f59a25ea94e14104336f06eea6475f782c90786f
     def notify_subscribers(self):
         subscribers = self.subscribers.all()
         for subscriber in subscribers:
@@ -88,10 +76,6 @@ class Property(models.Model):
                     fail_silently=False,
                 )
 
-<<<<<<< HEAD
-
-=======
->>>>>>> f59a25ea94e14104336f06eea6475f782c90786f
 class PropertyImages(models.Model):
     """
     Property Images model
@@ -108,10 +92,7 @@ class PropertyImages(models.Model):
     file = models.FileField(upload_to="", blank=False)
 
     def __str__(self) -> str:
-<<<<<<< HEAD
-=======
         
->>>>>>> f59a25ea94e14104336f06eea6475f782c90786f
         if type(self.name) != None:
             return self.name
         else:
@@ -126,13 +107,9 @@ class Unit(models.Model):
     unit_property = models.ForeignKey(
         Property, null=True, on_delete=models.SET_NULL, blank=True
     )
-<<<<<<< HEAD
 
     def __str__(self):
-        return self.name 
-=======
-        return self.name if self.name else self.file.url
->>>>>>> f59a25ea94e14104336f06eea6475f782c90786f
+        return self.name
 
 
 class Unit(models.Model):
@@ -165,10 +142,6 @@ class Unit(models.Model):
      #       self.unit_property.notify_subscribers()
      #   super().save(*args, **kwargs)
 
-<<<<<<< HEAD
-
-=======
->>>>>>> f59a25ea94e14104336f06eea6475f782c90786f
 class UnitImages(models.Model):
     """
     Unit Images model
@@ -185,10 +158,7 @@ class UnitImages(models.Model):
             return self.name
         else:
             return self.file.url
-<<<<<<< HEAD
-=======
         return self.name if self.name else self.file.url
->>>>>>> f59a25ea94e14104336f06eea6475f782c90786f
 
 
 class Subscription(models.Model):
@@ -207,8 +177,6 @@ class Subscription(models.Model):
 
     def __str__(self):
         return f"{self.user.username} subscribed to {self.property.name}"
-<<<<<<< HEAD
-=======
 
 
 
@@ -218,4 +186,3 @@ class Subscription(models.Model):
 
     
 
->>>>>>> f59a25ea94e14104336f06eea6475f782c90786f
