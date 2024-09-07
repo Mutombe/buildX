@@ -1,3 +1,4 @@
+from datetime import date
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
@@ -14,6 +15,8 @@ class Booking(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bookings')
     status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('approved', 'Approved'), ('denied', 'Denied')], default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
+    start_date = models.DateField(default=date.today)
+    end_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
         if self.unit:
@@ -45,3 +48,9 @@ class Booking(models.Model):
             fail_silently=False,
         )
 
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
