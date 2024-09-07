@@ -1,16 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchDetails, setBookingData } from '../store/bookingSlice';
+// src/components/BookingSelectDate.js
+import { useEffect, useState } from 'react';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { TextField, Button, Box, Typography } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { setBookingDetails } from '../../redux/bookingSlice';
+import { useNavigate } from 'react-router-dom';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider/LocalizationProvider';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { fetchDetails } from '../../redux/bookingSlice';
 
-const BookSelectDate = () => {
+const BookingSelectDate = ({ propertyId, unitId }) => {
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [bookingType, setBookingType] = useState('unspecified');
   const { type, id } = useParams();
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
+
   const details = useSelector((state) => state.booking.details);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [bookingType, setBookingType] = useState(type);
 
   useEffect(() => {
     dispatch(fetchDetails({ id, type }));
@@ -27,24 +35,49 @@ const BookSelectDate = () => {
   };
 
   const handleProceed = () => {
+    // Save booking details to Redux store and local storage
     const bookingData = {
-      startDate,
-      endDate: bookingType === 'specified' ? endDate : null,
+      startDate: startDate.toISOString().split('T')[0],
+      endDate: bookingType === 'specified' ? endDate.toISOString().split('T')[0] : null,
       bookingType,
       price: calculateTotalPrice(details.price_per_month, startDate, endDate, bookingType),
     };
-    dispatch(setBookingData(bookingData));
-    localStorage.setItem('bookingData', JSON.stringify(bookingData));
-    history.push('/booking-confirmation');
+    dispatch(setBookingDetails(bookingData));
+    localStorage.setItem('bookingDetails', JSON.stringify(bookingData));
+    navigate('/booking/confirmation');
   };
 
   return (
-    <div>
-      <h1>Select Dates for Booking</h1>
-      {/* Date pickers and other UI elements */}
-      <button onClick={handleProceed}>Proceed</button>
-    </div>
+    <Box>
+      <Typography variant="h5">Select Booking Dates</Typography>
+      <Box mt={2}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DemoContainer components={['DatePicker']}>
+        <DatePicker
+          label="Start Date"
+          value={startDate}
+          onChange={(newValue) => setStartDate(newValue)}
+          renderInput={(params) => <TextField {...params} />}
+            />
+        </DemoContainer>
+      </LocalizationProvider>
+        {bookingType === 'specified' && (
+          <DatePicker
+            label="End Date"
+            value={endDate}
+            onChange={(newValue) => setEndDate(newValue)}
+            renderInput={(params) => <TextField {...params} />}
+          />
+        )}
+      </Box>
+      <Box mt={2}>
+        <Button variant="contained" onClick={handleProceed}>
+          Proceed to Confirmation
+        </Button>
+      </Box>
+    </Box>
   );
 };
 
-export default BookSelectDate;
+export default BookingSelectDate;
+

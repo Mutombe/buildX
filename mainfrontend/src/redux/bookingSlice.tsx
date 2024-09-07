@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import authAxios from '../utils/authAxios';
 
-// Thunks for booking actions
 export const fetchDetails = createAsyncThunk(
   'bookings/fetchDetails',
   async ({ id, type }, { rejectWithValue }) => {
