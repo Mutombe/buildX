@@ -29,6 +29,8 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/approve-booking" element={""} />
             <Route path="/deny-booking" element={""} />
+            <Route path="/book-select-date/:type/:id" component={BookSelectDate} />
+            <Route path="/booking-confirmation" component={BookingConfirmation} />
           </Routes>
         </BrowserRouter>
       </div>

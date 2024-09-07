@@ -1,50 +1,50 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { createBooking } from '../redux/bookingSlice';
-import { Button, Form, Checkbox, TextField } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchDetails, setBookingData } from '../store/bookingSlice';
 
-const BookingPropertyForm = ({ unitId }) => {
-  const [isSpecifiedPeriod, setIsSpecifiedPeriod] = useState(false);
+const BookSelectDate = () => {
+  const { type, id } = useParams();
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const details = useSelector((state) => state.booking.details);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const dispatch = useDispatch();
+  const [bookingType, setBookingType] = useState(type);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    dispatch(fetchDetails({ id, type }));
+  }, [id, type, dispatch]);
+
+  const calculateTotalPrice = (pricePerMonth, startDate, endDate, type) => {
+    const start = new Date(startDate);
+    const end = endDate ? new Date(endDate) : new Date(startDate);
+    const daysBooked = (end - start) / (1000 * 60 * 60 * 24);
+    if (type === 'specified') {
+      return (pricePerMonth / 30) * daysBooked;
+    }
+    return pricePerMonth;
+  };
+
+  const handleProceed = () => {
     const bookingData = {
-      unit: unitId,
-      start_date: startDate,
-      end_date: isSpecifiedPeriod ? endDate : null,
+      startDate,
+      endDate: bookingType === 'specified' ? endDate : null,
+      bookingType,
+      price: calculateTotalPrice(details.price_per_month, startDate, endDate, bookingType),
     };
-    dispatch(createBooking(bookingData));
+    dispatch(setBookingData(bookingData));
+    localStorage.setItem('bookingData', JSON.stringify(bookingData));
+    history.push('/booking-confirmation');
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Checkbox
-        checked={isSpecifiedPeriod}
-        onChange={() => setIsSpecifiedPeriod(!isSpecifiedPeriod)}
-        label="Booking for a specified period"
-      />
-      {isSpecifiedPeriod && (
-        <>
-          <TextField
-            label="From"
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-          />
-          <TextField
-            label="To"
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-          />
-        </>
-      )}
-      <Button type="submit">Proceed</Button>
-    </Form>
+    <div>
+      <h1>Select Dates for Booking</h1>
+      {/* Date pickers and other UI elements */}
+      <button onClick={handleProceed}>Proceed</button>
+    </div>
   );
 };
 
-export default BookingPropertyForm;
+export default BookSelectDate;

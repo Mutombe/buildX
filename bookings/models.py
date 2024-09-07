@@ -9,7 +9,7 @@ class Booking(models.Model):
     """
     Booking model
     """
-    booking_type = models.CharField(max_length=50)
+    booking_type = models.CharField(max_length=50, default="unspecified")
     unit = models.ForeignKey(Unit, null=True, blank=True, on_delete=models.CASCADE)
     property = models.ForeignKey(Property, null=True, blank=True, on_delete=models.CASCADE)
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bookings')
@@ -24,6 +24,14 @@ class Booking(models.Model):
             return f"Booking by {self.customer.username} for {self.unit.name}"
         else:
             return f"Booking by {self.customer.username} for {self.property.name}"
+
+    def calculate_total_price(self):
+        if self.booking_type == 'specified':
+            days_booked = (self.to_date - self.from_date).days
+            self.total_price = (self.price_per_month / 30) * days_booked
+        else:
+            self.total_price = self.price_per_month
+        self.save()
 
 
 class Notification(models.Model):
