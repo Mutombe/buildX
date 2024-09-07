@@ -3,8 +3,6 @@ from .models import Booking
 
 
 class AdminBookingOverview(admin.ModelAdmin):
-<<<<<<< HEAD
-<<<<<<< HEAD
     list_display = (
         "id",
         "user",
@@ -19,15 +17,11 @@ class AdminBookingOverview(admin.ModelAdmin):
         "user",
         "property",
     )
-
-=======
     list_display = ("id","customer", "property",)
-=======
     list_display = ("id","customer", "property", "status")
->>>>>>> branch-01
     search_fields = ("customer", "property",)
     ordering = ("property",)
     list_filter = ("customer", "property",)
->>>>>>> branch-01
+
 
 admin.site.register(Booking, AdminBookingOverview)
