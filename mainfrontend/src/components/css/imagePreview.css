@@ -9,6 +9,7 @@
   }
   
   .image-preview img {
+    border-radius: 3px;
     width: 100px; /* Set a fixed width for image previews */
     height: auto; /* Maintain aspect ratio */
   }

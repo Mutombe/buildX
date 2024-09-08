@@ -25,13 +25,6 @@ class Booking(models.Model):
         else:
             return f"Booking by {self.customer.username} for {self.property.name}"
 
-    def calculate_total_price(self):
-        if self.booking_type == 'specified':
-            days_booked = (self.to_date - self.from_date).days
-            self.total_price = (self.price_per_month / 30) * days_booked
-        else:
-            self.total_price = self.price_per_month
-        self.save()
 
 
 class Notification(models.Model):
