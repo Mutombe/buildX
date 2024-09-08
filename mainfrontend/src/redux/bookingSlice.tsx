@@ -5,7 +5,7 @@ export const fetchDetails = createAsyncThunk(
   'bookings/fetchDetails',
   async ({ id, type }, { rejectWithValue }) => {
     try {
-      const endpoint = type === 'unit' ? `/api/units/${id}` : `/api/properties/${id}`;
+      const endpoint = type === 'unit' ? `/units/${id}` : `/properties/${id}`;
       const response = await authAxios.get(endpoint);
       return response.data;
     } catch (error) {
@@ -18,7 +18,7 @@ export const bookProperty = createAsyncThunk(
   'bookings/bookProperty',
   async (property_id, { rejectWithValue }) => {
     try {
-      const response = await authAxios.post(`book/property/${property_id}`);
+      const response = await authAxios.post(`book/properties/${property_id}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

@@ -31,7 +31,8 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/approve-booking" element={""} />
             <Route path="/deny-booking" element={""} />
-            <Route path="/book-select-date/:type/:id" element={<BookingSelectDate />} />
+            <Route path="/book/:type/:id" element={<BookingSelectDate />} />
+            <Route path="/book/:type/:id" element={<BookingSelectDate />} />
             <Route path="/booking-confirmation" element={<BookingConfirmation />} />
           </Routes>
         </BrowserRouter>
