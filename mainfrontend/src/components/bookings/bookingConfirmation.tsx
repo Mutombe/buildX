@@ -7,6 +7,10 @@ const BookingConfirmation = () => {
   const bookingDetails = JSON.parse(localStorage.getItem('bookingDetails'));
   const { startDate, endDate, bookingType, propertyId, unitId } = bookingDetails;
 
+  // Convert startDate and endDate strings to Date objects
+  const startDateObj = new Date(startDate);
+  const endDateObj = endDate ? new Date(endDate) : null;
+
   const handleConfirm = () => {
     if (unitId) {
       dispatch(bookUnit(unitId));
@@ -22,8 +26,8 @@ const BookingConfirmation = () => {
       <Typography variant="h5">Confirm Your Booking</Typography>
       <Box mt={2}>
         <Typography>Booking Type: {bookingType}</Typography>
-        <Typography>Start Date: {startDate?.toDateString()}</Typography>
-        {bookingType === 'specified' && <Typography>End Date: {endDate?.toDateString()}</Typography>}
+        <Typography>Start Date: {startDateObj?.toDateString()}</Typography>
+        {bookingType === 'specified' && <Typography>End Date: {endDateObj?.toDateString()}</Typography>}
         {/* Add more details as needed */}
       </Box>
       <Box mt={2}>
