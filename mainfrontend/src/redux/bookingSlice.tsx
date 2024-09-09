@@ -1,11 +1,24 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import authAxios from "../utils/authAxios";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import authAxios from '../utils/authAxios';
+
+export const fetchDetails = createAsyncThunk(
+  'bookings/fetchDetails',
+  async ({ id, type }, { rejectWithValue }) => {
+    try {
+      const endpoint = type === 'unit' ? `/units/${id}` : `/properties/${id}`;
+      const response = await authAxios.get(endpoint);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 export const bookProperty = createAsyncThunk(
-  "bookings/bookingProperty",
+  'bookings/bookProperty',
   async (property_id, { rejectWithValue }) => {
     try {
-      const response = await authAxios.post(`book/property/${property_id}`);
+      const response = await authAxios.post(`book/properties/${property_id}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -14,7 +27,7 @@ export const bookProperty = createAsyncThunk(
 );
 
 export const bookUnit = createAsyncThunk(
-  "bookings/bookingUnit",
+  'bookings/bookUnit',
   async (unit_id, { rejectWithValue }) => {
     try {
       const response = await authAxios.post(`book/unit/${unit_id}`);
@@ -25,9 +38,8 @@ export const bookUnit = createAsyncThunk(
   }
 );
 
-
 export const approveBooking = createAsyncThunk(
-  "bookings/approveBooking",
+  'bookings/approveBooking',
   async (booking_id, { rejectWithValue }) => {
     try {
       const response = await authAxios.post(`approve/booking/${booking_id}`);
@@ -39,10 +51,10 @@ export const approveBooking = createAsyncThunk(
 );
 
 export const denyBooking = createAsyncThunk(
-  "bookings/denyBooking",
+  'bookings/denyBooking',
   async (booking_id, { rejectWithValue }) => {
     try {
-      const response = await authAxios.post(`approve/booking/${booking_id}`);
+      const response = await authAxios.post(`deny/booking/${booking_id}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -51,10 +63,10 @@ export const denyBooking = createAsyncThunk(
 );
 
 export const manageBookings = createAsyncThunk(
-  "bookings/manageBookings",
+  'bookings/manageBookings',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await authAxios.get("manage/bookings/");
+      const response = await authAxios.get('manage/bookings/');
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -63,8 +75,10 @@ export const manageBookings = createAsyncThunk(
 );
 
 const bookingSlice = createSlice({
-  name: "bookings",
+  name: 'bookings',
   initialState: {
+    details: {},
+    bookingData: {},
     unitBookings: [],
     propertyBookings: [],
     status: null,
@@ -72,9 +86,24 @@ const bookingSlice = createSlice({
     error: null,
     allBookings: [],
   },
-  reducers: {},
+  reducers: {
+    setBookingDetails: (state, action) => {
+      state.bookingData = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchDetails.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchDetails.fulfilled, (state, action) => {
+        state.loading = false;
+        state.details = action.payload;
+      })
+      .addCase(fetchDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
       .addCase(bookProperty.pending, (state) => {
         state.loading = true;
       })
@@ -133,4 +162,5 @@ const bookingSlice = createSlice({
   },
 });
 
+export const { setBookingDetails } = bookingSlice.actions;
 export default bookingSlice.reducer;

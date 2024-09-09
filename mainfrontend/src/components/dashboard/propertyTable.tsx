@@ -2,7 +2,6 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import EditIcon from "@mui/icons-material/Edit";
@@ -10,15 +9,28 @@ import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import Text from "../typography/typography";
 import { deleteProperty } from "../../redux/propertySlice";
 import { fetchUserProperties } from "../../redux/propertySlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { IconButton } from "@mui/material";
+import EditPropertyModal from "../properties/propertiesEditForm";
 
 export function PropertyTable() {
   const dispatch = useDispatch();
   const userProperties = useSelector(
     (state) => state.properties.userProperties
   );
+  const [selectedProperty, setSelectedProperty] = useState<any>(null);
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleEditClick = (property: any) => {
+    setSelectedProperty(property);
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setSelectedProperty(null);
+  };
 
   useEffect(() => {
     dispatch(fetchUserProperties());
@@ -52,9 +64,10 @@ export function PropertyTable() {
 
                   <TableCell align="right">{property.location}</TableCell>
                   <TableCell align="right">
-                    <EditIcon color="primary" />
+                  <IconButton onClick={() => handleEditClick(property)}>
+                    <EditIcon color="primary" /></IconButton>
                   </TableCell>
-
+                  
                   <TableCell align="right">
                     <IconButton
                       aria-label="delete"
@@ -68,8 +81,16 @@ export function PropertyTable() {
             </TableBody>
           </Table>
         </TableContainer>
+      )};
+
+      {selectedProperty && (
+        <EditPropertyModal
+          open={openModal}
+          onClose={handleCloseModal}
+          property={selectedProperty}
+        />
       )}
-      ;
     </>
+    
   );
 }

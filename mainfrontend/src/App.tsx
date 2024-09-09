@@ -10,6 +10,8 @@ import PropertyList from "./components/properties/listProperties";
 import AddPro from "./components/properties/form";
 import UnitList from "./components/units/list_units";
 import "./App.css";
+import BookingConfirmation from "./components/bookings/bookingConfirmation";
+import BookingSelectDate from "./components/bookings/bookPropertyForm";
 //import ProtectedRoute from "./utils/protectedRoute";
 
 function App() {
@@ -29,6 +31,8 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/approve-booking" element={""} />
             <Route path="/deny-booking" element={""} />
+            <Route path="/book/:type/:id" element={<BookingSelectDate />} />
+            <Route path="/booking-confirmation" element={<BookingConfirmation />} />
           </Routes>
         </BrowserRouter>
       </div>
