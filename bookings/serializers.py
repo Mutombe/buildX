@@ -4,23 +4,23 @@ from app1.models import Property, Unit
 
 
 class BookingSerializer(serializers.ModelSerializer):
-    property_id = serializers.PrimaryKeyRelatedField(
-        queryset=Property.objects.all(),
-        source="property",
-        required=False,
-        write_only=True,
-    )
-    unit_id = serializers.PrimaryKeyRelatedField(
-        queryset=Unit.objects.all(), source="unit", required=False, write_only=True
-    )
+    #property_id = serializers.PrimaryKeyRelatedField(
+     #   queryset=Property.objects.all(),
+     #   source="property",
+     #   required=False,
+     #   write_only=True,
+    #)
+    #unit_id = serializers.PrimaryKeyRelatedField(
+     #   queryset=Unit.objects.all(), source="unit", required=False, write_only=True
+    #)
     customer = serializers.ReadOnlyField(source="customer.username")
 
     class Meta:
         model = Booking
         fields = [
             "id",
-            "property_id",
-            "unit_id",
+            "property",
+            "unit",
             "customer",
             "booking_type",
             "start_date",
@@ -33,8 +33,6 @@ class BookingSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         # Ensure that either a unit or property is booked, not both or none.
-        if not data.get("property") and not data.get("unit"):
-            raise serializers.ValidationError("Either unit or property must be selected.")
         if data.get("property") and data.get("unit"):
             raise serializers.ValidationError("Cannot book both a unit and a property.")
 

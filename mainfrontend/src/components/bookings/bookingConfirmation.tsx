@@ -1,12 +1,15 @@
-import { Box, Typography, Button } from '@mui/material';
-import { useDispatch } from 'react-redux';
-import { bookProperty, bookUnit } from '../../redux/bookingSlice';
+import { Box, Typography, Button } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { bookProperty, bookUnit } from "../../redux/bookingSlice";
+import { useNavigate } from "react-router-dom";
 
 const BookingConfirmation = () => {
   const dispatch = useDispatch();
-  const bookingDetails = JSON.parse(localStorage.getItem('bookingDetails'));
-  const { startDate, endDate, bookingType, propertyId, unitId, total_price } = bookingDetails;
-
+  const navigate = useNavigate();
+  const bookingDetails = JSON.parse(localStorage.getItem("bookingDetails"));
+  const { startDate, endDate, bookingType, propertyId, unitId, total_price } =
+    bookingDetails;
+  let result: any = [];
   // Convert startDate and endDate strings to Date objects
   const startDateObj = new Date(startDate);
   const endDateObj = endDate ? new Date(endDate) : null;
@@ -22,12 +25,19 @@ const BookingConfirmation = () => {
     };
 
     if (unitId) {
-      dispatch(bookUnit(bookingData));
+      const booking = dispatch(bookUnit(bookingData)).unwrap();
+      result.push(booking);
+      console.log("Booking Result", result);
     } else if (propertyId) {
-      dispatch(bookProperty(bookingData));
+      const booking = dispatch(bookProperty(bookingData)).unwrap();
+      result.push(booking);
+      console.log("Booking Result", result);
     }
     // Clear local storage
-    localStorage.removeItem('bookingDetails');
+    localStorage.removeItem("bookingDetails");
+    if (result) {
+      navigate("/dashboard");
+    }
     //navigate('/dashboard');
   };
 
@@ -37,7 +47,9 @@ const BookingConfirmation = () => {
       <Box mt={2}>
         <Typography>Booking Type: {bookingType}</Typography>
         <Typography>Start Date: {startDateObj?.toDateString()}</Typography>
-        {bookingType === 'specified' && <Typography>End Date: {endDateObj?.toDateString()}</Typography>}
+        {bookingType === "specified" && (
+          <Typography>End Date: {endDateObj?.toDateString()}</Typography>
+        )}
         {/* Add more details as needed */}
       </Box>
       <Box mt={2}>
