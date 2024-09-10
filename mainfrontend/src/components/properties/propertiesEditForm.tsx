@@ -27,14 +27,21 @@ const EditPropertyModal: React.FC<EditPropertyModalProps> = ({ open, onClose, pr
   useEffect(() => {
     if (property) {
       setFormData({
-        name: formData.name || '',
-        category: formData.category || '',
-        location: formData.location || '',
-        price: formData.price || '',
+        name: property.name || '',
+        category: property.category || '',
+        location: property.location || '',
+        price: property.price || '',
       });
       }
       dispatch(fetchCategories());
   }, [property, dispatch]);
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      category: e.target.value,
+    });
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -65,8 +72,8 @@ const EditPropertyModal: React.FC<EditPropertyModalProps> = ({ open, onClose, pr
       <DialogContent>
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <TextField
-          label="Name"
-          name="Name"
+          label="Property Name"
+          name="name"
           value={formData.name}
           onChange={handleInputChange}
           fullWidth
@@ -77,7 +84,7 @@ const EditPropertyModal: React.FC<EditPropertyModalProps> = ({ open, onClose, pr
           label="Category"
           name="Category"
           value={formData.category}
-          onChange={handleInputChange}
+          onChange={handleCategoryChange}
           fullWidth
                   margin="normal"
                   placeholder={property.category}

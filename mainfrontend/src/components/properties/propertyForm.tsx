@@ -59,7 +59,7 @@ const PropertyUploadForm = () => {
       formData.append(key, value);
     });
     images.forEach((image, i) => {
-      formData.append(`images[${i}]file`, image.file);
+      formData.append(`images[${i}]file`, image.file); 
     });
 
     try {

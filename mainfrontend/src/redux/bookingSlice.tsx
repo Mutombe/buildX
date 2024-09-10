@@ -16,9 +16,9 @@ export const fetchDetails = createAsyncThunk(
 
 export const bookProperty = createAsyncThunk(
   'bookings/bookProperty',
-  async (property_id, { rejectWithValue }) => {
+  async ( bookingData, { rejectWithValue }) => {
     try {
-      const response = await authAxios.post(`book/properties/${property_id}`);
+      const response = await authAxios.post(`book/properties/${bookingData.property_id}/`, bookingData);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -28,11 +28,12 @@ export const bookProperty = createAsyncThunk(
 
 export const bookUnit = createAsyncThunk(
   'bookings/bookUnit',
-  async (unit_id, { rejectWithValue }) => {
+  async (bookingData, { rejectWithValue }) => {
     try {
-      const response = await authAxios.post(`book/unit/${unit_id}`);
+      const response = await authAxios.post(`book/unit/${bookingData.unit_id}/`, bookingData);
       return response.data;
     } catch (error) {
+      console.log("Booking Error", error)
       return rejectWithValue(error.response.data);
     }
   }

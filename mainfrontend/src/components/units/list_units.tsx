@@ -15,7 +15,7 @@ const UnitList = () => {
   }, [propertyId, dispatch]);
 
   const handleBookUnit = (unitId: any) => {
-    navigate(`/units/${unitId}/book`);
+    navigate(`/book/unit/${unitId}/`);
   };
 
   return (
