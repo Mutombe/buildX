@@ -20,6 +20,8 @@ const BookingSelectDate = () => {
   const details = useSelector((state) => state.bookings.details);
 
   useEffect(() => {
+    console.log('Booking type:', type);
+    console.log('Booking id:', id);
     dispatch(fetchDetails({ id, type }));
   }, [id, type, dispatch]);
 
@@ -36,7 +38,7 @@ const BookingSelectDate = () => {
   const handleProceed = () => {
     const bookingData = {
       unitId: type === 'unit' ? id : null,
-      propertyId: type === 'property' ? id : null,
+      propertyId: type === 'properties' ? id : null,
       startDate: startDate.toISOString().split('T')[0],
       endDate: bookingType === 'specified' ? endDate.toISOString().split('T')[0] : null,
       bookingType,
