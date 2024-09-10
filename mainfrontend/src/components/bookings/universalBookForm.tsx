@@ -1,18 +1,25 @@
-import { useEffect, useState } from 'react';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { TextField, Button, Box, Typography, FormControlLabel, Checkbox } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import { setBookingDetails } from '../../redux/bookingSlice';
-import { useNavigate, useParams } from 'react-router-dom';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider/LocalizationProvider';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { fetchDetails } from '../../redux/bookingSlice';
+import { useEffect, useState } from "react";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { setBookingDetails } from "../../redux/bookingSlice";
+import { useNavigate, useParams } from "react-router-dom";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { fetchDetails } from "../../redux/bookingSlice";
 
 const BookingSelectDate = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [bookingType, setBookingType] = useState('unspecified');
+  const [bookingType, setBookingType] = useState("unspecified");
   const { type, id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -20,16 +27,21 @@ const BookingSelectDate = () => {
   const details = useSelector((state) => state.bookings.details);
 
   useEffect(() => {
-    console.log('Booking type:', type);
-    console.log('Booking id:', id);
+    console.log("Booking type:", type);
+    console.log("Booking id:", id);
     dispatch(fetchDetails({ id, type }));
   }, [id, type, dispatch]);
 
-  const calculateTotalPrice = (pricePerMonth, startDate, endDate, bookingType) => {
+  const calculateTotalPrice = (
+    pricePerMonth,
+    startDate,
+    endDate,
+    bookingType
+  ) => {
     const start = new Date(startDate);
     const end = endDate ? new Date(endDate) : new Date(startDate);
     const daysBooked = (end - start) / (1000 * 60 * 60 * 24);
-    if (bookingType === 'specified') {
+    if (bookingType === "specified") {
       return (pricePerMonth / 30) * daysBooked;
     }
     return pricePerMonth;
@@ -37,16 +49,24 @@ const BookingSelectDate = () => {
 
   const handleProceed = () => {
     const bookingData = {
-      unitId: type === 'unit' ? id : null,
-      propertyId: type === 'properties' ? id : null,
-      startDate: startDate.toISOString().split('T')[0],
-      endDate: bookingType === 'specified' ? endDate.toISOString().split('T')[0] : null,
+      unitId: type === "unit" ? id : null,
+      propertyId: type === "properties" ? id : null,
+      startDate: startDate.toISOString().split("T")[0],
+      endDate:
+        bookingType === "specified"
+          ? endDate.toISOString().split("T")[0]
+          : null,
       bookingType,
-      total_price: calculateTotalPrice(details.price_per_month, startDate, endDate, bookingType),
+      total_price: calculateTotalPrice(
+        details.price_per_month,
+        startDate,
+        endDate,
+        bookingType
+      ),
     };
     dispatch(setBookingDetails(bookingData));
-    localStorage.setItem('bookingDetails', JSON.stringify(bookingData));
-    navigate('/booking-confirmation');
+    localStorage.setItem("bookingDetails", JSON.stringify(bookingData));
+    navigate("/booking-confirmation");
   };
 
   return (
@@ -58,8 +78,10 @@ const BookingSelectDate = () => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={bookingType === 'specified'}
-              onChange={(e) => setBookingType(e.target.checked ? 'specified' : 'unspecified')}
+              checked={bookingType === "specified"}
+              onChange={(e) =>
+                setBookingType(e.target.checked ? "specified" : "unspecified")
+              }
             />
           }
           label="Specify rental period"
@@ -68,7 +90,7 @@ const BookingSelectDate = () => {
 
       <Box mt={2}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer components={['DatePicker']}>
+          <DemoContainer components={["DatePicker"]}>
             <DatePicker
               label="Start Date"
               value={startDate}
@@ -79,9 +101,9 @@ const BookingSelectDate = () => {
         </LocalizationProvider>
 
         {/* Show End Date picker if 'specified' is selected */}
-        {bookingType === 'specified' && (
+        {bookingType === "specified" && (
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={['DatePicker']}>
+            <DemoContainer components={["DatePicker"]}>
               <DatePicker
                 label="End Date"
                 value={endDate}

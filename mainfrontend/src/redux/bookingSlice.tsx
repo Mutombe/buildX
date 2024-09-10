@@ -18,7 +18,8 @@ export const bookProperty = createAsyncThunk(
   'bookings/bookProperty',
   async ( bookingData, { rejectWithValue }) => {
     try {
-      const response = await authAxios.post(`book/properties/${bookingData.property_id}/`, bookingData);
+      const response = await authAxios.post(`book/properties/${bookingData.property}/`, bookingData);
+      console.log("Property ID Booking/ Slice Post to Backend", bookingData.property)
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -30,7 +31,8 @@ export const bookUnit = createAsyncThunk(
   'bookings/bookUnit',
   async (bookingData, { rejectWithValue }) => {
     try {
-      const response = await authAxios.post(`book/unit/${bookingData.unit_id}/`, bookingData);
+      const response = await authAxios.post(`book/unit/${bookingData.unit}/`, bookingData);
+      console.log("Unit ID Booking/ Slice Post to Backend", bookingData.unit)
       return response.data;
     } catch (error) {
       console.log("Booking Error", error)

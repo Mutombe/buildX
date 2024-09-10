@@ -29,7 +29,7 @@ def book_unit(request, unit_id):
         return Response({"detail": "Unit is already occupied."}, status=status.HTTP_400_BAD_REQUEST)
 
     request_data = request.data.copy()  # Make a mutable copy of request data
-    request_data["unit_id"] = unit.id
+    request_data["unit"] = unit.id
 
     serializer = BookingSerializer(data=request_data, context={"request": request})
     if serializer.is_valid():
@@ -49,7 +49,7 @@ def book_property(request, property_id):
         return Response({"detail": "Property has units. Book a unit instead."}, status=status.HTTP_400_BAD_REQUEST)
 
     request_data = request.data.copy()  # Make a mutable copy of request data
-    request_data["property_id"] = property.id
+    request_data["property"] = property.id
 
     serializer = BookingSerializer(data=request_data, context={"request": request})
     if serializer.is_valid():

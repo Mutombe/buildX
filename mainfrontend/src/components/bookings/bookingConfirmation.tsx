@@ -20,8 +20,8 @@ const BookingConfirmation = () => {
       end_date: endDate,
       booking_type: bookingType,
       total_price: total_price,
-      unit_id: unitId || null,
-      property_id: propertyId || null,
+      unit: unitId || null,
+      property: propertyId || null,
     };
 
     if (unitId) {
