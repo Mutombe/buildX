@@ -35,6 +35,8 @@ const BookingSelectDate = () => {
 
   const handleProceed = () => {
     const bookingData = {
+      unitId: type === 'unit' ? id : null,
+      propertyId: type === 'property' ? id : null,
       startDate: startDate.toISOString().split('T')[0],
       endDate: bookingType === 'specified' ? endDate.toISOString().split('T')[0] : null,
       bookingType,

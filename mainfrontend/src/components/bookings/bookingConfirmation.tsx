@@ -17,8 +17,8 @@ const BookingConfirmation = () => {
       end_date: endDate,
       booking_type: bookingType,
       total_price: total_price,
-      unitId: unitId || null,
-      propertyId: propertyId || null
+      unit: unitId || null,
+      property: propertyId || null,
     };
 
     if (unitId) {
@@ -28,6 +28,7 @@ const BookingConfirmation = () => {
     }
     // Clear local storage
     localStorage.removeItem('bookingDetails');
+    //navigate('/dashboard');
   };
 
   return (
