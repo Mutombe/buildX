@@ -32,21 +32,14 @@ class BookingSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "customer", "status", "created_at"]
 
     def validate(self, data):
-        """Custom validation to ensure either property or unit is booked"""
-        property_ = data.get("property")
-        unit = data.get("unit")
+        # Ensure that either a unit or property is booked, not both or none.
+        if not data.get("property") and not data.get("unit"):
+            raise serializers.ValidationError("Either unit or property must be selected.")
+        if data.get("property") and data.get("unit"):
+            raise serializers.ValidationError("Cannot book both a unit and a property.")
 
-        if not property_ and not unit:
-            raise serializers.ValidationError(
-                "Either a property or a unit must be booked."
-            )
-
-        # Ensure the end date is after the start date if booking for a specified period
-        if (
-            data["booking_type"] == "specified"
-            and "start_date" in data
-            and "end_date" in data
-        ):
+        # Check if end date is valid for 'specified' booking type
+        if data["booking_type"] == "specified" and data.get("start_date") and data.get("end_date"):
             if data["end_date"] <= data["start_date"]:
                 raise serializers.ValidationError("End date must be after start date.")
 

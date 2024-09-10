@@ -26,55 +26,36 @@ class BookingDetailView(generics.RetrieveUpdateDestroyAPIView):
 def book_unit(request, unit_id):
     unit = get_object_or_404(Unit, id=unit_id)
     if unit.occupied:
-        return Response(
-            {"detail": "Unit is already occupied."}, status=status.HTTP_400_BAD_REQUEST
-        )
-    booking_data = {
-        "unit": unit.id,
-        "customer": request.user.id,
-        "start_date": request.data.get("start_date"),
-        "end_date": request.data.get("end_date"),
-        "booking_type": request.data.get("booking_type"),
-        "total_price": request.data.get("total_price"),
-    }
-    serializer = BookingSerializer(data=booking_data)
+        return Response({"detail": "Unit is already occupied."}, status=status.HTTP_400_BAD_REQUEST)
 
+    request_data = request.data.copy()  # Make a mutable copy of request data
+    request_data["unit_id"] = unit.id
+
+    serializer = BookingSerializer(data=request_data, context={"request": request})
     if serializer.is_valid():
-        serializer.save()
-        return Response(
-            {"booking_id": serializer.data["id"]}, status=status.HTTP_201_CREATED
-        )
+        serializer.save(customer=request.user)  # Pass customer from request
+        return Response({"booking_id": serializer.data["id"]}, status=status.HTTP_201_CREATED)
+    
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def book_property(request, property_id):
     property = get_object_or_404(Property, id=property_id)
     if property.occupied:
-        return Response(
-            {"detail": "Unit is already occupied."}, status=status.HTTP_400_BAD_REQUEST
-        )
-    if property.units.exists():
-        return Response(
-            {"detail": "Property has units. Book a unit instead."},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
-    booking_data = {
-        "property": property.id,
-        "customer": request.user.id,
-        "start_date": request.data.get("start_date"),
-        "end_date": request.data.get("end_date"),
-        "booking_type": request.data.get("booking_type"),
-        "total_price": request.data.get("total_price"),
-    }
-    serializer = BookingSerializer(data=booking_data)
+        return Response({"detail": "Property is already occupied."}, status=status.HTTP_400_BAD_REQUEST)
 
+    if property.units.exists():
+        return Response({"detail": "Property has units. Book a unit instead."}, status=status.HTTP_400_BAD_REQUEST)
+
+    request_data = request.data.copy()  # Make a mutable copy of request data
+    request_data["property_id"] = property.id
+
+    serializer = BookingSerializer(data=request_data, context={"request": request})
     if serializer.is_valid():
-        serializer.save()
-        return Response(
-            {"booking_id": serializer.data["id"]}, status=status.HTTP_201_CREATED
-        )
+        serializer.save(customer=request.user)  # Pass customer from request
+        return Response({"booking_id": serializer.data["id"]}, status=status.HTTP_201_CREATED)
+    
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
