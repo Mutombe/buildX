@@ -5,17 +5,26 @@ import { bookProperty, bookUnit } from '../../redux/bookingSlice';
 const BookingConfirmation = () => {
   const dispatch = useDispatch();
   const bookingDetails = JSON.parse(localStorage.getItem('bookingDetails'));
-  const { startDate, endDate, bookingType, propertyId, unitId } = bookingDetails;
+  const { startDate, endDate, bookingType, propertyId, unitId, total_price } = bookingDetails;
 
   // Convert startDate and endDate strings to Date objects
   const startDateObj = new Date(startDate);
   const endDateObj = endDate ? new Date(endDate) : null;
 
   const handleConfirm = () => {
+    const bookingData = {
+      start_date: startDate,
+      end_date: endDate,
+      booking_type: bookingType,
+      total_price: total_price,
+      unitId: unitId || null,
+      propertyId: propertyId || null
+    };
+
     if (unitId) {
-      dispatch(bookUnit(unitId));
+      dispatch(bookUnit(bookingData));
     } else if (propertyId) {
-      dispatch(bookProperty(propertyId));
+      dispatch(bookProperty(bookingData));
     }
     // Clear local storage
     localStorage.removeItem('bookingDetails');
