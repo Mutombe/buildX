@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import { fetchUnits } from '../../redux/propertySlice';
+import { fetchPropertyUnits } from '../../redux/propertySlice';
 
 const UnitList = () => {
   const { propertyId } = useParams();
@@ -11,7 +11,7 @@ const UnitList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(fetchUnits(propertyId));
+    dispatch(fetchPropertyUnits(propertyId));
   }, [propertyId, dispatch]);
 
   const handleBookUnit = (unitId: any) => {
@@ -22,7 +22,7 @@ const UnitList = () => {
     <Container>
       <Row>
         {units.map((unit: any) => (
-          <Col key={unit.id} md={4} className="mb-3">
+          <Col key={unit.id} md={4} className="">
             <Card>
               <Card.Body>
                 <Card.Title>{unit.name}</Card.Title>

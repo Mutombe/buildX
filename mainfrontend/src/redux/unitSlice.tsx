@@ -1,6 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import authAxios from "../utils/authAxios";
 
+export const fetchUnits = createAsyncThunk(
+  "units/fetchUnits",
+  async () => {
+    const response = await authAxios.get(`/units/`);
+    return response.data;
+  }
+);
+
+
 export const addUnit = createAsyncThunk(
   "units/addUnit",
   async ({ property_id, formData }) => {
@@ -34,7 +43,7 @@ export const addUnit = createAsyncThunk(
 const unitSlice = createSlice({
   name: "units",
   initialState: {
-    unit: [],
+    units: [],
     loading: false,
     error: null,
   },
@@ -45,10 +54,21 @@ const unitSlice = createSlice({
         state.loading = true;
       })
       .addCase(addUnit.fulfilled, (state, action) => {
-        state.unit.push(action.payload);
+        state.units.push(action.payload);
         console.log("Uploaded Unit", action.payload)
       })
       .addCase(addUnit.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchUnits.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchUnits.fulfilled, (state, action) => {
+        state.units = action.payload;
+        console.log("Fetched Units", action.payload)
+      })
+      .addCase(fetchUnits.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

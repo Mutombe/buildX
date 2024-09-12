@@ -14,8 +14,8 @@ export const fetchProperties = createAsyncThunk(
   }
 );
 
-export const fetchUnits = createAsyncThunk(
-  "units/fetchUnits",
+export const fetchPropertyUnits = createAsyncThunk(
+  "units/fetchPropertyUnits",
   async (propertyId) => {
     const response = await authAxios.get(`/properties/${propertyId}/units/`);
     return response.data;
@@ -128,15 +128,15 @@ const propertySlice = createSlice({
         state.success = false;
         state.error = action.payload;
       })
-      .addCase(fetchUnits.pending, (state) => {
+      .addCase(fetchPropertyUnits.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchUnits.fulfilled, (state, action) => {
+      .addCase(fetchPropertyUnits.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
         state.units = action.payload;
       })
-      .addCase(fetchUnits.rejected, (state: any, action) => {
+      .addCase(fetchPropertyUnits.rejected, (state: any, action) => {
         state.loading = false;
         state.success = false;
         state.error = action.payload;
