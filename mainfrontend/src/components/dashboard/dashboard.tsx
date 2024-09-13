@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { manageBookings, approveBooking, denyBooking } from '../../redux/bookingSlice';
 import { Tabs, Tab, Box, Typography, List, ListItem, IconButton, Button } from '@mui/material';
-import { ArrowUpward, ArrowDownward, Home, Apartment } from '@mui/icons-material'; // Icons
+import { ArrowUpward, ArrowDownward, Home, Apartment } from '@mui/icons-material';
 import { PropertyTable } from './propertyTable';
 import { fetchProperties } from '../../redux/propertySlice';
 import { fetchUnits } from '../../redux/unitSlice';
@@ -13,11 +13,12 @@ const Dashboard = () => {
   const { allBookings, loading } = useSelector(state => state.bookings); // Grab all bookings
   const { properties } = useSelector(state => state.properties);
   const { units } = useSelector(state => state.units);
+  const { user } = useSelector(state => state.auth);
 
   useEffect(() => {
     dispatch(manageBookings());
-    dispatch(fetchProperties()); // Fetch all properties
-    dispatch(fetchUnits()); // Fetch all units
+    dispatch(fetchProperties());
+    dispatch(fetchUnits()); 
   }, [dispatch]);
 
   const handleChange = (event, newValue) => {
@@ -33,17 +34,27 @@ const Dashboard = () => {
   };
 
   const getBookingDetails = (booking) => {
-    console.log("Units in Dashboard", units)
-    if (booking.unit && units) { // Check if units is defined and booking has a unit
+    if (booking.unit && units) { 
       const booked_unit = units.find(unit => unit.id === booking.unit);
-      return booked_unit ? `Unit: ${booked_unit.name}, Location: ${booked_unit.location}` : 'Loading unit details...';
+  
+      if (booked_unit && properties) {
+        const related_property = properties.find(property => property.id === booked_unit.unit_property);
+        return related_property
+          ? `Unit: ${booked_unit.name},  Location: ${related_property.location},  ${related_property.owner}, ${booking.status}`
+          : 'Loading unit and property details...';
+      }
     }
-    if (booking.property && properties) { // Check if properties is defined and booking has a property
+  
+    if (booking.property && properties) { 
       const booked_property = properties.find(property => property.id === booking.property);
-      return booked_property ? `Property: ${booked_property.name}, Location: ${booked_property.location}` : 'Loading property details...';
+      return booked_property 
+        ? `Property: ${booked_property.name},  Location: ${booked_property.location},  ${booked_property.owner}, ${booking.status}` 
+        : 'Loading property details...';
     }
+  
     return 'Unknown Booking';
   };
+  
   
 
   // Filter bookings based on their type (incoming/outgoing, property/unit, status)
@@ -81,8 +92,10 @@ const Dashboard = () => {
   };
 
   const isBookingIncoming = (booking) => {
-    return booking.property?.owner === true || booking.unit?.unit_property?.owner === true;
+    return booking.property?.owner === user.username || booking.unit?.unit_property?.owner === user.username;
   };
+
+  console.log(user.username)
 
   return (
     <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
@@ -116,8 +129,6 @@ const Dashboard = () => {
                   {/* Booking Information */}
                   <Typography sx={{ ml: 1 }}>
                   {getBookingDetails(booking)}
-                    {isIncoming ? `Incoming booking for ${booking.unit ? booking.unit : booking.property}` : 
-                    `Outgoing booking for ${booking.unit ? booking.unit : booking.property}`}
                   </Typography>
 
                   {/* Approve/Deny Buttons for Incoming Bookings */}
@@ -143,9 +154,7 @@ const Dashboard = () => {
 
                 {/* Booking Information */}
                 <Typography sx={{ ml: 1 }}>
-                  {isBookingIncoming(booking)
-                    ? `Incoming booking for ${booking.unit ? booking.unit.name : booking.property.name}`
-                    : `Outgoing booking for ${booking.unit ? booking.unit.name : booking.property.name}`}
+                {getBookingDetails(booking)}
                 </Typography>
               </ListItem>
             ))}

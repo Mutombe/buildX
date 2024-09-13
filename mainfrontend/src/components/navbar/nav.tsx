@@ -25,7 +25,10 @@ function MainNavBar() {
 
   return (
     <nav className="navbar">
-      <h1 id="brand">homer</h1>
+      <Link href="/" underline="none" color={"white"}>
+        <h1 id="brand">homer</h1>
+      </Link>
+      
       <ul>
         <Link href="/postProperty">
           <Fab size="small" color="primary" aria-label="add">
