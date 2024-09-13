@@ -11,7 +11,7 @@ import { deleteProperty } from "../../redux/propertySlice";
 import { fetchUserProperties } from "../../redux/propertySlice";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { IconButton } from "@mui/material";
+import { IconButton, TableHead } from "@mui/material";
 import EditPropertyModal from "../properties/propertiesEditForm";
 
 export function PropertyTable() {
@@ -47,28 +47,46 @@ export function PropertyTable() {
       ) : (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Photos</TableCell>
+                <TableCell>Category</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>State</TableCell>
+                <TableCell>Subscribers</TableCell>
+                <TableCell>Units</TableCell>
+                <TableCell>Action</TableCell>
+                <TableCell>Action</TableCell>
+                <TableCell>Action</TableCell>
+              </TableRow>
+            </TableHead>
             <TableBody>
               {userProperties.map((property) => (
                 <TableRow
                   key={property.id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
+                  <TableCell>400</TableCell>
+                  <TableCell>{property.category}</TableCell>
                   <TableCell component="th" scope="row">
                     {property.name}
                   </TableCell>
                   {property.accupied ? (
-                    <TableCell align="right">Booked</TableCell>
+                    <TableCell>Occupied</TableCell>
                   ) : (
-                    <TableCell align="right">Open</TableCell>
+                    <TableCell>Unoccupied</TableCell>
                   )}
+                  <TableCell>{property.subscribers}0</TableCell>
+                  <TableCell>5</TableCell>
+                  <TableCell>View Units</TableCell>
 
-                  <TableCell align="right">{property.location}</TableCell>
-                  <TableCell align="right">
-                  <IconButton onClick={() => handleEditClick(property)}>
-                    <EditIcon color="primary" /></IconButton>
+                  <TableCell>
+                    <IconButton onClick={() => handleEditClick(property)}>
+                      <EditIcon color="primary" />
+                    </IconButton>
                   </TableCell>
-                  
-                  <TableCell align="right">
+
+                  <TableCell>
                     <IconButton
                       aria-label="delete"
                       onClick={() => handleDelete(property.id)}
@@ -81,8 +99,8 @@ export function PropertyTable() {
             </TableBody>
           </Table>
         </TableContainer>
-      )};
-
+      )}
+      ;
       {selectedProperty && (
         <EditPropertyModal
           open={openModal}
@@ -91,6 +109,5 @@ export function PropertyTable() {
         />
       )}
     </>
-    
   );
 }
