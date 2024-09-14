@@ -5,13 +5,15 @@ import {
   approveBooking,
   denyBooking,
 } from "../../redux/bookingSlice";
-import { Tabs, Tab, Box, Typography, Button } from "@mui/material";
+import { Tabs, Tab, Box, Typography, Button, Skeleton } from "@mui/material";
 import {
   ArrowUpward,
   ArrowDownward,
   Home,
   Apartment,
 } from "@mui/icons-material";
+import NorthEastIcon from "@mui/icons-material/NorthEast";
+import SouthWestIcon from "@mui/icons-material/SouthWest";
 import { PropertyTable } from "./propertyTable";
 import { fetchProperties } from "../../redux/propertySlice";
 import { fetchUnits } from "../../redux/unitSlice";
@@ -26,16 +28,20 @@ import Paper from "@mui/material/Paper";
 const Dashboard = () => {
   const [value, setValue] = useState(0);
   const dispatch = useDispatch();
-  const { allBookings, loading } = useSelector((state) => state.bookings);
-  const { properties } = useSelector((state) => state.properties);
-  const { units } = useSelector((state) => state.units);
+  const { allBookings, loading: bookingsLoading } = useSelector(
+    (state) => state.bookings
+  );
+  const { properties, loading: propertiesLoading } = useSelector(
+    (state) => state.properties
+  );
+  const { units, loading: unitsLoading } = useSelector((state) => state.units);
   const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(manageBookings());
     dispatch(fetchProperties());
     dispatch(fetchUnits());
-  }, [dispatch]);
+  }, []); // No need to add `dispatch` as it doesn't change.
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -67,6 +73,7 @@ const Dashboard = () => {
     return "Unknown Type";
   };
 
+  console.log("All bookings", allBookings);
   const getCategory = (booking) => {
     if (booking.unit && units) {
       const booked_unit = units.find((unit) => unit.id === booking.unit);
@@ -110,15 +117,43 @@ const Dashboard = () => {
   };
 
   const isBookingIncoming = (booking) => {
-    return (
-      booking.property?.owner === user.username ||
-      booking.unit?.unit_property?.owner === user.username
-    );
+    if (booking.unit && units) {
+      const booked_unit = units.find((unit) => unit.id === booking.unit);
+      if (booked_unit && properties) {
+        const related_property = properties.find(
+          (property) => property.id === booked_unit.unit_property
+        );
+        console.log(
+          "booked unit related property owner",
+          related_property ? related_property.owner : "None"
+        );
+        return related_property
+          ? related_property.owner === user.username
+          : false;
+      }
+    }
+    if (booking.property && properties) {
+      const booked_property = properties.find(
+        (property) => property.id === booking.property
+      );
+      console.log("booked property owner", booked_property.owner);
+      return booked_property
+        ? booked_property.owner.username === user.username
+        : false;
+    }
+    return false;
+  };
+
+  const isBookingOutgoing = (booking) => {
+    return booking.customer === user.username;
   };
 
   const pendingBookings = allBookings.filter(
-    (booking) => booking.status === "pending"
+    (booking) =>
+      booking.status === "pending" &&
+      (isBookingIncoming(booking) || isBookingOutgoing(booking))
   );
+
   const bookingHistory = allBookings.filter(
     (booking) => booking.status !== "pending"
   );
@@ -155,41 +190,81 @@ const Dashboard = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {pendingBookings.map((booking) => {
-                  const isIncoming = isBookingIncoming(booking);
-                  return (
-                    <TableRow key={booking.id}>
-                      <TableCell>
-                        {isIncoming ? <ArrowDownward /> : <ArrowUpward />}
-                      </TableCell>
-                      <TableCell>{getBookingType(booking)}</TableCell>
-                      <TableCell>{getCategory(booking)}</TableCell>
-                      <TableCell>{getLocation(booking)}</TableCell>
-                      <TableCell>{booking.status}</TableCell>
-                      <TableCell>
-                        {isIncoming && (
-                          <Box>
-                            <Button
-                              variant="contained"
-                              color="success"
-                              onClick={() => handleApprove(booking.id)}
-                            >
-                              Approve
-                            </Button>
-                            <Button
-                              variant="contained"
-                              color="error"
-                              onClick={() => handleDeny(booking.id)}
-                              sx={{ ml: 2 }}
-                            >
-                              Deny
-                            </Button>
-                          </Box>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
+                {bookingsLoading ? (
+                  <>
+                    {[...Array(3)].map((_, idx) => (
+                      <TableRow key={idx}>
+                        <TableCell>
+                          <Skeleton />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </>
+                ) : (
+                  pendingBookings.map((booking) => {
+                    const isIncoming = isBookingIncoming(booking);
+                    const isOutgoing = isBookingOutgoing(booking);
+                    return (
+                      <TableRow key={booking.id}>
+                        <TableCell>
+                          {isIncoming ? (
+                            <>
+                              <Typography>Incoming</Typography>
+                              <SouthWestIcon />
+                            </>
+                          ) : (
+                            isOutgoing && (
+                              <>
+                                <Typography>Outgoing</Typography>
+                                <NorthEastIcon />
+                              </>
+                            )
+                          )}
+                        </TableCell>
+                        <TableCell>{getBookingType(booking)}</TableCell>
+                        <TableCell>{getCategory(booking)}</TableCell>
+                        <TableCell>{getLocation(booking)}</TableCell>
+                        <TableCell>{booking.status}</TableCell>
+                        <TableCell>
+                          {isIncoming && (
+                            <Box>
+                              <Button
+                                variant="contained"
+                                color="success"
+                                onClick={() => handleApprove(booking.id)}
+                              >
+                                Approve
+                              </Button>
+                              <Button
+                                variant="contained"
+                                color="error"
+                                onClick={() => handleDeny(booking.id)}
+                                sx={{ ml: 2 }}
+                              >
+                                Deny
+                              </Button>
+                            </Box>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -211,21 +286,49 @@ const Dashboard = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {bookingHistory.map((booking) => (
-                  <TableRow key={booking.id}>
-                    <TableCell>
-                      {isBookingIncoming(booking) ? (
-                        <ArrowDownward />
-                      ) : (
-                        <ArrowUpward />
-                      )}
-                    </TableCell>
-                    <TableCell>{getBookingType(booking)}</TableCell>
-                    <TableCell>{getCategory(booking)}</TableCell>
-                    <TableCell>{getLocation(booking)}</TableCell>
-                    <TableCell>{booking.status}</TableCell>
-                  </TableRow>
-                ))}
+                {bookingsLoading ? (
+                  <>
+                    {[...Array(3)].map((_, idx) => (
+                      <TableRow key={idx}>
+                        <TableCell>
+                          <Skeleton />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </>
+                ) : (
+                  bookingHistory.map((booking) => (
+                    <TableRow key={booking.id}>
+                      <TableCell>
+                        {isBookingIncoming(booking) ? (
+                          <SouthWestIcon />
+                        ) : (
+                          <NorthEastIcon />
+                        )}
+                      </TableCell>
+                      <TableCell>{getBookingType(booking)}</TableCell>
+                      <TableCell>{getCategory(booking)}</TableCell>
+                      <TableCell>{getLocation(booking)}</TableCell>
+                      <TableCell>{booking.customer}</TableCell>
+                      <TableCell>{booking.status}</TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </TableContainer>

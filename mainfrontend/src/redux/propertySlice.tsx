@@ -6,7 +6,6 @@ export const fetchProperties = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await authAxios.get("/properties/");
-      console.log(response);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -58,35 +57,6 @@ export const deleteProperty = createAsyncThunk(
   }
 );
 
-export const createProperty = createAsyncThunk(
-  "properties/createProperty",
-  async (propertyData: any, { rejectWithValue }) => {
-    try {
-      const formData = new FormData();
-      for (const key in propertyData) {
-        console.log(key);
-        if (key === "images") {
-          console.log("Images", key);
-          propertyData[key].forEach((image: File) => {
-            formData.append("images", image);
-          });
-        } else {
-          formData.append(key, propertyData[key]);
-        }
-      }
-
-      const response = await authAxios.post("/properties/", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      return response?.data;
-    } catch (error: any) {
-      console.error("Error in createProperty:", error);
-      return rejectWithValue(error.response?.data);
-    }
-  }
-);
 
 export const uploadProperty = createAsyncThunk(
   "property/uploadProperty",
@@ -121,7 +91,6 @@ const propertySlice = createSlice({
         state.loading = false;
         state.success = true;
         state.properties = action.payload;
-        console.log(action.payload);
       })
       .addCase(fetchProperties.rejected, (state: any, action) => {
         state.loading = false;
@@ -160,10 +129,6 @@ const propertySlice = createSlice({
       .addCase(uploadProperty.fulfilled, (state, action) => {
         state.loading = false;
         state.properties.push(action.payload);
-        console.log(
-          "Property data getting pushed to the database: ",
-          action.payload
-        );
       })
       .addCase(uploadProperty.rejected, (state, action) => {
         state.loading = false;

@@ -15,7 +15,7 @@ export const addUnit = createAsyncThunk(
   async ({ property_id, formData }) => {
     try {
       const response = await authAxios.post(
-        `/property/${property_id}/units/`,
+        `/properties/${property_id}/units/`,
         formData,
       );
       console.log("Unit data and Property ID", formData, property_id)
