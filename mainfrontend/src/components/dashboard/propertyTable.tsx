@@ -99,7 +99,7 @@ export function PropertyTable() {
 
                     <TableCell>
                       {property.images.count}
-                      <CarouselRatio />
+                      <CarouselRatio property={property}/>
                     </TableCell>
                     <TableCell>{property.category}</TableCell>
                     <TableCell component="th" scope="row">
@@ -113,9 +113,11 @@ export function PropertyTable() {
                     <TableCell>{property.subscribers_count}0</TableCell>
                     <TableCell>5</TableCell>
                     <TableCell>
-                    <Button variant="outlined" size="small">
-                      View Units
-                    </Button>
+                    <Tooltip title="View Property Units" placement="top-start">
+                      <Button variant="outlined" size="small">
+                        View Units
+                      </Button>
+                    </Tooltip>
                     </TableCell>
 
                     <TableCell>

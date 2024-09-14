@@ -3,25 +3,7 @@ import Box from '@mui/joy/Box';
 import Card from '@mui/joy/Card';
 import './images.css';
 
-const data = [
-  {
-    src: 'https://images.unsplash.com/photo-1502657877623-f66bf489d236',
-    title: 'Night view',
-    description: '4.21M views',
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1527549993586-dff825b37782',
-    title: 'Lake view',
-    description: '4.74M views',
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1532614338840-ab30cf10ed36',
-    title: 'Mountain view',
-    description: '3.98M views',
-  },
-];
-
-export default function CarouselRatio() {
+const CarouselRatio = ({property}) => {
   return (
     <Box
       sx={{
@@ -35,16 +17,18 @@ export default function CarouselRatio() {
         '& > *': {
           scrollSnapAlign: 'center',
         },
-        '::-webkit-scrollbar': { display: 'none' },
+              '::-webkit-scrollbar': { display: 'none' },
+        paddingTop: 0,
+        paddingBottom:0,
       }}
     >
-      {data.map((item) => (
-        <Card orientation="horizontal" size="sm" key={item.title} variant="outlined" sx={{height:40, width:50, padding:0 }}>
+      {property.images.map((image) => (
+        <Card orientation="horizontal" size="sm" key={image.id} variant="outlined" sx={{height:40, width:50, padding:0 }}>
           <AspectRatio ratio="1" sx={{ minWidth: 50 }}>
             <img
-              srcSet={`${item.src}?h=50&fit=crop&auto=format&dpr=2 `}
-              src={`${item.src}?h=50&fit=crop&auto=format`}
-              alt={item.title}
+              srcSet={`${image.file}?h=50&fit=crop&auto=format&dpr=2 2x`}
+              src={`${image.file}?h=50&fit=crop&auto=format`}
+              alt={image.name}
             />
           </AspectRatio>
         </Card>
@@ -52,3 +36,5 @@ export default function CarouselRatio() {
     </Box>
   );
 }
+
+export default CarouselRatio

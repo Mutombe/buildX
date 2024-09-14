@@ -56,14 +56,14 @@ const EditPropertyModal: React.FC<EditPropertyModalProps> = ({ open, onClose, pr
       propertyData.append(key, value);
     });
 
-    // Append images to formData
+
     images.forEach((image) => {
-      propertyData.append('images', image.file); // Append each image file
+      propertyData.append('images', image.file);
     });
 
     dispatch(updateProperty({ id: property.id, propertyData }));
-    resetImages(); // Reset images after submit
-    onClose(); // Close modal after submit
+    resetImages();
+    onClose(); 
   };
 
   return (
@@ -119,8 +119,10 @@ const EditPropertyModal: React.FC<EditPropertyModalProps> = ({ open, onClose, pr
               />
               
         {/* Image upload section */}
+        <hr></hr>
         <div>
           <><label>Images</label></>
+          <br />
           <input type="file" name="images" multiple onChange={handleImageChange} />
           <div className="image-previews">
             {images.map((image, index) => (

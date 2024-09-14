@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
-  AccordionDetails,
   AccordionSummary,
   Button,
   Skeleton,
@@ -17,6 +16,7 @@ import "./properties.css";
 import { useNavigate } from "react-router-dom";
 import ImagePreviewModal from "../image-preview/imagePreview";
 import Accordion from "@mui/material/Accordion";
+import DrawerUnitList from './drawerUnitList';
 
 const PropertyCard = ({ property }) => {
   const [showModal, setShowModal] = useState(false);
@@ -59,7 +59,7 @@ const PropertyCard = ({ property }) => {
         <Typography variant="body2">
           Booked <strong>{property.booked_count}</strong> times
         </Typography>
-        {/* Add more property details here */}
+        <DrawerUnitList property={property} />
       </Box>
     </Box>
   );
