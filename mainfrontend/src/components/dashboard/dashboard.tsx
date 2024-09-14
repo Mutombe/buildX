@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   manageBookings,
@@ -24,7 +24,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
 const Dashboard = () => {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
   const dispatch = useDispatch();
   const { allBookings, loading } = useSelector((state) => state.bookings);
   const { properties } = useSelector((state) => state.properties);
@@ -146,7 +146,7 @@ const Dashboard = () => {
             <Table sx={{ minWidth: 650 }} aria-label="booking requests table">
               <TableHead>
                 <TableRow>
-                  <TableCell>Booking Arrow</TableCell>
+                  <TableCell>Request</TableCell>
                   <TableCell>Type</TableCell>
                   <TableCell>Category</TableCell>
                   <TableCell>Location</TableCell>

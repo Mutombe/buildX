@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { IconButton, TableHead } from "@mui/material";
 import EditPropertyModal from "../properties/propertiesEditForm";
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
 
 export function PropertyTable() {
   const dispatch = useDispatch();
@@ -49,7 +50,7 @@ export function PropertyTable() {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Photos</TableCell>
+                <TableCell><CameraAltIcon /></TableCell>
                 <TableCell>Category</TableCell>
                 <TableCell>Name</TableCell>
                 <TableCell>State</TableCell>
