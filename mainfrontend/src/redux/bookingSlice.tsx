@@ -45,7 +45,7 @@ export const approveBooking = createAsyncThunk(
   'bookings/approveBooking',
   async (booking_id, { rejectWithValue }) => {
     try {
-      const response = await authAxios.post(`approve/booking/${booking_id}`);
+      const response = await authAxios.post(`approve/booking/${booking_id}/`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -57,7 +57,7 @@ export const denyBooking = createAsyncThunk(
   'bookings/denyBooking',
   async (booking_id, { rejectWithValue }) => {
     try {
-      const response = await authAxios.post(`deny/booking/${booking_id}`);
+      const response = await authAxios.post(`deny/booking/${booking_id}/`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

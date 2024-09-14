@@ -81,7 +81,7 @@ def booking_status(request, booking_id):
 @permission_classes([IsAuthenticated])
 def approve_booking(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
-    booking.status = "approved"
+    booking.status = "Approved"
     if booking.unit:
         booking.unit.occupied = True
         booking.unit.save()
@@ -95,6 +95,6 @@ def approve_booking(request, booking_id):
 @permission_classes([IsAuthenticated])
 def deny_booking(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
-    booking.status = "denied"
+    booking.status = "Denied"
     booking.save()
     return Response({"detail": "Booking denied."})

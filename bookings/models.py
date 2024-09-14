@@ -10,7 +10,7 @@ class Booking(models.Model):
     Booking model
     """
 
-    booking_type = models.CharField(max_length=50, default="unspecified")
+    booking_type = models.CharField(max_length=50, default="Unspecified")
     unit = models.ForeignKey(Unit, null=True, blank=True, on_delete=models.CASCADE)
     property = models.ForeignKey(
         Property, null=True, blank=True, on_delete=models.CASCADE
@@ -21,9 +21,9 @@ class Booking(models.Model):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("pending", "Pending"),
-            ("approved", "Approved"),
-            ("denied", "Denied"),
+            ("Pending", "Pending"),
+            ("Approved", "Approved"),
+            ("Denied", "Denied"),
         ],
         default="pending",
     )

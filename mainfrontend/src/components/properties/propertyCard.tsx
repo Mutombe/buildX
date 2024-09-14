@@ -7,6 +7,7 @@ import {
   Typography,
   Drawer,
   Box,
+  Divider,
 } from "@mui/material";
 import { Card, Carousel } from "react-bootstrap";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -48,6 +49,7 @@ const PropertyCard = ({ property }) => {
         <Typography variant="body2">
           <strong>{property.category}</strong>
         </Typography>
+        <Divider />
         <Typography variant="h6" gutterBottom>
           {property.name}
         </Typography>

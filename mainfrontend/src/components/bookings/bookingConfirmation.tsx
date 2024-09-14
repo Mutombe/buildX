@@ -47,10 +47,10 @@ const BookingConfirmation = () => {
       <Box mt={2}>
         <Typography>Booking Type: {bookingType}</Typography>
         <Typography>Start Date: {startDateObj?.toDateString()}</Typography>
-        {bookingType === "specified" && (
+        {bookingType === "Specified" && (
           <Typography>End Date: {endDateObj?.toDateString()}</Typography>
         )}
-        {/* Add more details as needed */}
+        <Typography>${total_price}</Typography>
       </Box>
       <Box mt={2}>
         <Button variant="contained" onClick={handleConfirm}>

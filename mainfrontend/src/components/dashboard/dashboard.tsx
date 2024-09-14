@@ -5,10 +5,8 @@ import {
   approveBooking,
   denyBooking,
 } from "../../redux/bookingSlice";
-import { Tabs, Tab, Box, Typography, Button, Skeleton } from "@mui/material";
+import { Tabs, Tab, Box, Typography, Button, Skeleton, IconButton, Tooltip, Chip } from "@mui/material";
 import {
-  ArrowUpward,
-  ArrowDownward,
   Home,
   Apartment,
 } from "@mui/icons-material";
@@ -24,6 +22,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+
 
 const Dashboard = () => {
   const [value, setValue] = useState(0);
@@ -41,7 +41,7 @@ const Dashboard = () => {
     dispatch(manageBookings());
     dispatch(fetchProperties());
     dispatch(fetchUnits());
-  }, []); // No need to add `dispatch` as it doesn't change.
+  }, []);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -150,12 +150,12 @@ const Dashboard = () => {
 
   const pendingBookings = allBookings.filter(
     (booking) =>
-      booking.status === "pending" &&
+      booking.status === "Pending" &&
       (isBookingIncoming(booking) || isBookingOutgoing(booking))
   );
 
   const bookingHistory = allBookings.filter(
-    (booking) => booking.status !== "pending"
+    (booking) => booking.status !== "Pending"
   );
 
   return (
@@ -186,6 +186,7 @@ const Dashboard = () => {
                   <TableCell>Category</TableCell>
                   <TableCell>Location</TableCell>
                   <TableCell>Status</TableCell>
+                  <TableCell>Action</TableCell>
                   <TableCell>Action</TableCell>
                 </TableRow>
               </TableHead>
@@ -224,14 +225,17 @@ const Dashboard = () => {
                         <TableCell>
                           {isIncoming ? (
                             <>
-                              <Typography>Incoming</Typography>
-                              <SouthWestIcon />
+                              <Tooltip title="Incoming Booking Requests" placement="top-end">
+                                <Chip icon={<SouthWestIcon />} label="Incoming" />
+                              </Tooltip>
+
                             </>
                           ) : (
                             isOutgoing && (
-                              <>
-                                <Typography>Outgoing</Typography>
-                                <NorthEastIcon />
+                                <>
+                              <Tooltip title="Outgoing Booking Requests" placement="top-end">
+                                <Chip icon={<NorthEastIcon />} label="Outgoing" />
+                              </Tooltip>
                               </>
                             )
                           )}
@@ -278,11 +282,13 @@ const Dashboard = () => {
             <Table sx={{ minWidth: 650 }} aria-label="booking history table">
               <TableHead>
                 <TableRow>
-                  <TableCell>Booking Arrow</TableCell>
+                  <TableCell>Request</TableCell>
                   <TableCell>Type</TableCell>
                   <TableCell>Category</TableCell>
                   <TableCell>Location</TableCell>
+                  <TableCell>Customer</TableCell>
                   <TableCell>Status</TableCell>
+                  <TableCell>Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -316,9 +322,15 @@ const Dashboard = () => {
                     <TableRow key={booking.id}>
                       <TableCell>
                         {isBookingIncoming(booking) ? (
-                          <SouthWestIcon />
+                          <Tooltip title="Incoming Booking Requests" placement="top-end">
+                            <Chip icon={<SouthWestIcon />} label="Incoming" />
+                          </Tooltip>
+
                         ) : (
-                          <NorthEastIcon />
+                        <Tooltip title="Outgoing Booking Requests" placement="top-end">
+                          <Chip icon={<NorthEastIcon />} label="Outgoing" />
+                        </Tooltip>
+                          
                         )}
                       </TableCell>
                       <TableCell>{getBookingType(booking)}</TableCell>
@@ -326,6 +338,13 @@ const Dashboard = () => {
                       <TableCell>{getLocation(booking)}</TableCell>
                       <TableCell>{booking.customer}</TableCell>
                       <TableCell>{booking.status}</TableCell>
+                      <TableCell>
+                      <IconButton
+                        aria-label="delete"
+                      >
+                          <Tooltip title="Delete" placement="top-start"><DeleteRoundedIcon color="error" /></Tooltip>
+                      </IconButton>
+                      </TableCell>
                     </TableRow>
                   ))
                 )}

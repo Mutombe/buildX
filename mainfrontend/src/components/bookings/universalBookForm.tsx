@@ -19,7 +19,7 @@ import { fetchDetails } from "../../redux/bookingSlice";
 const BookingSelectDate = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [bookingType, setBookingType] = useState("unspecified");
+  const [bookingType, setBookingType] = useState("Unspecified");
   const { type, id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -41,7 +41,7 @@ const BookingSelectDate = () => {
     const start = new Date(startDate);
     const end = endDate ? new Date(endDate) : new Date(startDate);
     const daysBooked = (end - start) / (1000 * 60 * 60 * 24);
-    if (bookingType === "specified") {
+    if (bookingType === "Specified") {
       return (pricePerMonth / 30) * daysBooked;
     }
     return pricePerMonth;
@@ -53,7 +53,7 @@ const BookingSelectDate = () => {
       propertyId: type === "properties" ? id : null,
       startDate: startDate.toISOString().split("T")[0],
       endDate:
-        bookingType === "specified"
+        bookingType === "Specified"
           ? endDate.toISOString().split("T")[0]
           : null,
       bookingType,
@@ -78,9 +78,9 @@ const BookingSelectDate = () => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={bookingType === "specified"}
+              checked={bookingType === "Specified"}
               onChange={(e) =>
-                setBookingType(e.target.checked ? "specified" : "unspecified")
+                setBookingType(e.target.checked ? "Specified" : "Unspecified")
               }
             />
           }
@@ -101,7 +101,7 @@ const BookingSelectDate = () => {
         </LocalizationProvider>
 
         {/* Show End Date picker if 'specified' is selected */}
-        {bookingType === "specified" && (
+        {bookingType === "Specified" && (
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={["DatePicker"]}>
               <DatePicker

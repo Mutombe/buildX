@@ -28,7 +28,7 @@ class BookingSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Cannot book both a unit and a property.")
 
         # Check if end date is valid for 'specified' booking type
-        if data["booking_type"] == "specified" and data.get("start_date") and data.get("end_date"):
+        if data["booking_type"] == "Specified" and data.get("start_date") and data.get("end_date"):
             if data["end_date"] <= data["start_date"]:
                 raise serializers.ValidationError("End date must be after start date.")
 
