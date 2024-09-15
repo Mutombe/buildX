@@ -1,4 +1,5 @@
 import MainNavBar from "./components/navbar/nav";
+import Footer from "./components/footer/footer";
 import Login from "./components/authentication/login";
 import Signup from "./components/authentication/signup";
 import Dashboard from "./components/dashboard/dashboard";
@@ -7,7 +8,7 @@ import WelcomeAlert from "./components/main-page/mainpage";
 import PropertyList from "./components/properties/listProperties";
 //import ManageBookings from "./components/bookings/manageBookings";
 //import BookingStatus from "./components/bookings/bookingStatus";
-import AddPro from "./components/properties/form";
+import AddPro from "./components/properties/propertAddingForm";
 import UnitList from "./components/units/unitList";
 import "./App.css";
 import BookingConfirmation from "./components/bookings/bookingConfirmation";
@@ -35,6 +36,7 @@ function App() {
             <Route path="/booking-confirmation" element={<BookingConfirmation />} />
           </Routes>
         </BrowserRouter>
+        <Footer />
       </div>
     </>
   );

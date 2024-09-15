@@ -13,17 +13,25 @@ import HomeIcon from '@mui/icons-material/Home';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { fetchProperties } from '../../redux/propertySlice';
 import './unitList.css'
 
 const UnitList = () => {
   const { propertyId } = useParams();
   const dispatch = useDispatch();
   const units = useSelector((state) => state.properties.units);
+  const properties = useSelector((state) => state.properties.properties.find(property => property.id === propertyId)
+    )
   const navigate = useNavigate();
+  console.log("...", properties)
 
   useEffect(() => {
     dispatch(fetchPropertyUnits(propertyId));
   }, [propertyId, dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchProperties());
+  }, [dispatch]);
 
   const handleBookUnit = (unitId) => {
     navigate(`/book/unit/${unitId}/`);
@@ -32,7 +40,6 @@ const UnitList = () => {
   return (
     <CssVarsProvider>
       <Typography level="h2" sx={{ mb: 2 }}>
-        Available Units
       </Typography>
       <Grid container spacing={2} sx={{ flexGrow: 1 }}>
         {units.map((unit) => (
@@ -49,6 +56,9 @@ const UnitList = () => {
               <CardContent>
                 <Typography level="h2" fontSize="md" sx={{ mb: 0.5 }}>
                   {unit.name}
+                </Typography>
+                <Typography level="h4" fontSize="md" sx={{ mb: 0.5 }}>
+                 
                 </Typography>
                 <Typography level="body2" sx={{ mb: 1 }}>
                   Rented: {unit.booked_count} times

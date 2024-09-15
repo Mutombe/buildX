@@ -16,6 +16,7 @@ import "./properties.css";
 import { useNavigate } from "react-router-dom";
 import ImagePreviewModal from "../image-preview/imagePreview";
 import DrawerUnitList from './drawerUnitList';
+import App from './LLL';
 
 const PropertyCard = ({ property }) => {
   const [showModal, setShowModal] = useState(false);
@@ -65,7 +66,7 @@ const PropertyCard = ({ property }) => {
     </Box>
   );
 
-  return (
+  return (<>
     <Card style={{ width: "18rem", boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }} className="mb-3">
       <Card.Body style={{ padding: 0 }}>
         {property.has_images ? (
@@ -147,6 +148,7 @@ const PropertyCard = ({ property }) => {
           </Button>
         </Box>
       </Card.Body>
+      
       <ImagePreviewModal
         show={showModal}
         onHide={handleClose}
@@ -162,6 +164,7 @@ const PropertyCard = ({ property }) => {
         {drawerContent}
       </Drawer>
     </Card>
+    </>
   );
 };
 
