@@ -25,7 +25,7 @@ class Booking(models.Model):
             ("Approved", "Approved"),
             ("Denied", "Denied"),
         ],
-        default="pending",
+        default="Pending",
     )
     created_at = models.DateTimeField(auto_now_add=True)
     start_date = models.DateField(default=date.today)

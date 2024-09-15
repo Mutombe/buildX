@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchProperties } from "../../redux/propertySlice";
 import { useDispatch, useSelector } from "react-redux";
-import PropertyCard from "./propertyCard";
+import GradientCover from "./propertyCard";
 import { Col, Row, Container, Form } from "react-bootstrap";
 import "./properties.css";
 import "../css/listProperties.css";
@@ -42,7 +42,7 @@ function PropertyList() {
       .map((property) => (
         <>
           <Col key={property.id} xs={12} md={4} className="mb-4">
-            <PropertyCard property={property} />
+            <GradientCover property={property} />
           </Col>
         </>
       ));

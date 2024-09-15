@@ -5,11 +5,18 @@ import {
   approveBooking,
   denyBooking,
 } from "../../redux/bookingSlice";
-import { Tabs, Tab, Box, Typography, Button, Skeleton, IconButton, Tooltip, Chip } from "@mui/material";
 import {
-  Home,
-  Apartment,
-} from "@mui/icons-material";
+  Tabs,
+  Tab,
+  Box,
+  Typography,
+  Button,
+  Skeleton,
+  IconButton,
+  Tooltip,
+  Chip,
+} from "@mui/material";
+import { Home, Apartment } from "@mui/icons-material";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import SouthWestIcon from "@mui/icons-material/SouthWest";
 import { PropertyTable } from "./propertyTable";
@@ -23,7 +30,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
-
 
 const Dashboard = () => {
   const [value, setValue] = useState(0);
@@ -225,17 +231,28 @@ const Dashboard = () => {
                         <TableCell>
                           {isIncoming ? (
                             <>
-                              <Tooltip title="Incoming Booking Requests" placement="top-end">
-                                <Chip icon={<SouthWestIcon />} label="Incoming" />
+                              <Tooltip
+                                title="Incoming Booking Requests"
+                                placement="top-end"
+                              >
+                                <Chip
+                                  icon={<SouthWestIcon />}
+                                  label="Incoming"
+                                />
                               </Tooltip>
-
                             </>
                           ) : (
                             isOutgoing && (
-                                <>
-                              <Tooltip title="Outgoing Booking Requests" placement="top-end">
-                                <Chip icon={<NorthEastIcon />} label="Outgoing" />
-                              </Tooltip>
+                              <>
+                                <Tooltip
+                                  title="Outgoing Booking Requests"
+                                  placement="top-end"
+                                >
+                                  <Chip
+                                    icon={<NorthEastIcon />}
+                                    label="Outgoing"
+                                  />
+                                </Tooltip>
                               </>
                             )
                           )}
@@ -244,9 +261,9 @@ const Dashboard = () => {
                         <TableCell>{getCategory(booking)}</TableCell>
                         <TableCell>{getLocation(booking)}</TableCell>
                         <TableCell>{booking.status}</TableCell>
-                        <TableCell>
-                          {isIncoming && (
-                            <Box>
+                        {isIncoming && (
+                          <>
+                            <TableCell>
                               <Button
                                 variant="contained"
                                 color="success"
@@ -254,17 +271,19 @@ const Dashboard = () => {
                               >
                                 Approve
                               </Button>
+                            </TableCell>
+
+                            <TableCell>
                               <Button
                                 variant="contained"
                                 color="error"
                                 onClick={() => handleDeny(booking.id)}
-                                sx={{ ml: 2 }}
                               >
                                 Deny
                               </Button>
-                            </Box>
-                          )}
-                        </TableCell>
+                            </TableCell>
+                          </>
+                        )}
                       </TableRow>
                     );
                   })
@@ -322,15 +341,19 @@ const Dashboard = () => {
                     <TableRow key={booking.id}>
                       <TableCell>
                         {isBookingIncoming(booking) ? (
-                          <Tooltip title="Incoming Booking Requests" placement="top-end">
+                          <Tooltip
+                            title="Incoming Booking Requests"
+                            placement="top-end"
+                          >
                             <Chip icon={<SouthWestIcon />} label="Incoming" />
                           </Tooltip>
-
                         ) : (
-                        <Tooltip title="Outgoing Booking Requests" placement="top-end">
-                          <Chip icon={<NorthEastIcon />} label="Outgoing" />
-                        </Tooltip>
-                          
+                          <Tooltip
+                            title="Outgoing Booking Requests"
+                            placement="top-end"
+                          >
+                            <Chip icon={<NorthEastIcon />} label="Outgoing" />
+                          </Tooltip>
                         )}
                       </TableCell>
                       <TableCell>{getBookingType(booking)}</TableCell>
@@ -339,11 +362,11 @@ const Dashboard = () => {
                       <TableCell>{booking.customer}</TableCell>
                       <TableCell>{booking.status}</TableCell>
                       <TableCell>
-                      <IconButton
-                        aria-label="delete"
-                      >
-                          <Tooltip title="Delete" placement="top-start"><DeleteRoundedIcon color="error" /></Tooltip>
-                      </IconButton>
+                        <IconButton aria-label="delete">
+                          <Tooltip title="Delete" placement="top-start">
+                            <DeleteRoundedIcon color="error" />
+                          </Tooltip>
+                        </IconButton>
                       </TableCell>
                     </TableRow>
                   ))

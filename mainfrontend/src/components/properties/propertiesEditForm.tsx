@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, MenuItem } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, MenuItem, } from '@mui/material';
 import { updateProperty } from '../../redux/propertySlice';
 import useImages from '../../hooks/useImages';
 import { fetchCategories } from '../../redux/categorySlice';
@@ -88,9 +88,9 @@ const EditPropertyModal: React.FC<EditPropertyModalProps> = ({ open, onClose, pr
           fullWidth
                   margin="normal"
                   placeholder={property.category}
-         >
+        >
         <MenuItem value="">
-         <em>Select Category</em>
+         <em></em>
           </MenuItem>
           {categories.map((category: any) => (
             <MenuItem key={category.id} value={category.name}>
