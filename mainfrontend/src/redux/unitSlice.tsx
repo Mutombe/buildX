@@ -40,6 +40,11 @@ export const addUnit = createAsyncThunk(
   }
 );
 
+export const updateUnit = createAsyncThunk('units/updateUnit', async (unit) => {
+  const response = await authAxios.put(`/api/units/${unit.id}`, unit);
+  return response.data;
+});
+
 const unitSlice = createSlice({
   name: "units",
   initialState: {
@@ -71,6 +76,12 @@ const unitSlice = createSlice({
       .addCase(fetchUnits.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(updateUnit.fulfilled, (state, action) => {
+        const index = state.units.findIndex(unit => unit.id === action.payload.id);
+        if (index !== -1) {
+          state.units[index] = action.payload;
+        }
       });
   },
 });
