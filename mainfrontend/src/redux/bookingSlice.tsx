@@ -70,7 +70,8 @@ export const manageBookings = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await authAxios.get('manage/bookings/');
-      return response.data;
+      const customerBookings = await authAxios.get('customer/bookings/');
+      return [...response.data, ...customerBookings.data];
     } catch (error) {
       return rejectWithValue(error.response.data);
     }

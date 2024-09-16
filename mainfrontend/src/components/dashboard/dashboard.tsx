@@ -34,19 +34,23 @@ import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 const Dashboard = () => {
   const [value, setValue] = useState(0);
   const dispatch = useDispatch();
-  const { allBookings, loading: bookingsLoading } = useSelector(
-    (state) => state.bookings
-  );
+
+  const { user } = useSelector((state) => state.auth);
+
   const { properties, loading: propertiesLoading } = useSelector(
     (state) => state.properties
   );
-  const { units, loading: unitsLoading } = useSelector((state) => state.units);
-  const { user } = useSelector((state) => state.auth);
 
+  const { units, loading: unitsLoading } = useSelector((state) => state.units);
+
+
+  const { allBookings, loading: bookingsLoading } = useSelector(
+    (state) => state.bookings
+  );
   useEffect(() => {
-    dispatch(manageBookings());
     dispatch(fetchProperties());
     dispatch(fetchUnits());
+    dispatch(manageBookings());
   }, []);
 
   const handleChange = (event, newValue) => {

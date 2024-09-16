@@ -10,7 +10,7 @@ import mainauth
 from bookings.views import (
     BookingListCreateView,
     BookingDetailView,
-    book_unit, book_property, booking_status, manage_bookings, approve_booking, deny_booking
+    book_unit, book_property, booking_status, manage_bookings, approve_booking, deny_booking, customer_bookings
 )
 
 router = routers.DefaultRouter()
@@ -36,6 +36,7 @@ urlpatterns = [
     path('book/properties/<int:property_id>/', book_property, name='book-property'),
     path('booking/status/<int:booking_id>/', booking_status, name='booking-status'),
     path('manage/bookings/', manage_bookings, name='manage-bookings'),
+    path('customer/bookings/', customer_bookings, name='customer-bookings'),
     path('approve/booking/<int:booking_id>/', approve_booking, name='approve-booking'),
     path('deny/booking/<int:booking_id>/', deny_booking, name='deny-booking'),
     path('', include('mainauth.urls')), 
