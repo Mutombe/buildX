@@ -12,6 +12,7 @@ from rest_framework import serializers
 from .utils import get_object
 from .serializers import CategorySerializer, SubscriptionSerializer
 
+
 class CategoryListView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -76,6 +77,26 @@ class UnitListCreateView(generics.ListCreateAPIView):
             serializer.save(unit_property=property_instance)
         except Property.DoesNotExist:
             raise serializers.ValidationError("Property does not exist.")
+        
+
+
+class UnitUpdateView(generics.UpdateAPIView):
+    queryset = Unit.objects.all()
+    serializer_class = UnitSerializer
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
+
 
 class ListProperties(APIView):
 

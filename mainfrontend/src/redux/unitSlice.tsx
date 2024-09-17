@@ -18,8 +18,6 @@ export const addUnit = createAsyncThunk(
         `/properties/${property_id}/units/`,
         formData,
       );
-      console.log("Unit data and Property ID", formData, property_id)
-      console.log("Response.data", response.data);
       return response.data;
     } catch (error: any) {
       if (error.response) {
@@ -40,9 +38,15 @@ export const addUnit = createAsyncThunk(
   }
 );
 
-export const updateUnit = createAsyncThunk('units/updateUnit', async (unit) => {
-  const response = await authAxios.put(`/api/units/${unit.id}`, unit);
-  return response.data;
+export const updateUnit = createAsyncThunk(
+  'units/updateUnit',
+  async ({ property_id, unit_id, unitData }, { rejectWithValue }) => {
+    try {
+      const response = await authAxios.put(`/properties/${property_id}/units/${unit_id}`, unitData);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
 });
 
 const unitSlice = createSlice({
