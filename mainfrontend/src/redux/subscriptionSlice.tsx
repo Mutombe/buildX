@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "../utils/axiosConfig";
+import authAxios from "../utils/authAxios";
 
 export const subscribeToProperty = createAsyncThunk(
   "subscription/subscribeToProperty",
   async ({ property_id }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`/subscribe/${property_id}/`);
+      const response = await authAxios.post(`/subscribe/${property_id}/`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -18,7 +18,7 @@ export const unsubscribeFromProperty = createAsyncThunk(
   "subscription/unsubscribeFromProperty",
   async ({ property_id }, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(`/unsubscribe/${property_id}/`);
+      const response = await authAxios.delete(`/unsubscribe/${property_id}/`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -31,7 +31,7 @@ export const checkSubscriptionStatus = createAsyncThunk(
   "subscription/checkSubscriptionStatus",
   async ({ property_id }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`/check-subscription-status/${property_id}/`);
+      const response = await authAxios.get(`/check-subscription-status/${property_id}/`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
