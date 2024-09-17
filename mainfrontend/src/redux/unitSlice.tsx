@@ -40,9 +40,9 @@ export const addUnit = createAsyncThunk(
 
 export const updateUnit = createAsyncThunk(
   'units/updateUnit',
-  async ({ property_id, unit_id, unitData }, { rejectWithValue }) => {
+  async ({ id, unitData }, { rejectWithValue }) => {
     try {
-      const response = await authAxios.put(`/properties/${property_id}/units/${unit_id}`, unitData);
+      const response = await authAxios.put(`user/properties/units/${id}/`, unitData);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -81,11 +81,18 @@ const unitSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      .addCase(updateUnit.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(updateUnit.fulfilled, (state, action) => {
         const index = state.units.findIndex(unit => unit.id === action.payload.id);
         if (index !== -1) {
           state.units[index] = action.payload;
         }
+      })
+      .addCase(updateUnit.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

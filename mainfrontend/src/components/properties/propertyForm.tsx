@@ -6,7 +6,7 @@ import { fetchCategories } from "../../redux/categorySlice";
 import { useNavigate } from "react-router-dom";
 import useForm from "../../hooks/useForm";
 import useImages from "../../hooks/useImages";
-import UnitForm from "../units/unitForm";
+import UnitForm from "../units/unitAddingForm";
 import { Alert, Button, Stack } from "@mui/material";
 import AddHomeIcon from "@mui/icons-material/AddHome";
 import Badge from "@mui/material/Badge";
@@ -17,11 +17,6 @@ const PropertyUploadForm = () => {
   const [propertyId, setPropertyId] = useState(null);
   const [showUnitModal, setShowUnitModal] = useState(false);
   const [propertyCount, setPropertyCount] = useState(1);
-  //const [showModal, setShowModal] = useState(false);
-  //const [currentIndex, setCurrentIndex] = useState(0);
-
-  //const handleShow = () => setShowModal(true);
-  //const handleClose = () => setShowModal(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
