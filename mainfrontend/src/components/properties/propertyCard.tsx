@@ -16,7 +16,7 @@ import "./properties.css";
 import { useNavigate } from "react-router-dom";
 import ImagePreviewModal from "../image-preview/imagePreview";
 import DrawerUnitList from './drawerUnitList';
-import App from './LLL';
+import SubscriptionButton from './propertySubscription';
 
 const PropertyCard = ({ property }) => {
   const [showModal, setShowModal] = useState(false);
@@ -106,6 +106,7 @@ const PropertyCard = ({ property }) => {
           <Typography variant="h6" gutterBottom>
             {property.name.length > 20 ? `${property.name.substr(0, 20)}...` : property.name}
           </Typography>
+          <SubscriptionButton property_id={property.id}/>
           <Typography variant="body2" color="text.secondary" gutterBottom>
             <FmdGoodOutlinedIcon sx={{ fontSize: 16, verticalAlign: 'text-bottom', mr: 0.5 }} />
             {property.location}

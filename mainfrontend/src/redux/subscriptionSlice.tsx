@@ -3,35 +3,39 @@ import authAxios from "../utils/authAxios";
 
 export const subscribeToProperty = createAsyncThunk(
   "subscription/subscribeToProperty",
-  async ({ property_id }, { rejectWithValue }) => {
+  async ({ property_id }, { rejectWithValue, dispatch }) => {
     try {
-      const response = await authAxios.post(`/subscribe/${property_id}/`);
+      const response = await authAxios.post(
+        `/properties/${property_id}/subscribe/`
+        );
+        dispatch(subscriptionSlice.actions.toggleSubscription(property_id));
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
   }
 );
-
 
 export const unsubscribeFromProperty = createAsyncThunk(
   "subscription/unsubscribeFromProperty",
-  async ({ property_id }, { rejectWithValue }) => {
+  async ({ property_id }, { rejectWithValue, dispatch }) => {
     try {
-      const response = await authAxios.delete(`/unsubscribe/${property_id}/`);
+        const response = await authAxios.delete(`/unsubscribe/${property_id}/`);
+        dispatch(subscriptionSlice.actions.toggleSubscription(property_id));
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
   }
 );
-
 
 export const checkSubscriptionStatus = createAsyncThunk(
   "subscription/checkSubscriptionStatus",
   async ({ property_id }, { rejectWithValue }) => {
     try {
-      const response = await authAxios.get(`/check-subscription-status/${property_id}/`);
+      const response = await authAxios.get(
+        `/subscription_status/${property_id}/`
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -40,30 +44,33 @@ export const checkSubscriptionStatus = createAsyncThunk(
 );
 
 const subscriptionSlice = createSlice({
-  name: "subscription",
-  initialState: {
-    isSubscribed: false, // Tracks whether the user is subscribed
-    success: false,
-    error: null,
-  },
-  reducers: {
-    toggleSubscription: (state) => {
-      state.isSubscribed = !state.isSubscribed;
+    name: "subscription",
+    initialState: {
+      subscriptions: {},  // Track subscription status for each property
+      error: null,
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(subscribeToProperty.fulfilled, (state) => {
-        state.isSubscribed = true;
-      })
-      .addCase(unsubscribeFromProperty.fulfilled, (state) => {
-        state.isSubscribed = false;
-      })
-      .addCase(checkSubscriptionStatus.fulfilled, (state, action) => {
-        state.isSubscribed = action.payload.is_subscribed;
-      });
-  },
-});
-
+    reducers: {
+      toggleSubscription: (state, action) => {
+        const propertyId = action.payload;
+        state.subscriptions[propertyId] = !state.subscriptions[propertyId];
+      },
+    },
+    extraReducers: (builder) => {
+      builder
+        .addCase(subscribeToProperty.fulfilled, (state, action) => {
+          const propertyId = action.meta.arg.property_id;
+          state.subscriptions[propertyId] = true;
+        })
+        .addCase(unsubscribeFromProperty.fulfilled, (state, action) => {
+          const propertyId = action.meta.arg.property_id;
+          state.subscriptions[propertyId] = false;
+        })
+        .addCase(checkSubscriptionStatus.fulfilled, (state, action) => {
+          const { property_id, is_subscribed } = action.payload;
+          state.subscriptions[property_id] = is_subscribed;
+        });
+    },
+  });
+  
 export const { toggleSubscription } = subscriptionSlice.actions;
 export default subscriptionSlice.reducer;

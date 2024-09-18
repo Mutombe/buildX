@@ -126,8 +126,6 @@ class UnitDetailView(generics.RetrieveUpdateDestroyAPIView):
 class PropertyUpdateView(APIView):
    permission_classes = [IsOwner]
 
-
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def subscribe_property(request, property_id):
