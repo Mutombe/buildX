@@ -62,7 +62,4 @@ admin.site.register(Unit, AdminUnitsOverview)
 admin.site.register(PropertyImages, AdminPropertyImagesOverview)
 admin.site.register(UnitImages, AdminUnitImagesOverview)
 admin.site.register(Category, AdminCategoryOverview)
-<<<<<<< HEAD
-=======
 admin.site.register(Subscription, AdminSubscriptionOverview)
->>>>>>> branch-01

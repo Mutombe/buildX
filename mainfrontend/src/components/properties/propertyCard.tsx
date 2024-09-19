@@ -17,6 +17,8 @@ import { useNavigate } from "react-router-dom";
 import ImagePreviewModal from "../image-preview/imagePreview";
 import DrawerUnitList from './drawerUnitList';
 import SubscriptionButton from './propertySubscription';
+import { togglePinProperty } from '../../redux/propertySlice';
+import { useDispatch } from 'react-redux';
 
 const PropertyCard = ({ property }) => {
   const [showModal, setShowModal] = useState(false);
@@ -27,6 +29,11 @@ const PropertyCard = ({ property }) => {
   const handleClose = () => setShowModal(false);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handlePinToggle = () => {
+    dispatch(togglePinProperty(property.id));
+  };
 
   const toggleDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -148,6 +155,14 @@ const PropertyCard = ({ property }) => {
             Details
           </Button>
         </Box>
+        <Box display="flex" justifyContent="space-between" alignItems="center" p={1}>
+        <Typography variant="body2" color="text.secondary">
+          {property.pinned ? 'Pinned' : 'Not Pinned'}
+        </Typography>
+        <IconButton onClick={handlePinToggle} color={property.pinned ? 'primary' : 'default'}>
+          {property.pinned ? <PushPinIcon /> : <PushPinOutlinedIcon />}
+        </IconButton>
+      </Box>
       </Card.Body>
       
       <ImagePreviewModal

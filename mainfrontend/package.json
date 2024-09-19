@@ -24,6 +24,7 @@
     "bootstrap": "^5.3.3",
     "dayjs": "^1.11.13",
     "framer-motion": "^11.5.4",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.441.0",
     "postcss": "^8.4.45",
     "react": "^18.2.0",

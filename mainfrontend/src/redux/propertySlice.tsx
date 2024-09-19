@@ -1,15 +1,23 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import authAxios from "../utils/authAxios";
 
+//export const fetchProperties = createAsyncThunk(
+  //"properties/fetchProperties",
+  //async (_, { rejectWithValue }) => {
+   // try {
+     // const response = await authAxios.get("/properties/");
+     // return response.data;
+    //} catch (error: any) {
+     // return rejectWithValue(error.response.data);
+    //}
+  //}
+//);
+
 export const fetchProperties = createAsyncThunk(
-  "properties/fetchProperties",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await authAxios.get("/properties/");
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data);
-    }
+  'properties/fetchProperties',
+  async ({ search = '', category = '' }, ) => {
+    const response = await authAxios.get(`/properties/?search=${search}&category=${category}`);
+    return response.data;
   }
 );
 
@@ -23,17 +31,19 @@ export const fetchPropertyUnits = createAsyncThunk(
 
 export const togglePinProperty = createAsyncThunk(
   'properties/togglePin',
-  async (propertyId, { getState }) => {
-    const { properties } = getState().properties;
-    const property = properties.find(p => p.id === propertyId);
-    
-    if (property.pinned) {
-      await authAxios.delete(`/properties/${propertyId}/pin/`);
-    } else {
-      await authAxios.post(`/properties/${propertyId}/pin/`);
+  async (propertyId) => {
+    try {
+      const response = await authAxios.post(`/api/properties/${propertyId}/pin/`);
+      return { propertyId, pinned: true };
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        // If the property was already pinned, we'll get a 400 error
+        // In this case, we'll unpin the property
+        await authAxios.delete(`/api/properties/${propertyId}/pin/`);
+        return { propertyId, pinned: false };
+      }
+      throw error;
     }
-    
-    return propertyId;
   }
 );
 
@@ -112,6 +122,13 @@ const propertySlice = createSlice({
         state.loading = false;
         state.success = false;
         state.error = action.payload;
+      })
+      .addCase(togglePinProperty.fulfilled, (state, action) => {
+        const { propertyId, pinned } = action.payload;
+        const property = state.properties.find(p => p.id === propertyId);
+        if (property) {
+          property.pinned = pinned;
+        }
       })
       .addCase(fetchPropertyUnits.pending, (state) => {
         state.loading = true;
