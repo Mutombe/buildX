@@ -13,7 +13,8 @@ import {
   List,
   ListItem,
   ListItemDecorator,
-  Chip
+  Chip,
+  Link
 } from '@mui/joy';
 import { 
   Home as HomeIcon, 
@@ -153,11 +154,11 @@ export default function LandingPage() {
                   variant="solid"
                   sx={{ 
                     bgcolor: 'white', 
-                    color: 'primary.700',
-                    '&:hover': { bgcolor: 'grey.100' }
+                    color: 'black',
+                    
                   }}
                 >
-                  Explore Properties
+                  <Link href="/property" underline="none">Explore Properties</Link> 
                 </Button>
               </Grid>
               <Grid xs={12} md={6}>
@@ -176,7 +177,7 @@ export default function LandingPage() {
                   }}
                 >
                   <img
-                    src="https://images.unsplash.com/photo-1532614338840-ab30cf10ed36?auto=format&fit=crop&w=318"
+                    src="https://github.com/user-attachments/assets/0eceef67-7b6e-4abf-b1fa-efe56dec106d"
                     alt="Modern apartment interior"
                     style={{ objectFit: 'cover', width: '100%', height: '100%' }}
                   />
@@ -272,7 +273,7 @@ export default function LandingPage() {
             </Box>
             <AspectRatio ratio="4/3" sx={{ width: { xs: '100%', md: '50%' }, borderRadius: 'md', overflow: 'hidden' }}>
               <img
-                src="https://drive.google.com/uc?export=view&id=1Gin0Q1TGXTW6ElFitGUNE4QRH3hBtPnS"
+                src="https://github.com/user-attachments/assets/0eceef67-7b6e-4abf-b1fa-efe56dec106d"
                 alt="Happy tenants"
                 style={{ objectFit: 'cover', width: '100%', height: '100%' }}
               />

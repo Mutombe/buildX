@@ -32,7 +32,7 @@ export default function Footer() {
               Homer
             </Typography>
             <Typography mb={2} sx={{color: 'white'}}>
-              Homer is your gateway to finding the perfect living space. We connect property seekers with unique homes and office spaces across the Zimbabwe.
+              Homer is your gateway to finding the perfect living space. We connect property seekers with unique homes and office spaces across Zimbabwe.
             </Typography>
             </Grid>
           <Grid xs={12} md={4}>

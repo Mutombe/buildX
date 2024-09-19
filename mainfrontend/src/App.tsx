@@ -5,15 +5,12 @@ import Signup from "./components/authentication/signup";
 import Dashboard from "./components/dashboard/dashboard";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import WelcomeAlert from "./components/main-page/mainpage";
-import PropertyList from "./components/properties/listProperties";
-//import ManageBookings from "./components/bookings/manageBookings";
-//import BookingStatus from "./components/bookings/bookingStatus";
+import PropertyList from "./components/properties/propertyList";
 import AddPro from "./components/properties/propertAddingForm";
 import UnitList from "./components/units/unitList";
 import "./App.css";
 import BookingConfirmation from "./components/bookings/bookingConfirmation";
 import BookingSelectDate from "./components/bookings/universalBookForm";
-//import ProtectedRoute from "./utils/protectedRoute";
 
 function App() {
   return (

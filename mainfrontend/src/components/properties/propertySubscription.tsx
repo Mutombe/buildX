@@ -10,7 +10,8 @@ const SubscriptionButton = ({ property_id }) => {
     const dispatch = useDispatch();
     
     // Get subscription status for the specific property
-    const isSubscribed = useSelector((state) => state.subscription.subscriptions[property_id]);
+  const isSubscribed = useSelector((state) => state.subscription.subscriptions[property_id]);
+  console.log("Subscription Status", isSubscribed)
     const error = useSelector((state) => state.subscription.error);
     const [isLoading, setIsLoading] = useState(false);
   

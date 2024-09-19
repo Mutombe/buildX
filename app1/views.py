@@ -175,7 +175,7 @@ class CheckSubscriptionStatus(APIView):
     def get(self, request, property_id):
         user = request.user
         is_subscribed = Subscription.objects.filter(user=user, property_id=property_id).exists()
-        return Response({'is_subscribed': is_subscribed})
+        return Response({'is_subscribed': is_subscribed, 'property_id': property_id})
 
 class SubscriptionViewSet(viewsets.ModelViewSet):
     queryset = Subscription.objects.all()

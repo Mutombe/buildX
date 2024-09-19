@@ -66,6 +66,7 @@ const subscriptionSlice = createSlice({
           state.subscriptions[propertyId] = false;
         })
         .addCase(checkSubscriptionStatus.fulfilled, (state, action) => {
+          console.log(action.payload);
           const { property_id, is_subscribed } = action.payload;
           state.subscriptions[property_id] = is_subscribed;
         });
