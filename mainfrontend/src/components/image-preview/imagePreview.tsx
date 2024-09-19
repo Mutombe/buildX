@@ -1,42 +1,95 @@
 import React from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import { Carousel } from 'react-bootstrap';
-import './imagePreview.css'
+import Box from '@mui/joy/Box';
+import IconButton from '@mui/joy/IconButton';
+import Typography from '@mui/joy/Typography';
+import CloseIcon from '@mui/icons-material/Close';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import './imagePreview.css';
 
 interface ImagePreviewModalProps {
-    show: boolean;
-    onHide: () => void;
-    images: Array<{ id: number; file: string; name: string }>;
-    currentIndex: number;
-    setCurrentIndex: React.Dispatch<React.SetStateAction<number>>;
+  show: boolean;
+  onHide: () => void;
+  images: Array<{ id: number; file: string; name: string }>;
+  currentIndex: number;
+  setCurrentIndex: React.Dispatch<React.SetStateAction<number>>;
+  unitName: string;
 }
 
-const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ show, onHide, images, currentIndex, setCurrentIndex }) => {
-    return (
-        <Modal show={show} onHide={onHide} size="lg" centered>
-            <Modal.Body>
-                <Carousel activeIndex={currentIndex} onSelect={(index) => setCurrentIndex(index)}>
-                    {images.map((image) => (
-                        <Carousel.Item key={image.id}>
-                            <img
-                                className="d-block w-100"
-                                src={image.file}
-                                alt={image.name}
-                            />
-                            <Carousel.Caption>
-                                <h5>{image.name}</h5>
-                            </Carousel.Caption>
-                        </Carousel.Item>
-                    ))}
-                </Carousel>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={onHide}>
-                    Close
-                </Button>
-            </Modal.Footer>
-        </Modal>
-    );
+const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
+  show,
+  onHide,
+  images,
+  currentIndex,
+  setCurrentIndex,
+  unitName,
+}) => {
+  const handlePrev = () => setCurrentIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1));
+  const handleNext = () => setCurrentIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0));
+
+  return (
+    <Modal show={show} onHide={onHide} size="xl" sx={{ borderRadius: '10px' }} centered>
+      <Modal.Body className="p-0">
+        <Box sx={{ position: 'relative', bgcolor: 'black', height: '90vh', borderRadius: '10px' }}>
+          <IconButton
+            onClick={onHide}
+            sx={{ position: 'absolute', top: 10, right: 10, color: 'white', zIndex: 1 }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <Carousel
+            activeIndex={currentIndex}
+            onSelect={(index) => setCurrentIndex(index)}
+            interval={null}
+            indicators={false}
+            prevIcon={<NavigateBeforeIcon sx={{ fontSize: 40, color: 'white' }} />}
+            nextIcon={<NavigateNextIcon sx={{ fontSize: 40, color: 'white' }} />}
+          >
+            {images.map((image) => (
+              <Carousel.Item key={image.id}>
+                <Box
+                  sx={{
+                    height: '90vh',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <img
+                    src={image.file}
+                    alt={image.name}
+                    style={{
+                      maxHeight: '100%',
+                      maxWidth: '100%',
+                      objectFit: 'contain',
+                    }}
+                  />
+                </Box>
+              </Carousel.Item>
+            ))}
+          </Carousel>
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              bgcolor: 'rgba(0,0,0,0.7)',
+              color: 'white',
+              p: 2,
+            }}
+          >
+            <Typography level="h6">{unitName}</Typography>
+            <Typography level="body-sm">
+              {images[currentIndex].name} ({currentIndex + 1} of {images.length})
+            </Typography>
+          </Box>
+        </Box>
+      </Modal.Body>
+    </Modal>
+  );
 };
 
 export default ImagePreviewModal;

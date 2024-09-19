@@ -21,7 +21,7 @@ const useImages = () => {
     setImages([]);
   };
 
-  return { images, handleImageChange, removeImage, resetImages };
+  return { images, setImages, handleImageChange, removeImage, resetImages };
 };
 
 export default useImages;

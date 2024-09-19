@@ -29,7 +29,7 @@ def book_unit(request, unit_id):
         return Response({"detail": "Unit is already occupied."}, status=status.HTTP_400_BAD_REQUEST)
 
     request_data = request.data.copy()  # Make a mutable copy of request data
-    request_data["unit_id"] = unit.id
+    request_data["unit"] = unit.id
 
     serializer = BookingSerializer(data=request_data, context={"request": request})
     if serializer.is_valid():
@@ -49,7 +49,7 @@ def book_property(request, property_id):
         return Response({"detail": "Property has units. Book a unit instead."}, status=status.HTTP_400_BAD_REQUEST)
 
     request_data = request.data.copy()  # Make a mutable copy of request data
-    request_data["property_id"] = property.id
+    request_data["property"] = property.id
 
     serializer = BookingSerializer(data=request_data, context={"request": request})
     if serializer.is_valid():
@@ -68,6 +68,13 @@ def manage_bookings(request):
     serializer = BookingSerializer(bookings, many=True)
     return Response(serializer.data)
 
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def customer_bookings(request):
+    bookings = Booking.objects.filter(customer=request.user)
+    serializer = BookingSerializer(bookings, many=True)
+    return Response(serializer.data)
+
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -81,7 +88,7 @@ def booking_status(request, booking_id):
 @permission_classes([IsAuthenticated])
 def approve_booking(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
-    booking.status = "approved"
+    booking.status = "Approved"
     if booking.unit:
         booking.unit.occupied = True
         booking.unit.save()
@@ -95,6 +102,6 @@ def approve_booking(request, booking_id):
 @permission_classes([IsAuthenticated])
 def deny_booking(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
-    booking.status = "denied"
+    booking.status = "Denied"
     booking.save()
     return Response({"detail": "Booking denied."})

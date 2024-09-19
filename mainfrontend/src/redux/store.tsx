@@ -4,6 +4,7 @@ import propertyReducer from "./propertySlice"
 import categoryReducer from './categorySlice';
 import unitReducer from "./unitSlice"
 import bookingReducer from "./bookingSlice"
+import subscriptionReducer from "./subscriptionSlice";
 
 const store: any = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store: any = configureStore({
     categories: categoryReducer,
     units: unitReducer,
     bookings: bookingReducer,
+    subscription: subscriptionReducer,
   },
 });
 

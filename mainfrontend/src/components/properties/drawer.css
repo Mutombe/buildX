@@ -1,0 +1,26 @@
+.content {
+  display: grid;
+  grid-template-columns: 1fr;
+  transition: grid-template-columns 0.3s ease-in-out;
+}
+
+.content.details-open {
+  grid-template-columns: 2fr 1fr;
+}
+
+.property-details {
+  background-color: #f0f0f0;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.property-details-open .col-md-4 {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .content,
+  .content.details-open {
+    grid-template-columns: 1fr;
+  }
+}

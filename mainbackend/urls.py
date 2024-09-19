@@ -9,7 +9,8 @@ from app1.views import *
 import mainauth
 from bookings.views import (
     BookingListCreateView,
-    book_unit, book_property, booking_status, manage_bookings, approve_booking, deny_booking
+    BookingDetailView,
+    book_unit, book_property, booking_status, manage_bookings, approve_booking, deny_booking, customer_bookings
 )
 
 router = routers.DefaultRouter()
@@ -26,14 +27,20 @@ urlpatterns = [
     path('properties/<int:property_id>/units/', UnitListCreateView.as_view(), name='unit-list-create'),
     path('units/<int:pk>/', UnitDetailView.as_view(), name='unit-detail'),
     path('units/', UnitListCreateView.as_view(), name='units'),
+    path('user/properties/units/<int:pk>/', UnitUpdateView.as_view(), name='unit-update'),
     path('uploads/', UserPropertiesView.as_view()),
     path('user/properties/', UserPropertiesView.as_view(), name='user-properties'),
+    path('user/properties/units/<int:pk>/', UnitUpdateView.as_view(), name='unit-update'),
     path('bookings/', BookingListCreateView.as_view(), name='booking-list-create'),
+    path('bookings/<int:pk>/', BookingDetailView.as_view(), name='booking-detail'),
     path('properties/<int:property_id>/subscribe/', subscribe_property, name='subscribe-property'),
+    path('unsubscribe/<int:property_id>/', unsubscribe_property, name='unsubscribe_property'),
+    path('subscription_status/<int:property_id>/', CheckSubscriptionStatus.as_view(), name='check_subscription_status'),
     path('book/unit/<int:unit_id>/', book_unit, name='book-unit'),
     path('book/properties/<int:property_id>/', book_property, name='book-property'),
     path('booking/status/<int:booking_id>/', booking_status, name='booking-status'),
     path('manage/bookings/', manage_bookings, name='manage-bookings'),
+    path('customer/bookings/', customer_bookings, name='customer-bookings'),
     path('approve/booking/<int:booking_id>/', approve_booking, name='approve-booking'),
     path('deny/booking/<int:booking_id>/', deny_booking, name='deny-booking'),
     path('', include('mainauth.urls')), 

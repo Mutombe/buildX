@@ -11,6 +11,7 @@ from .permissions import IsOwner
 from rest_framework import serializers
 from .utils import get_object
 from .serializers import CategorySerializer, SubscriptionSerializer
+from django.shortcuts import get_object_or_404
 
 class CategoryListView(generics.ListAPIView):
     queryset = Category.objects.all()
@@ -78,6 +79,26 @@ class UnitListCreateView(generics.ListCreateAPIView):
             serializer.save(unit_property=property_instance)
         except Property.DoesNotExist:
             raise serializers.ValidationError("Property does not exist.")
+        
+
+
+class UnitUpdateView(generics.UpdateAPIView):
+    queryset = Unit.objects.all()
+    serializer_class = UnitSerializer
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
+
 
 class ListProperties(APIView):
 
@@ -117,17 +138,54 @@ class PropertyUpdateView(APIView):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def subscribe_property(request, property_id):
+    property = get_object_or_404(Property, id=property_id)
+    user = request.user
+
+    # Check if user is already subscribed
+    if Subscription.objects.filter(user=user, property=property).exists():
+        return Response({"error": "You are already subscribed."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Subscribe user
+    Subscription.objects.create(user=user, property=property)
+
+    # Increment subscribers_count
+    property.subscribers_count += 1
+    property.save()
+
+    return Response({"message": "Subscribed successfully!"}, status=status.HTTP_200_OK)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def unsubscribe_property(request, property_id):
+    property = get_object_or_404(Property, id=property_id)
+    user = request.user
+
+    # Check if the subscription exists
     try:
-        property = Property.objects.get(id=property_id)
-        property.subscribers_count += 1
+        subscription = Subscription.objects.get(user=user, property=property)
+    except Subscription.DoesNotExist:
+        return Response({"error": "You are not subscribed to this property."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Unsubscribe the user
+    subscription.delete()
+
+    # Decrement subscribers_count
+    if property.subscribers_count > 0:
+        property.subscribers_count -= 1
         property.save()
-        # Add the user to a subscription list or send an email, etc.
-        # This is a simplified example.
-        return Response({"message": "Subscribed successfully!"}, status=status.HTTP_200_OK)
-    except Property.DoesNotExist:
-        return Response({"error": "Property not found"}, status=status.HTTP_404_NOT_FOUND)
-    
-      
+
+    return Response({"message": "Unsubscribed successfully!"}, status=status.HTTP_200_OK)
+
+
+class CheckSubscriptionStatus(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, property_id):
+        user = request.user
+        is_subscribed = Subscription.objects.filter(user=user, property_id=property_id).exists()
+        return Response({'is_subscribed': is_subscribed, 'property_id': property_id})
+
 class SubscriptionViewSet(viewsets.ModelViewSet):
     queryset = Subscription.objects.all()
     serializer_class = SubscriptionSerializer
@@ -143,12 +201,7 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(user=user)
         return queryset
     
-class SubscriptionListCreateCreateView(generics.ListCreateAPIView):
-    queryset = Subscription.objects.all()
-    serializer_class = SubscriptionSerializer
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
 
 class SubscriptionDetailView(generics.RetrieveDestroyAPIView):
     queryset = Subscription.objects.all()

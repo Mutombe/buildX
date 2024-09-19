@@ -20,8 +20,8 @@ const BookingConfirmation = () => {
       end_date: endDate,
       booking_type: bookingType,
       total_price: total_price,
-      unit_id: unitId || null,
-      property_id: propertyId || null,
+      unit: unitId || null,
+      property: propertyId || null,
     };
 
     if (unitId) {
@@ -47,10 +47,10 @@ const BookingConfirmation = () => {
       <Box mt={2}>
         <Typography>Booking Type: {bookingType}</Typography>
         <Typography>Start Date: {startDateObj?.toDateString()}</Typography>
-        {bookingType === "specified" && (
+        {bookingType === "Specified" && (
           <Typography>End Date: {endDateObj?.toDateString()}</Typography>
         )}
-        {/* Add more details as needed */}
+        <Typography>${total_price}</Typography>
       </Box>
       <Box mt={2}>
         <Button variant="contained" onClick={handleConfirm}>

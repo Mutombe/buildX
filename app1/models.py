@@ -59,6 +59,8 @@ class Property(models.Model):
     occupied = models.BooleanField(default=False)
     subscribers_count = models.IntegerField(blank=True, default=0)
     price_per_month = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    pinned = models.BooleanField(default=False)
+    pinned_at = models.DateTimeField(null=True, blank=True)
     objects = PropertyManager()
 
     def __str__(self) -> str:
@@ -162,6 +164,14 @@ class UnitImages(models.Model):
             return self.file.url
         return self.name if self.name else self.file.url
 
+
+class PinnedProperty(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pinned_properties')
+    property = models.ForeignKey('Property', on_delete=models.CASCADE, related_name='pinned_by')
+    pinned_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'property')
 
 class Subscription(models.Model):
     """
