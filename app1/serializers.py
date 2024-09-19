@@ -2,7 +2,7 @@ from rest_framework import serializers
 from app1.models import Property, Category, UnitImages, Unit, PropertyImages
 from mainauth.serializers import UserSerializer
 from django.contrib.auth.models import User
-from .models import Subscription
+from .models import PinnedProperty, Subscription
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -70,6 +70,12 @@ class PropertySerializer(serializers.ModelSerializer):
             PropertyImages.objects.create(property=property_instance, **image_data)
         print(property_instance)
         return property_instance
+
+class PinnedPropertySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PinnedProperty
+        fields = ['id', 'user', 'property', 'pinned_at']
+        read_only_fields = ['user', 'pinned_at']
 
 class SubscriptionSerializer(serializers.ModelSerializer):
     class Meta:

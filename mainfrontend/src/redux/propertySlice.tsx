@@ -21,6 +21,22 @@ export const fetchPropertyUnits = createAsyncThunk(
   }
 );
 
+export const togglePinProperty = createAsyncThunk(
+  'properties/togglePin',
+  async (propertyId, { getState }) => {
+    const { properties } = getState().properties;
+    const property = properties.find(p => p.id === propertyId);
+    
+    if (property.pinned) {
+      await authAxios.delete(`/properties/${propertyId}/pin/`);
+    } else {
+      await authAxios.post(`/properties/${propertyId}/pin/`);
+    }
+    
+    return propertyId;
+  }
+);
+
 export const fetchUserProperties = createAsyncThunk(
   "properties/fetchUserProperties",
   async (_, { rejectWithValue }) => {

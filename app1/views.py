@@ -1,5 +1,6 @@
 from app1.serializers import PropertySerializer, UnitSerializer
-from app1.models import Category, Property, Subscription, Unit, PropertyImages
+from django.db.models import Q
+from app1.models import Category, PinnedProperty, Property, Subscription, Unit, PropertyImages
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework import permissions, generics, status
@@ -10,7 +11,7 @@ from rest_framework.decorators import api_view, permission_classes
 from .permissions import IsOwner
 from rest_framework import serializers
 from .utils import get_object
-from .serializers import CategorySerializer, SubscriptionSerializer
+from .serializers import CategorySerializer, PinnedPropertySerializer, SubscriptionSerializer
 from django.shortcuts import get_object_or_404
 
 class CategoryListView(generics.ListAPIView):
@@ -24,15 +25,23 @@ class PropertyView(viewsets.ModelViewSet):
   
 
 class PropertyListCreateView(generics.ListCreateAPIView):
-    queryset = Property.objects.all()
     serializer_class = PropertySerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
+        queryset = Property.objects.all()
         category = self.request.query_params.get('category', None)
+        search_query = self.request.query_params.get('search', None)
+
         if category:
-            return Property.objects.filter(category__name=category)
-        return self.queryset.filter(owner=self.request.user)
+            queryset = queryset.filter(category__name=category)
+        
+        if search_query:
+            queryset = queryset.filter(
+                Q(name__icontains=search_query) | Q(location__icontains=search_query)
+            )
+
+        return queryset
 
     def perform_create(self, serializer):
         property_instance = serializer.save(owner=self.request.user)
@@ -40,14 +49,46 @@ class PropertyListCreateView(generics.ListCreateAPIView):
             PropertyImages.objects.create(property=property_instance, file=image_data)
 
     def list(self, request, *args, **kwargs):
-        queryset = Property.objects.all()
+        queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         data = serializer.data
+
+        pinned_properties = PinnedProperty.objects.filter(user=request.user).values_list('property_id', flat=True)
+
         for property_data in data:
             property_data['has_units'] = Unit.objects.filter(unit_property=property_data['id']).exists()
             property_data['has_images'] = PropertyImages.objects.filter(property=property_data['id']).exists()
+            property_data['pinned'] = property_data['id'] in pinned_properties
+
         return Response(data)
 
+class PropertyPinView(generics.CreateAPIView, generics.DestroyAPIView):
+    serializer_class = PinnedPropertySerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        property_id = kwargs.get('pk')
+        try:
+            property = Property.objects.get(id=property_id)
+        except Property.DoesNotExist:
+            return Response({'error': 'Property not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        pinned_property, created = PinnedProperty.objects.get_or_create(user=request.user, property=property)
+        
+        if created:
+            return Response({'status': 'property pinned'}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({'status': 'property already pinned'}, status=status.HTTP_200_OK)
+
+    def destroy(self, request, *args, **kwargs):
+        property_id = kwargs.get('pk')
+        try:
+            pinned_property = PinnedProperty.objects.get(user=request.user, property_id=property_id)
+        except PinnedProperty.DoesNotExist:
+            return Response({'error': 'Pinned property not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        pinned_property.delete()
+        return Response({'status': 'property unpinned'}, status=status.HTTP_204_NO_CONTENT)
 
 class PropertyDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Property.objects.all()
