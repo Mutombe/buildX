@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 
 
-
 class Category(models.Model):
     """
     Category model
@@ -28,17 +27,6 @@ class PropertyManager(models.Manager):
     def for_user(self, user):
         return self.filter(owner=user)
 
-class Property(models.Model):
-    name = models.CharField(max_length=100, blank=True)
-    location = models.CharField(max_length=500, blank=False, null=True)
-    category = models.ForeignKey(
-        Category,
-        on_delete=models.CASCADE,
-        related_name="building",
-        blank=True,
-        null=True,
-    )
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
 
 class Property(models.Model):
     """
@@ -77,6 +65,7 @@ class Property(models.Model):
                     fail_silently=False,
                 )
 
+
 class PropertyImages(models.Model):
     """
     Property Images model
@@ -93,24 +82,11 @@ class PropertyImages(models.Model):
     file = models.FileField(upload_to="", blank=False)
 
     def __str__(self) -> str:
-        
+
         if type(self.name) != None:
             return self.name
         else:
             return self.file.url
-
-
-class Unit(models.Model):
-    name = models.CharField(
-        max_length=100,
-        blank=True,
-    )
-    unit_property = models.ForeignKey(
-        Property, null=True, on_delete=models.SET_NULL, blank=True
-    )
-
-    def __str__(self):
-        return self.name
 
 
 class Unit(models.Model):
@@ -119,7 +95,6 @@ class Unit(models.Model):
     """
 
     name = models.CharField(max_length=100, blank=True)
-    unit_property = models.ForeignKey(Property, null=True, on_delete=models.SET_NULL, blank=True)
     unit_property = models.ForeignKey(
         Property, related_name="units", blank=True, on_delete=models.CASCADE, null=True
     )
@@ -139,10 +114,11 @@ class Unit(models.Model):
     def location(self):
         return self.unit_property.location
 
-    #def save(self, *args, **kwargs):
-     #   if not self.occupied:
-     #       self.unit_property.notify_subscribers()
-     #   super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #   if not self.occupied:
+    #       self.unit_property.notify_subscribers()
+    #   super().save(*args, **kwargs)
+
 
 class UnitImages(models.Model):
     """
@@ -164,12 +140,17 @@ class UnitImages(models.Model):
 
 
 class PinnedProperty(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pinned_properties')
-    property = models.ForeignKey('Property', on_delete=models.CASCADE, related_name='pinned_by')
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="pinned_properties"
+    )
+    property = models.ForeignKey(
+        "Property", on_delete=models.CASCADE, related_name="pinned_by"
+    )
     pinned_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'property')
+        unique_together = ("user", "property")
+
 
 class Subscription(models.Model):
     """
@@ -187,12 +168,3 @@ class Subscription(models.Model):
 
     def __str__(self):
         return f"{self.user.username} subscribed to {self.property.name}"
-
-
-
-
-
-
-
-    
-

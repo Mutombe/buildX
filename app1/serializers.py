@@ -4,16 +4,17 @@ from mainauth.serializers import UserSerializer
 from django.contrib.auth.models import User
 from .models import PinnedProperty, Subscription
 
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'name']
+        fields = ["id", "name"]
 
 
 class UnitImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = UnitImages
-        fields = '__all__'
+        fields = "__all__"
 
 
 class PropertyImageSerializer(serializers.ModelSerializer):
@@ -22,10 +23,9 @@ class PropertyImageSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-
 class UnitSerializer(serializers.ModelSerializer):
     images = UnitImageSerializer(many=True, required=False)
-    
+
     class Meta:
         model = Unit
         fields = [
@@ -40,10 +40,11 @@ class UnitSerializer(serializers.ModelSerializer):
             "solar",
             "occupied",
             "booked_count",
+            "price_per_month",
         ]
-    
+
     def create(self, validated_data):
-        images_data = validated_data.pop('images', [])
+        images_data = validated_data.pop("images", [])
         unit_instance = Unit.objects.create(**validated_data)
         for image_data in images_data:
             UnitImages.objects.create(unit=unit_instance, **image_data)
@@ -52,32 +53,47 @@ class UnitSerializer(serializers.ModelSerializer):
 
 
 class PropertySerializer(serializers.ModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username')
+    owner = serializers.ReadOnlyField(source="owner.username")
     images = PropertyImageSerializer(many=True, required=False)
     units = UnitSerializer(many=True, read_only=True, required=False)
-    category = serializers.SlugRelatedField(slug_field='name',
-                                            queryset=Category.objects.all())
-    
+    category = serializers.SlugRelatedField(
+        slug_field="name", queryset=Category.objects.all()
+    )
+
     class Meta:
         model = Property
-        fields = ['id', 'owner', 'name', 'location', 'category', 'images', 'units']
-        read_only_fields = ['owner']
+        fields = [
+            "id",
+            "owner",
+            "name",
+            "location",
+            "category",
+            "images",
+            "units",
+            "price_per_month",
+            "occupied",
+            "booked_count",
+            "subscribers_count",
+        ]
+        read_only_fields = ["owner"]
 
     def create(self, validated_data):
-        images_data = validated_data.pop('images', [])
+        images_data = validated_data.pop("images", [])
         property_instance = Property.objects.create(**validated_data)
         for image_data in images_data:
             PropertyImages.objects.create(property=property_instance, **image_data)
         print(property_instance)
         return property_instance
 
+
 class PinnedPropertySerializer(serializers.ModelSerializer):
     class Meta:
         model = PinnedProperty
-        fields = ['id', 'user', 'property', 'pinned_at']
-        read_only_fields = ['user', 'pinned_at']
+        fields = ["id", "user", "property", "pinned_at"]
+        read_only_fields = ["user", "pinned_at"]
+
 
 class SubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subscription
-        fields = ['id', 'user', 'property', 'subscribed_at']
+        fields = ["id", "user", "property", "subscribed_at"]
