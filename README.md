@@ -1,5 +1,5 @@
 # buildX
-A unique property rental web app
+A unique property rental web app![20240922_233358(702)](https://github.com/user-attachments/assets/72687cf7-bdd2-45b9-9e17-ecfd979fa153)
+![20240922_233147(104)](https://github.com/user-attachments/assets/0a8eea11-077f-4b68-8502-be10a165b1d9)
 
-![20240918_221739(622)](https://github.com/user-attachments/assets/0eceef67-7b6e-4abf-b1fa-efe56dec106d)
 
