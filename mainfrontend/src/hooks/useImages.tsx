@@ -7,7 +7,8 @@ const useImages = () => {
     const selectedFiles = Array.from(e.target.files);
     const updatedImages = selectedFiles.map((file) => ({
       file,
-      preview: URL.createObjectURL(file),  // Create image preview
+      // Create image preview
+      preview: URL.createObjectURL(file),
     }));
     setImages([...images, ...updatedImages]);
   };

@@ -1,10 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, MenuItem, } from '@mui/material';
-import { updateProperty } from '../../redux/propertySlice';
-import useImages from '../../hooks/useImages';
-import { fetchCategories } from '../../redux/categorySlice';
-
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+  TextField,
+  MenuItem,
+} from "@mui/material";
+import { updateProperty } from "../../redux/propertySlice";
+import useImages from "../../hooks/useImages";
+import { fetchCategories } from "../../redux/categorySlice";
 
 interface EditPropertyModalProps {
   open: boolean;
@@ -12,29 +19,33 @@ interface EditPropertyModalProps {
   property: any;
 }
 
-const EditPropertyModal: React.FC<EditPropertyModalProps> = ({ open, onClose, property }) => {
-    const dispatch = useDispatch();
-    const { categories } = useSelector((state: any) => state.categories);
-    const { loading, error } = useSelector((state: any) => state.properties);
-    const { images, handleImageChange, removeImage, resetImages } = useImages();
+const EditPropertyModal: React.FC<EditPropertyModalProps> = ({
+  open,
+  onClose,
+  property,
+}) => {
+  const dispatch = useDispatch();
+  const { categories } = useSelector((state: any) => state.categories);
+  const { loading, error } = useSelector((state: any) => state.properties);
+  const { images, handleImageChange, removeImage, resetImages } = useImages();
 
   const [formData, setFormData] = useState({
-    name: '',
-    category: '',
-    location: '',
-    price_per_month: '',
+    name: "",
+    category: "",
+    location: "",
+    price_per_month: "",
   });
 
   useEffect(() => {
     if (property) {
       setFormData({
-        name: property.name || '',
-        category: property.category || '',
-        location: property.location || '',
-        price_per_month: property.price || '',
+        name: property.name || "",
+        category: property.category || "",
+        location: property.location || "",
+        price_per_month: property.price || "",
       });
-      }
-      dispatch(fetchCategories());
+    }
+    dispatch(fetchCategories());
   }, [property, dispatch]);
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,29 +68,28 @@ const EditPropertyModal: React.FC<EditPropertyModalProps> = ({ open, onClose, pr
       propertyData.append(key, value);
     });
 
-
     images.forEach((image) => {
-      propertyData.append('images', image.file);
+      propertyData.append("images", image.file);
     });
 
     dispatch(updateProperty({ id: property.id, propertyData }));
     resetImages();
-    onClose(); 
+    onClose();
   };
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
       <DialogTitle>Edit Property</DialogTitle>
       <DialogContent>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
         <TextField
           label="Property Name"
           name="name"
           value={formData.name}
           onChange={handleInputChange}
           fullWidth
-                  margin="normal"
-                  placeholder={property.name}
+          margin="normal"
+          placeholder={property.name}
         />
         <TextField
           label="Category"
@@ -87,11 +97,11 @@ const EditPropertyModal: React.FC<EditPropertyModalProps> = ({ open, onClose, pr
           value={formData.category}
           onChange={handleCategoryChange}
           fullWidth
-                  margin="normal"
-                  placeholder={property.category}
+          margin="normal"
+          placeholder={property.category}
         >
-        <MenuItem value="">
-         <em></em>
+          <MenuItem value="">
+            <em></em>
           </MenuItem>
           {categories.map((category: any) => (
             <MenuItem key={category.id} value={category.name}>
@@ -105,8 +115,8 @@ const EditPropertyModal: React.FC<EditPropertyModalProps> = ({ open, onClose, pr
           value={formData.location}
           onChange={handleInputChange}
           fullWidth
-                  margin="normal"
-                  placeholder={property.location}
+          margin="normal"
+          placeholder={property.location}
         />
         <TextField
           label="Price Per Month"
@@ -115,20 +125,31 @@ const EditPropertyModal: React.FC<EditPropertyModalProps> = ({ open, onClose, pr
           onChange={handleInputChange}
           fullWidth
           margin="normal"
-                  type="number"
-                  placeholder={property.price_per_month}
-              />
-              
+          type="number"
+          placeholder={property.price_per_month}
+        />
+
         {/* Image upload section */}
         <hr></hr>
         <div>
-          <><label>Images</label></>
+          <>
+            <label>Images</label>
+          </>
           <br />
-          <input type="file" name="images" multiple onChange={handleImageChange} />
+          <input
+            type="file"
+            name="images"
+            multiple
+            onChange={handleImageChange}
+          />
           <div className="image-previews">
             {images.map((image, index) => (
               <div key={index} className="image-preview">
-                <img src={image.preview} alt={`preview-${index}`} style={{ width: '100px', marginRight: '10px' }} />
+                <img
+                  src={image.preview}
+                  alt={`preview-${index}`}
+                  style={{ width: "100px", marginRight: "10px" }}
+                />
                 <button type="button" onClick={() => removeImage(index)}>
                   &times;
                 </button>

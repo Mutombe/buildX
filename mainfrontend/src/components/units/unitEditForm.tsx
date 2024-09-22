@@ -29,9 +29,10 @@ const EditUnitModal: React.FC<EditUnitModalProps> = ({
 }) => {
   //const { loading, error } = useSelector((state) => state.unit);
 
-  const { images, setImages, handleImageChange, removeImage, resetImages } = useImages();
+  const { images, setImages, handleImageChange, removeImage, resetImages } =
+    useImages();
   const dispatch = useDispatch();
-  const [initialUnitData, setInitialUnitData] = useState ({
+  const [initialUnitData, setInitialUnitData] = useState({
     name: "",
     kitchen: false,
     bathroom: false,
@@ -50,7 +51,7 @@ const EditUnitModal: React.FC<EditUnitModalProps> = ({
         toilet: unit.toilet || false,
         water: unit.water || false,
         solar: unit.solar || false,
-        price_per_month: unit.price_per_month || '',
+        price_per_month: unit.price_per_month || "",
       });
       setImages([...unit.images]);
     }

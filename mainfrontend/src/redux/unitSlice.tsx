@@ -1,14 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import authAxios from "../utils/authAxios";
 
-export const fetchUnits = createAsyncThunk(
-  "units/fetchUnits",
-  async () => {
-    const response = await authAxios.get(`/units/`);
-    return response.data;
-  }
-);
-
+export const fetchUnits = createAsyncThunk("units/fetchUnits", async () => {
+  const response = await authAxios.get(`/units/`);
+  return response.data;
+});
 
 export const addUnit = createAsyncThunk(
   "units/addUnit",
@@ -16,21 +12,17 @@ export const addUnit = createAsyncThunk(
     try {
       const response = await authAxios.post(
         `/properties/${property_id}/units/`,
-        formData,
+        formData
       );
       return response.data;
     } catch (error: any) {
       if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
         console.log(error.response.data);
         console.log(error.response.status);
         console.log(error.response.headers);
       } else if (error.request) {
-        // The request was made but no response was received
         console.log(error.request);
       } else {
-        // Something happened in setting up the request that triggered an Error
         console.log("Error", error.message);
       }
       console.log(error.config);
@@ -39,15 +31,19 @@ export const addUnit = createAsyncThunk(
 );
 
 export const updateUnit = createAsyncThunk(
-  'units/updateUnit',
+  "units/updateUnit",
   async ({ id, unitData }, { rejectWithValue }) => {
     try {
-      const response = await authAxios.put(`user/properties/units/${id}/`, unitData);
+      const response = await authAxios.put(
+        `user/properties/units/${id}/`,
+        unitData
+      );
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
     }
-});
+  }
+);
 
 const unitSlice = createSlice({
   name: "units",
@@ -64,7 +60,7 @@ const unitSlice = createSlice({
       })
       .addCase(addUnit.fulfilled, (state, action) => {
         state.units.push(action.payload);
-        console.log("Uploaded Unit", action.payload)
+        console.log("Uploaded Unit", action.payload);
       })
       .addCase(addUnit.rejected, (state, action) => {
         state.loading = false;
@@ -75,7 +71,7 @@ const unitSlice = createSlice({
       })
       .addCase(fetchUnits.fulfilled, (state, action) => {
         state.units = action.payload;
-        console.log("Fetched Units", action.payload)
+        console.log("Fetched Units", action.payload);
       })
       .addCase(fetchUnits.rejected, (state, action) => {
         state.loading = false;
@@ -85,7 +81,9 @@ const unitSlice = createSlice({
         state.loading = true;
       })
       .addCase(updateUnit.fulfilled, (state, action) => {
-        const index = state.units.findIndex(unit => unit.id === action.payload.id);
+        const index = state.units.findIndex(
+          (unit) => unit.id === action.payload.id
+        );
         if (index !== -1) {
           state.units[index] = action.payload;
         }

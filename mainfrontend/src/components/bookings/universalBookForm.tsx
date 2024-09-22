@@ -42,13 +42,13 @@ const BookingSelectDate = () => {
     const end = endDate ? new Date(endDate) : new Date(startDate);
     const daysBooked = (end - start) / (1000 * 60 * 60 * 24);
     let total;
-  
+
     if (bookingType === "Specified") {
       total = (pricePerMonth / 30) * daysBooked;
     } else {
       total = pricePerMonth;
     }
-  
+
     // Round down to two decimal places
     return Math.floor(total * 100) / 100;
   };
@@ -79,7 +79,6 @@ const BookingSelectDate = () => {
       <Typography variant="h5">Select Booking Dates</Typography>
 
       <Box mt={2}>
-        {/* Checkbox for specifying rental period */}
         <FormControlLabel
           control={
             <Checkbox

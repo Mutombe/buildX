@@ -4,15 +4,17 @@ import { fetchProperties } from "../../redux/propertySlice";
 import { fetchCategories } from "../../redux/categorySlice";
 import PropertyCard from "./propertyCard";
 import { Col, Row, Container, Form, InputGroup } from "react-bootstrap";
-import { debounce } from 'lodash';
+import { debounce } from "lodash";
 import { Skeleton } from "@mui/material";
-import './css/propetyList.css'
+import "./css/propetyList.css";
 
 function PropertyList() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const dispatch = useDispatch();
-  const { properties, loading, success, error } = useSelector((state) => state.properties);
+  const { properties, loading, success, error } = useSelector(
+    (state) => state.properties
+  );
   const { categories } = useSelector((state) => state.categories);
 
   const debouncedSearch = debounce((search, category) => {
@@ -21,7 +23,7 @@ function PropertyList() {
 
   useEffect(() => {
     dispatch(fetchProperties({}));
-    console.log("Properties", properties)
+    console.log("Properties", properties);
   }, [dispatch]);
 
   useEffect(() => {
@@ -40,15 +42,20 @@ function PropertyList() {
     debouncedSearch(searchQuery, category);
   };
 
-  const renderSkeletons = () => (
+  const renderSkeletons = () =>
     Array.from(new Array(6)).map((_, index) => (
-      <Col key={index} xs={12} md={5} className="mb-4" style={{width: '300px'}}>
+      <Col
+        key={index}
+        xs={12}
+        md={5}
+        className="mb-4"
+        style={{ width: "300px" }}
+      >
         <Skeleton variant="rectangular" width="100%" height={200} />
         <Skeleton width="80%" />
         <Skeleton width="60%" />
       </Col>
-    ))
-  );
+    ));
 
   let content;
 
@@ -66,7 +73,11 @@ function PropertyList() {
       </Col>
     ));
   } else {
-    content = <div id="no-content">No properties found. Try adjusting your search or filter settings.</div>;
+    content = (
+      <div id="no-content">
+        No properties found. Try adjusting your search or filter settings.
+      </div>
+    );
   }
 
   if (error) {

@@ -18,26 +18,23 @@ function App() {
       <div className="container">
         <MainNavBar />
         <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<WelcomeAlert />} />
-              <Route path="login" element={<Login />} />
-              <Route path="logout" />
-              <Route path="signup" element={<Signup />} />
-              <Route path="property" element={<PropertyList />} />
-              <Route
-                path="/property/:propertyId/units"
-                element={<UnitList />}
-              />
-              <Route path="/postProperty" element={<AddPro />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/approve-booking" element={""} />
-              <Route path="/deny-booking" element={""} />
-              <Route path="/book/:type/:id" element={<BookingSelectDate />} />
-              <Route
-                path="/booking-confirmation"
-                element={<BookingConfirmation />}
-              />
-            </Routes>
+          <Routes>
+            <Route path="/" element={<WelcomeAlert />} />
+            <Route path="login" element={<Login />} />
+            <Route path="logout" />
+            <Route path="signup" element={<Signup />} />
+            <Route path="property" element={<PropertyList />} />
+            <Route path="/property/:propertyId/units" element={<UnitList />} />
+            <Route path="/postProperty" element={<AddPro />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/approve-booking" element={""} />
+            <Route path="/deny-booking" element={""} />
+            <Route path="/book/:type/:id" element={<BookingSelectDate />} />
+            <Route
+              path="/booking-confirmation"
+              element={<BookingConfirmation />}
+            />
+          </Routes>
         </BrowserRouter>
         <Footer />
       </div>

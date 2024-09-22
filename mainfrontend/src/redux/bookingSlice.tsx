@@ -1,11 +1,11 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import authAxios from '../utils/authAxios';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import authAxios from "../utils/authAxios";
 
 export const fetchDetails = createAsyncThunk(
-  'bookings/fetchDetails',
+  "bookings/fetchDetails",
   async ({ id, type }, { rejectWithValue }) => {
     try {
-      const endpoint = type === 'unit' ? `/units/${id}` : `/properties/${id}`;
+      const endpoint = type === "unit" ? `/units/${id}` : `/properties/${id}`;
       const response = await authAxios.get(endpoint);
       return response.data;
     } catch (error) {
@@ -15,11 +15,17 @@ export const fetchDetails = createAsyncThunk(
 );
 
 export const bookProperty = createAsyncThunk(
-  'bookings/bookProperty',
-  async ( bookingData, { rejectWithValue }) => {
+  "bookings/bookProperty",
+  async (bookingData, { rejectWithValue }) => {
     try {
-      const response = await authAxios.post(`book/properties/${bookingData.property}/`, bookingData);
-      console.log("Property ID Booking/ Slice Post to Backend", bookingData.property)
+      const response = await authAxios.post(
+        `book/properties/${bookingData.property}/`,
+        bookingData
+      );
+      console.log(
+        "Property ID Booking/ Slice Post to Backend",
+        bookingData.property
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -28,21 +34,24 @@ export const bookProperty = createAsyncThunk(
 );
 
 export const bookUnit = createAsyncThunk(
-  'bookings/bookUnit',
+  "bookings/bookUnit",
   async (bookingData, { rejectWithValue }) => {
     try {
-      const response = await authAxios.post(`book/unit/${bookingData.unit}/`, bookingData);
-      console.log("Unit ID Booking/ Slice Post to Backend", bookingData.unit)
+      const response = await authAxios.post(
+        `book/unit/${bookingData.unit}/`,
+        bookingData
+      );
+      console.log("Unit ID Booking/ Slice Post to Backend", bookingData.unit);
       return response.data;
     } catch (error) {
-      console.log("Booking Error", error)
+      console.log("Booking Error", error);
       return rejectWithValue(error.response.data);
     }
   }
 );
 
 export const approveBooking = createAsyncThunk(
-  'bookings/approveBooking',
+  "bookings/approveBooking",
   async (booking_id, { rejectWithValue }) => {
     try {
       const response = await authAxios.post(`approve/booking/${booking_id}/`);
@@ -54,7 +63,7 @@ export const approveBooking = createAsyncThunk(
 );
 
 export const denyBooking = createAsyncThunk(
-  'bookings/denyBooking',
+  "bookings/denyBooking",
   async (booking_id, { rejectWithValue }) => {
     try {
       const response = await authAxios.post(`deny/booking/${booking_id}/`);
@@ -66,11 +75,11 @@ export const denyBooking = createAsyncThunk(
 );
 
 export const manageBookings = createAsyncThunk(
-  'bookings/manageBookings',
+  "bookings/manageBookings",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await authAxios.get('manage/bookings/');
-      const customerBookings = await authAxios.get('customer/bookings/');
+      const response = await authAxios.get("manage/bookings/");
+      const customerBookings = await authAxios.get("customer/bookings/");
       return [...response.data, ...customerBookings.data];
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -79,7 +88,7 @@ export const manageBookings = createAsyncThunk(
 );
 
 const bookingSlice = createSlice({
-  name: 'bookings',
+  name: "bookings",
   initialState: {
     details: {},
     bookingData: {},

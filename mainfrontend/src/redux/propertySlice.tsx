@@ -2,9 +2,11 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import authAxios from "../utils/authAxios";
 
 export const fetchProperties = createAsyncThunk(
-  'properties/fetchProperties',
-  async ({ search = '', category = '' }, ) => {
-    const response = await authAxios.get(`/properties/?search=${search}&category=${category}`);
+  "properties/fetchProperties",
+  async ({ search = "", category = "" }) => {
+    const response = await authAxios.get(
+      `/properties/?search=${search}&category=${category}`
+    );
     return response.data;
   }
 );
@@ -18,25 +20,29 @@ export const fetchPropertyUnits = createAsyncThunk(
 );
 
 export const togglePinProperty = createAsyncThunk(
-  'properties/togglePin',
+  "properties/togglePin",
   async (propertyId, { rejectWithValue }) => {
     try {
-      const pinResponse = await authAxios.post(`/properties/${propertyId}/pin/`);
+      const pinResponse = await authAxios.post(
+        `/properties/${propertyId}/pin/`
+      );
       if (pinResponse.status === 201) {
         // Property was successfully pinned
         return { propertyId, pinned: true };
       } else if (pinResponse.status === 200) {
         // Property was already pinned, so we'll unpin it
-        const unpinResponse = await authAxios.delete(`/properties/${propertyId}/pin/`);
-        
+        const unpinResponse = await authAxios.delete(
+          `/properties/${propertyId}/pin/`
+        );
+
         if (unpinResponse.status === 204) {
           // Property was successfully unpinned
           return { propertyId, pinned: false };
         }
       }
-      throw new Error('Unexpected response from server');
+      throw new Error("Unexpected response from server");
     } catch (error) {
-      return rejectWithValue(error.response?.data || 'An error occurred');
+      return rejectWithValue(error.response?.data || "An error occurred");
     }
   }
 );
@@ -76,7 +82,6 @@ export const deleteProperty = createAsyncThunk(
     }
   }
 );
-
 
 export const uploadProperty = createAsyncThunk(
   "property/uploadProperty",
@@ -119,13 +124,13 @@ const propertySlice = createSlice({
       })
       .addCase(togglePinProperty.fulfilled, (state, action) => {
         const { propertyId, pinned } = action.payload;
-        const property = state.properties.find(p => p.id === propertyId);
+        const property = state.properties.find((p) => p.id === propertyId);
         if (property) {
           property.pinned = pinned;
         }
       })
       .addCase(togglePinProperty.rejected, (state, action) => {
-        state.error = action.payload; // Handle any errors
+        state.error = action.payload;
       })
       .addCase(fetchPropertyUnits.pending, (state) => {
         state.loading = true;
@@ -147,7 +152,7 @@ const propertySlice = createSlice({
         state.loading = false;
         state.success = true;
         state.userProperties = action.payload;
-        console.log("User Properties", state.userProperties)
+        console.log("User Properties", state.userProperties);
       })
       .addCase(fetchUserProperties.rejected, (state, action) => {
         state.loading = false;

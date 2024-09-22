@@ -3,7 +3,10 @@ import { login, signup, logout } from "../utils/api";
 
 export const userLogin = createAsyncThunk(
   "auth/login",
-  async (credentials: { username: string; password: string }, { rejectWithValue }) => {
+  async (
+    credentials: { username: string; password: string },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await login(credentials.username, credentials.password);
       return response.data;
@@ -15,9 +18,16 @@ export const userLogin = createAsyncThunk(
 
 export const userSignup = createAsyncThunk(
   "auth/signup",
-  async (userData: { username: string; email: string; password: string }, { rejectWithValue }) => {
+  async (
+    userData: { username: string; email: string; password: string },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await signup(userData.username, userData.email, userData.password);
+      const response = await signup(
+        userData.username,
+        userData.email,
+        userData.password
+      );
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -36,11 +46,10 @@ export const userLogout = createAsyncThunk(
   }
 );
 
-
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: JSON.parse(localStorage.getItem('user')) || null,
+    user: JSON.parse(localStorage.getItem("user")) || null,
     token: localStorage.getItem("token") || null,
     error: null,
     loading: false,
@@ -64,11 +73,11 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.loading = false;
         localStorage.setItem("token", action.payload.token);
-        localStorage.setItem('user', JSON.stringify(action.payload.user));
+        localStorage.setItem("user", JSON.stringify(action.payload.user));
       })
       .addCase(userLogin.rejected, (state, action) => {
         state.error = action.payload;
-        console.log("Login", state.error)
+        console.log("Login", state.error);
         state.loading = false;
       })
       .addCase(userSignup.fulfilled, (state, action) => {
@@ -78,7 +87,10 @@ const authSlice = createSlice({
         localStorage.setItem("user", JSON.stringify(action.payload.user));
       })
       .addCase(userSignup.rejected, (state, action) => {
-        state.error =  action.payload.email || action.payload.username || action.payload.password;
+        state.error =
+          action.payload.email ||
+          action.payload.username ||
+          action.payload.password;
       })
       .addCase(userLogout.fulfilled, (state) => {
         state.token = null;
