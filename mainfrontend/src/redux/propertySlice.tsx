@@ -31,18 +31,21 @@ export const fetchPropertyUnits = createAsyncThunk(
 
 export const togglePinProperty = createAsyncThunk(
   'properties/togglePin',
-  async (propertyId) => {
+  async (propertyId, { rejectWithValue }) => {
     try {
-      const response = await authAxios.post(`/api/properties/${propertyId}/pin/`);
+      const response = await authAxios.post(`/properties/${propertyId}/pin/`);
       return { propertyId, pinned: true };
-    } catch (error) {
-      if (error.response && error.response.status === 400) {
-        // If the property was already pinned, we'll get a 400 error
-        // In this case, we'll unpin the property
-        await authAxios.delete(`/api/properties/${propertyId}/pin/`);
-        return { propertyId, pinned: false };
+    } catch (error: any) {
+      if (error.response && error.response.status === 200) {
+        try {
+          await authAxios.delete(`/properties/${propertyId}/pin/`);
+          console.log("Property pinned:", response.data);
+          return { propertyId, pinned: false }; // If unpin is successful, mark as unpinned
+        } catch (unpinError: any) {
+          return rejectWithValue(unpinError.response.data); // Handle unpin errors
+        }
       }
-      throw error;
+      return rejectWithValue(error.response.data); 
     }
   }
 );
@@ -129,6 +132,9 @@ const propertySlice = createSlice({
         if (property) {
           property.pinned = pinned;
         }
+      })
+      .addCase(togglePinProperty.rejected, (state, action) => {
+        state.error = action.payload; // Handle any errors
       })
       .addCase(fetchPropertyUnits.pending, (state) => {
         state.loading = true;

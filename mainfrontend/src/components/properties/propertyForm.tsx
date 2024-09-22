@@ -13,7 +13,7 @@ import Badge from "@mui/material/Badge";
 import "../css/imagePreview.css";
 
 const PropertyUploadForm = () => {
-  const initialPropertyData = { name: "", location: "", category: "" };
+  const initialPropertyData = { name: "", location: "", category: "", price_per_month: "" };
   const [propertyId, setPropertyId] = useState(null);
   const [showUnitModal, setShowUnitModal] = useState(false);
   const [propertyCount, setPropertyCount] = useState(1);
@@ -106,6 +106,7 @@ const PropertyUploadForm = () => {
             value={propertyData.name}
             onChange={handleChange}
             required
+            placeholder="4 People Tent, 33 Street, Willovale Avenue"
           />
         </Form.Group>
         <Form.Group>
@@ -116,6 +117,7 @@ const PropertyUploadForm = () => {
             value={propertyData.category}
             onChange={handleChange}
             required
+            placeholder="House, Cabin"
           >
             <option value="">Select Category</option>
             {categories.map((category) => (
@@ -133,6 +135,18 @@ const PropertyUploadForm = () => {
             value={propertyData.location}
             onChange={handleChange}
             required
+            placeholder="Harare CBD, Masvingo CBD"
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Price Per Month</Form.Label>
+          <Form.Control
+            type="number"
+            name="price_per_month"
+            value={propertyData.price_per_month}
+            onChange={handleChange}
+            required
+            placeholder="Dont fill If not Applicable"
           />
         </Form.Group>
         <Form.Group>

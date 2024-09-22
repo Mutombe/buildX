@@ -11,6 +11,7 @@ import ExtensionIcon from "@mui/icons-material/Extension";
 const UnitForm = ({ propertyId }) => {
   const initialUnitData = {
     name: "",
+    price_per_month: "",
     kitchen: true,
     bathroom: false,
     toilet: false,
@@ -75,6 +76,15 @@ const UnitForm = ({ propertyId }) => {
           type="text"
           name="name"
           value={unitData.name}
+          onChange={handleChange}
+          required
+          placeholder="2 rooms, Office 4(Second Floor)"
+        />
+        <Form.Label>Price Per Month</Form.Label>
+        <Form.Control
+          type="number"
+          name="price_per_month"
+          value={unitData.price_per_month}
           onChange={handleChange}
           required
         />

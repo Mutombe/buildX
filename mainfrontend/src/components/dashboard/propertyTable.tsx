@@ -1,39 +1,27 @@
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Tooltip, Button, Skeleton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
-import Text from "../typography/typography";
-import { deleteProperty } from "../../redux/propertySlice";
-import { fetchUserProperties } from "../../redux/propertySlice";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Button, IconButton, Skeleton, TableHead, Tooltip } from "@mui/material";
+import ImagePreviewModal from '../image-preview/imagePreview';
+
+import { fetchUserProperties, deleteProperty } from "../../redux/propertySlice";
 import EditPropertyModal from "../properties/propertiesEditForm";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
-import CarouselRatio from "./images";
 
 export function PropertyTable() {
   const dispatch = useDispatch();
-  const { userProperties, loading: userPropertiesLoading } = useSelector(
-    (state) => state.properties
-  );
-  const [selectedProperty, setSelectedProperty] = useState<any>(null);
+  const { userProperties, loading: userPropertiesLoading } = useSelector(state => state.properties);
+  const [selectedProperty, setSelectedProperty] = useState(null);
   const [openModal, setOpenModal] = useState(false);
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-    setSelectedProperty(null);
-  };
+  const [previewModalShow, setPreviewModalShow] = useState(false);
+  const [currentImages, setCurrentImages] = useState([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     dispatch(fetchUserProperties());
   }, [dispatch]);
 
-  const handleEditClick = (property: any) => {
+  const handleEditClick = (property) => {
     setSelectedProperty(property);
     setOpenModal(true);
   };
@@ -42,117 +30,87 @@ export function PropertyTable() {
     dispatch(deleteProperty(id));
   };
 
+  const handleImageClick = (images) => {
+    setCurrentImages(images);
+    setCurrentImageIndex(0);
+    setPreviewModalShow(true);
+  };
+
   return (
     <>
-      {userProperties.length === 0 ? (
-        <Text size={"h6"} text={"You haven't uploaded any properties"} />
-      ) : (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <CameraAltIcon />
-                </TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>State</TableCell>
-                <TableCell>Subscribers</TableCell>
-                <TableCell>Units</TableCell>
-                <TableCell>Action</TableCell>
-                <TableCell>Action</TableCell>
-                <TableCell>Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {userPropertiesLoading ? (
-                <>
-                  {[...Array(3)].map((_, idx) => (
-                    <TableRow key={idx}>
-                      <TableCell>
-                        <Skeleton />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </>
-              ) : (
-                userProperties.map((property) => (
-                  <TableRow
-                    key={property.id}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-
-                    <TableCell>
-                      {property.images.count}
-                      <CarouselRatio property={property}/>
-                    </TableCell>
-                    <TableCell>{property.category}</TableCell>
-                    <TableCell component="th" scope="row">
-                      {property.name}
-                    </TableCell>
-                    {property.accupied ? (
-                      <TableCell>Occupied</TableCell>
-                    ) : (
-                      <TableCell>Unoccupied</TableCell>
-                    )}
-                    <TableCell>{property.subscribers_count}0</TableCell>
-                    <TableCell>5</TableCell>
-                    <TableCell>
-                    <Tooltip title="View Property Units" placement="top-start">
-                      <Button variant="outlined" size="small">
-                        View Units
-                      </Button>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Image</TableCell>
+              <TableCell>Category</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Subscribers</TableCell>
+              <TableCell>Units</TableCell>
+              <TableCell>Action</TableCell>
+              <TableCell>Edit</TableCell>
+              <TableCell>Delete</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {userPropertiesLoading ? (
+              [...Array(3)].map((_, idx) => (
+                <TableRow key={idx}>
+                  <TableCell colSpan={9}>
+                    <Skeleton animation="wave" height={60} variant="rectangular" width="100%" />
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              userProperties.map((property) => (
+                <TableRow key={property.id}>
+                  <TableCell onClick={() => handleImageClick(property.images)}>
+                    <img src={property.images[0].file} alt="Preview" style={{ width: '50px', height: 'auto', cursor: 'pointer' }} />
+                  </TableCell>
+                  <TableCell>{property.category}</TableCell>
+                  <TableCell>{property.name}</TableCell>
+                  <TableCell>{property.occupied ? "Occupied" : "Unoccupied"}</TableCell>
+                  <TableCell>{property.subscribers_count}</TableCell>
+                  <TableCell>{property.units.length}</TableCell>
+                  <TableCell>
+                    <Tooltip title="View Property Units">
+                      <Button variant="outlined" size="small">View Units</Button>
                     </Tooltip>
-                    </TableCell>
-
-                    <TableCell>
-                    
-                      <IconButton onClick={() => handleEditClick(property)}>
-                        <Tooltip title="Edit" placement="top-start">
-                          <EditIcon color="primary" />
-                        </Tooltip>
-                      </IconButton>
-                    </TableCell>
-
-                    <TableCell>
-                      <IconButton
-                        aria-label="delete"
-                        onClick={() => handleDelete(property.id)}
-                      >
-                        <Tooltip title="Delete" placement="top-start">
-                          <DeleteRoundedIcon color="error" />
-                        </Tooltip>
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )};
+                  </TableCell>
+                  <TableCell>
+                    <IconButton onClick={() => handleEditClick(property)}>
+                      <EditIcon color="primary" />
+                    </IconButton>
+                  </TableCell>
+                  <TableCell>
+                    <IconButton onClick={() => handleDelete(property.id)}>
+                      <DeleteRoundedIcon color="error" />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
       {selectedProperty && (
         <EditPropertyModal
           open={openModal}
-          onClose={handleCloseModal}
+          onClose={() => {
+            setOpenModal(false);
+            setSelectedProperty(null);
+          }}
           property={selectedProperty}
         />
       )}
+      <ImagePreviewModal
+        show={previewModalShow}
+        onHide={() => setPreviewModalShow(false)}
+        images={currentImages}
+        currentIndex={currentImageIndex}
+        setCurrentIndex={setCurrentImageIndex}
+      />
     </>
   );
 }

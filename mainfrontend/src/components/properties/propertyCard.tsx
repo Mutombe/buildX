@@ -19,6 +19,8 @@ import DrawerUnitList from './drawerUnitList';
 import SubscriptionButton from './propertySubscription';
 import { togglePinProperty } from '../../redux/propertySlice';
 import { useDispatch } from 'react-redux';
+import PushPinIcon from '@mui/icons-material/PushPin';
+import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 
 const PropertyCard = ({ property }) => {
   const [showModal, setShowModal] = useState(false);

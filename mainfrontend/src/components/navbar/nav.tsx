@@ -24,7 +24,7 @@ function MainNavBar() {
   };
 
   return (
-    <nav className="navbar">
+    <nav className="fixed navbar">
       <Link href="/" underline="none" color={"white"}>
         <h1 id="brand">homer</h1>
       </Link>

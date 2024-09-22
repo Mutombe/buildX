@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProperties } from "../../redux/propertySlice";
+import { fetchCategories } from "../../redux/categorySlice";
 import PropertyCard from "./propertyCard";
 import { Col, Row, Container, Form, InputGroup } from "react-bootstrap";
 import { debounce } from 'lodash';
@@ -9,7 +10,7 @@ function PropertyList() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const dispatch = useDispatch();
-  const { properties, status, error } = useSelector((state) => state.properties);
+  const { properties, loading, success, error } = useSelector((state) => state.properties);
   const { categories } = useSelector((state) => state.categories);
 
   const debouncedSearch = debounce((search, category) => {
@@ -18,6 +19,11 @@ function PropertyList() {
 
   useEffect(() => {
     dispatch(fetchProperties({}));
+    console.log("Properties", properties)
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
   }, [dispatch]);
 
   const handleSearchChange = (event) => {
@@ -34,15 +40,15 @@ function PropertyList() {
 
   let content;
 
-  if (status === 'loading') {
+  if (loading) {
     content = <div>Loading...</div>;
-  } else if (status === 'succeeded') {
+  } else if (success) {
     content = properties.map((property) => (
       <Col key={property.id} xs={12} md={4} className="mb-4">
         <PropertyCard property={property} />
       </Col>
     ));
-  } else if (status === 'failed') {
+  } else if (error) {
     content = <div>Error: {error}</div>;
   }
 

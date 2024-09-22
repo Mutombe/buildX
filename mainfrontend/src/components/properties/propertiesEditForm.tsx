@@ -5,6 +5,7 @@ import { updateProperty } from '../../redux/propertySlice';
 import useImages from '../../hooks/useImages';
 import { fetchCategories } from '../../redux/categorySlice';
 
+
 interface EditPropertyModalProps {
   open: boolean;
   onClose: () => void;
@@ -21,7 +22,7 @@ const EditPropertyModal: React.FC<EditPropertyModalProps> = ({ open, onClose, pr
     name: '',
     category: '',
     location: '',
-    price: '',
+    price_per_month: '',
   });
 
   useEffect(() => {
@@ -30,7 +31,7 @@ const EditPropertyModal: React.FC<EditPropertyModalProps> = ({ open, onClose, pr
         name: property.name || '',
         category: property.category || '',
         location: property.location || '',
-        price: property.price || '',
+        price_per_month: property.price || '',
       });
       }
       dispatch(fetchCategories());
@@ -108,14 +109,14 @@ const EditPropertyModal: React.FC<EditPropertyModalProps> = ({ open, onClose, pr
                   placeholder={property.location}
         />
         <TextField
-          label="Price"
+          label="Price Per Month"
           name="price"
-          value={formData.price}
+          value={formData.price_per_month}
           onChange={handleInputChange}
           fullWidth
           margin="normal"
                   type="number"
-                  placeholder={property.price}
+                  placeholder={property.price_per_month}
               />
               
         {/* Image upload section */}
