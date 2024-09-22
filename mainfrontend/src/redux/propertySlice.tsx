@@ -1,18 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import authAxios from "../utils/authAxios";
 
-//export const fetchProperties = createAsyncThunk(
-  //"properties/fetchProperties",
-  //async (_, { rejectWithValue }) => {
-   // try {
-     // const response = await authAxios.get("/properties/");
-     // return response.data;
-    //} catch (error: any) {
-     // return rejectWithValue(error.response.data);
-    //}
-  //}
-//);
-
 export const fetchProperties = createAsyncThunk(
   'properties/fetchProperties',
   async ({ search = '', category = '' }, ) => {
@@ -33,19 +21,22 @@ export const togglePinProperty = createAsyncThunk(
   'properties/togglePin',
   async (propertyId, { rejectWithValue }) => {
     try {
-      const response = await authAxios.post(`/properties/${propertyId}/pin/`);
-      return { propertyId, pinned: true };
-    } catch (error: any) {
-      if (error.response && error.response.status === 200) {
-        try {
-          await authAxios.delete(`/properties/${propertyId}/pin/`);
-          console.log("Property pinned:", response.data);
-          return { propertyId, pinned: false }; // If unpin is successful, mark as unpinned
-        } catch (unpinError: any) {
-          return rejectWithValue(unpinError.response.data); // Handle unpin errors
+      const pinResponse = await authAxios.post(`/properties/${propertyId}/pin/`);
+      if (pinResponse.status === 201) {
+        // Property was successfully pinned
+        return { propertyId, pinned: true };
+      } else if (pinResponse.status === 200) {
+        // Property was already pinned, so we'll unpin it
+        const unpinResponse = await authAxios.delete(`/properties/${propertyId}/pin/`);
+        
+        if (unpinResponse.status === 204) {
+          // Property was successfully unpinned
+          return { propertyId, pinned: false };
         }
       }
-      return rejectWithValue(error.response.data); 
+      throw new Error('Unexpected response from server');
+    } catch (error) {
+      return rejectWithValue(error.response?.data || 'An error occurred');
     }
   }
 );

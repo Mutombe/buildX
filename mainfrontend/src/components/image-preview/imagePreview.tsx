@@ -64,6 +64,7 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
                       maxHeight: '100%',
                       maxWidth: '100%',
                       objectFit: 'contain',
+                      borderRadius: '5px'
                     }}
                   />
                 </Box>

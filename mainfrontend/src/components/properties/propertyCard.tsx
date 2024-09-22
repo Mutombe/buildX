@@ -12,7 +12,7 @@ import { Card, Carousel } from "react-bootstrap";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 import CloseIcon from '@mui/icons-material/Close';
-import "./properties.css";
+import "./css/properties.css";
 import { useNavigate } from "react-router-dom";
 import ImagePreviewModal from "../image-preview/imagePreview";
 import DrawerUnitList from './drawerUnitList';

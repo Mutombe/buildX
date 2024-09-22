@@ -24,6 +24,7 @@ from .serializers import (
     SubscriptionSerializer,
 )
 from django.shortcuts import get_object_or_404
+from django.db.models import Exists, OuterRef
 
 
 class CategoryListView(generics.ListAPIView):
@@ -52,6 +53,15 @@ class PropertyListCreateView(generics.ListCreateAPIView):
             queryset = queryset.filter(
                 Q(name__icontains=search_query) | Q(location__icontains=search_query)
             )
+
+        queryset = queryset.annotate(
+            is_pinned=Exists(
+                PinnedProperty.objects.filter(
+                    user=self.request.user,
+                    property_id=OuterRef('pk')
+                )
+            )
+        ).order_by('-is_pinned', '-created_at')
 
         return queryset
 

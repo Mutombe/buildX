@@ -6,6 +6,7 @@ import PropertyCard from "./propertyCard";
 import { Col, Row, Container, Form, InputGroup } from "react-bootstrap";
 import { debounce } from 'lodash';
 import { Skeleton } from "@mui/material";
+import './css/propetyList.css'
 
 function PropertyList() {
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -41,7 +42,7 @@ function PropertyList() {
 
   const renderSkeletons = () => (
     Array.from(new Array(6)).map((_, index) => (
-      <Col key={index} xs={12} md={5} className="mb-4" sx={{ }}>
+      <Col key={index} xs={12} md={5} className="mb-4" style={{width: '300px'}}>
         <Skeleton variant="rectangular" width="100%" height={200} />
         <Skeleton width="80%" />
         <Skeleton width="60%" />
@@ -54,13 +55,18 @@ function PropertyList() {
   if (loading) {
     content = renderSkeletons();
   } else if (properties.length > 0) {
-    content = properties.map((property) => (
+    const sortedProperties = [...properties].sort((a, b) => {
+      if (a.pinned && !b.pinned) return -1;
+      if (!a.pinned && b.pinned) return 1;
+      return new Date(b.created_at) - new Date(a.created_at);
+    });
+    content = sortedProperties.map((property) => (
       <Col key={property.id} xs={12} md={4} className="mb-4">
         <PropertyCard property={property} />
       </Col>
     ));
   } else {
-    content = <div>No properties found. Try adjusting your search or filter settings.</div>;
+    content = <div id="no-content">No properties found. Try adjusting your search or filter settings.</div>;
   }
 
   if (error) {
@@ -74,7 +80,7 @@ function PropertyList() {
           <InputGroup>
             <Form.Control
               type="text"
-              placeholder="Search properties..."
+              placeholder="Search Location..."
               value={searchQuery}
               onChange={handleSearchChange}
             />

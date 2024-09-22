@@ -41,12 +41,17 @@ const BookingSelectDate = () => {
     const start = new Date(startDate);
     const end = endDate ? new Date(endDate) : new Date(startDate);
     const daysBooked = (end - start) / (1000 * 60 * 60 * 24);
+    let total;
+  
     if (bookingType === "Specified") {
-      return (pricePerMonth / 30) * daysBooked;
+      total = (pricePerMonth / 30) * daysBooked;
+    } else {
+      total = pricePerMonth;
     }
-    return pricePerMonth;
+  
+    // Round down to two decimal places
+    return Math.floor(total * 100) / 100;
   };
-
   const handleProceed = () => {
     const bookingData = {
       unitId: type === "unit" ? id : null,
