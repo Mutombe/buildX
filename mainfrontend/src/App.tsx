@@ -18,7 +18,6 @@ function App() {
       <div className="container">
         <MainNavBar />
         <BrowserRouter>
-          <div className="content">
             <Routes>
               <Route path="/" element={<WelcomeAlert />} />
               <Route path="login" element={<Login />} />
@@ -39,7 +38,6 @@ function App() {
                 element={<BookingConfirmation />}
               />
             </Routes>
-          </div>
         </BrowserRouter>
         <Footer />
       </div>

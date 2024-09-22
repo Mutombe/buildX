@@ -27,7 +27,7 @@ const Login = () => {
   };
 
   return (
-    <div id="login">
+    <div className="login">
         {error && (
           <Alert severity="warning">
             {error} <Link to="/signup">Sign Up</Link>

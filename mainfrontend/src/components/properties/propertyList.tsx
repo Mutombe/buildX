@@ -5,6 +5,7 @@ import { fetchCategories } from "../../redux/categorySlice";
 import PropertyCard from "./propertyCard";
 import { Col, Row, Container, Form, InputGroup } from "react-bootstrap";
 import { debounce } from 'lodash';
+import { Skeleton } from "@mui/material";
 
 function PropertyList() {
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -38,17 +39,31 @@ function PropertyList() {
     debouncedSearch(searchQuery, category);
   };
 
+  const renderSkeletons = () => (
+    Array.from(new Array(6)).map((_, index) => (
+      <Col key={index} xs={12} md={5} className="mb-4" sx={{ }}>
+        <Skeleton variant="rectangular" width="100%" height={200} />
+        <Skeleton width="80%" />
+        <Skeleton width="60%" />
+      </Col>
+    ))
+  );
+
   let content;
 
   if (loading) {
-    content = <div>Loading...</div>;
-  } else if (success) {
+    content = renderSkeletons();
+  } else if (properties.length > 0) {
     content = properties.map((property) => (
       <Col key={property.id} xs={12} md={4} className="mb-4">
         <PropertyCard property={property} />
       </Col>
     ));
-  } else if (error) {
+  } else {
+    content = <div>No properties found. Try adjusting your search or filter settings.</div>;
+  }
+
+  if (error) {
     content = <div>Error: {error}</div>;
   }
 

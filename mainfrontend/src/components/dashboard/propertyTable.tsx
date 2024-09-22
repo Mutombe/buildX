@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Tooltip, Button, Skeleton } from "@mui/material";
+import { Chip } from '@mui/joy';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import ImagePreviewModal from '../image-preview/imagePreview';
@@ -39,7 +40,7 @@ export function PropertyTable() {
   return (
     <>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table sx={{ width: '100%', cursor: 'pointer'}} aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell>Image</TableCell>
@@ -70,7 +71,13 @@ export function PropertyTable() {
                   </TableCell>
                   <TableCell>{property.category}</TableCell>
                   <TableCell>{property.name}</TableCell>
-                  <TableCell>{property.occupied ? "Occupied" : "Unoccupied"}</TableCell>
+                  <TableCell>                          <Chip
+                            variant="soft"
+                            color={property.occupied ? "warning" : "success"}
+                            size="sm"
+                          >
+                            {property.occupied ? "Occupied" : "Unoccupied"}
+                          </Chip></TableCell>
                   <TableCell>{property.subscribers_count}</TableCell>
                   <TableCell>{property.units.length}</TableCell>
                   <TableCell>

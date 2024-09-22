@@ -70,22 +70,7 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
               </Carousel.Item>
             ))}
           </Carousel>
-          <Box
-            sx={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              bgcolor: 'rgba(0,0,0,0.7)',
-              color: 'white',
-              p: 2,
-            }}
-          >
-            <Typography level="h6">{unitName}</Typography>
-            <Typography level="body-sm">
-              {images[currentIndex].name} ({currentIndex + 1} of {images.length})
-            </Typography>
-          </Box>
+
         </Box>
       </Modal.Body>
     </Modal>
