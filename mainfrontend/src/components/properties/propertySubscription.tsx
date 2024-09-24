@@ -49,7 +49,9 @@ const SubscriptionButton = ({ property_id }) => {
       startDecorator={
         isSubscribed ? <UnpublishedIcon /> : <CheckCircleOutlineIcon />
       }
+      sx={{borderRadius: "20px"}}
       disabled={isLoading}
+      size="sm"
     >
       {isLoading ? "Processing..." : isSubscribed ? "Unsubscribe" : "Subscribe"}
     </Button>

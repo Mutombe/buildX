@@ -11,6 +11,7 @@ import UnitList from "./components/units/unitList";
 import "./App.css";
 import BookingConfirmation from "./components/bookings/bookingConfirmation";
 import BookingSelectDate from "./components/bookings/universalBookForm";
+import BookingProcess from "./components/bookings/stepper";
 
 function App() {
   return (
@@ -29,11 +30,9 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/approve-booking" element={""} />
             <Route path="/deny-booking" element={""} />
-            <Route path="/book/:type/:id" element={<BookingSelectDate />} />
-            <Route
-              path="/booking-confirmation"
-              element={<BookingConfirmation />}
-            />
+        
+
+            <Route path="/book/:type/:id" element={<BookingProcess />} />
           </Routes>
         </BrowserRouter>
         <Footer />

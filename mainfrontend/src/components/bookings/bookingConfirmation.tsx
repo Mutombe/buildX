@@ -1,20 +1,30 @@
-import { Box, Typography, Button } from "@mui/material";
+import { useState } from "react";
+import {
+  Box,
+  Typography,
+  Button,
+  Alert,
+  CircularProgress,
+} from "@mui/material";
 import { useDispatch } from "react-redux";
 import { bookProperty, bookUnit } from "../../redux/bookingSlice";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 
-const BookingConfirmation = () => {
+const BookingConfirmation = ({ handleBack, handleReset }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
   const bookingDetails = JSON.parse(localStorage.getItem("bookingDetails"));
   const { startDate, endDate, bookingType, propertyId, unitId, total_price } =
     bookingDetails;
-  let result: any = [];
-  // Convert startDate and endDate strings to Date objects
-  const startDateObj = new Date(startDate);
-  const endDateObj = endDate ? new Date(endDate) : null;
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
+    setIsLoading(true);
+    setError("");
+
     const bookingData = {
       start_date: startDate,
       end_date: endDate,
@@ -24,37 +34,64 @@ const BookingConfirmation = () => {
       property: propertyId || null,
     };
 
-    if (unitId) {
-      const booking = dispatch(bookUnit(bookingData)).unwrap();
-      result.push(booking);
-      console.log("Booking Result", result);
-    } else if (propertyId) {
-      const booking = dispatch(bookProperty(bookingData)).unwrap();
-      result.push(booking);
-      console.log("Booking Result", result);
-    }
-    // Clear local storage
-    localStorage.removeItem("bookingDetails");
-    if (result) {
+    try {
+      if (unitId) {
+        await dispatch(bookUnit(bookingData)).unwrap();
+      } else if (propertyId) {
+        await dispatch(bookProperty(bookingData)).unwrap();
+      }
+
+      localStorage.removeItem("bookingDetails");
       navigate("/dashboard");
+    } catch (err) {
+      setError("Failed to confirm booking. Please try again.");
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+        handleReset();
+      }, 2000);
     }
-    //navigate('/dashboard');
   };
 
   return (
-    <Box>
-      <Typography variant="h5">Confirm Your Booking</Typography>
-      <Box mt={2}>
-        <Typography>Booking Type: {bookingType}</Typography>
-        <Typography>Start Date: {startDateObj?.toDateString()}</Typography>
+    <Box sx={{ maxWidth: 400, margin: "auto", mt: 4 }}>
+      <Typography variant="h5" gutterBottom>
+        Confirm Your Booking
+      </Typography>
+
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
+
+      <Box sx={{ mt: 2 }}>
+        <Typography>
+          <strong>Booking Type:</strong> {bookingType}
+        </Typography>
+        <Typography>
+          <strong>Start Date:</strong> {dayjs(startDate).format("MMMM D, YYYY")}
+        </Typography>
         {bookingType === "Specified" && (
-          <Typography>End Date: {endDateObj?.toDateString()}</Typography>
+          <Typography>
+            <strong>End Date:</strong> {dayjs(endDate).format("MMMM D, YYYY")}
+          </Typography>
         )}
-        <Typography>${total_price}</Typography>
+        <Typography>
+          <strong>Total Price:</strong> ${total_price}
+        </Typography>
       </Box>
-      <Box mt={2}>
-        <Button variant="contained" onClick={handleConfirm}>
-          Confirm Booking
+
+      <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
+        <Button variant="outlined" onClick={handleBack} disabled={isLoading}>
+          Back
+        </Button>
+        <Button
+          variant="contained"
+          onClick={handleConfirm}
+          disabled={isLoading}
+        >
+          {isLoading ? <CircularProgress size={24} /> : "Confirm Booking"}
         </Button>
       </Box>
     </Box>
