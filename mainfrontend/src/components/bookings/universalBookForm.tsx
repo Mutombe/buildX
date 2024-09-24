@@ -77,7 +77,7 @@ const SelectDate = ({ handleNext }) => {
   };
 
   return (
-    <Box sx={{ maxWidth: 400, margin: "auto", mt: 4 }}>
+    <Box sx={{ maxWidth: 'fit-content', margin: "auto", mt: 4, display: "grid" }}>
       <Typography variant="h5" gutterBottom>
         Select Booking Dates
       </Typography>
@@ -148,7 +148,8 @@ const SelectDate = ({ handleNext }) => {
         variant="contained"
         onClick={handleProceed}
         fullWidth
-        sx={{ mt: 2 }}
+        sx={{ mt: 2, borderRadius: "10px" }}
+        size="sm"
       >
         Proceed to Confirmation
       </Button>

@@ -9,8 +9,6 @@ import PropertyList from "./components/properties/propertyList";
 import AddPro from "./components/properties/propertAddingForm";
 import UnitList from "./components/units/unitList";
 import "./App.css";
-import BookingConfirmation from "./components/bookings/bookingConfirmation";
-import BookingSelectDate from "./components/bookings/universalBookForm";
 import BookingProcess from "./components/bookings/stepper";
 
 function App() {
@@ -30,8 +28,6 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/approve-booking" element={""} />
             <Route path="/deny-booking" element={""} />
-        
-
             <Route path="/book/:type/:id" element={<BookingProcess />} />
           </Routes>
         </BrowserRouter>

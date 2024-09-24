@@ -1,121 +1,121 @@
-import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Avatar from "@mui/material/Avatar";
-import "./nav.css";
-import { useSelector } from "react-redux";
-import Logout from "../authentication/logout";
-import { Fab, Link, Tooltip } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import { useState } from "react";
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import ExitToApp from "@mui/icons-material/ExitToApp";
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, Avatar, Tooltip, Link } from '@mui/material';
+import { styled } from '@mui/system';
+import { Home, PlusCircle, LogOut, User, Settings } from 'lucide-react';
 
-function MainNavBar() {
-  const token = useSelector((state: any) => state.auth.token);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+const StyledAppBar = styled(AppBar)({
+  backgroundColor: '#1976d2', // Default primary color
+});
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+const StyledToolbar = styled(Toolbar)({
+  display: 'flex',
+  justifyContent: 'space-between',
+});
+
+const NavItems = styled('div')({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '1rem',
+});
+
+const NavLink = styled(Link)({
+  color: 'white',
+  textDecoration: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '0.5rem',
+});
+
+const MainNavBar = () => {
+  const token = useSelector((state) => state.auth.token);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
 
   return (
-    <nav className="fixed navbar">
-      <Link href="/" underline="none" color={"white"}>
-        <h1 id="brand">homer</h1>
-      </Link>
-      
-      <ul>
-        <Link href="/postProperty">
-          <Fab size="small" color="primary" aria-label="add">
-            <Tooltip title="Add Property" placement="top-start">
-              <AddIcon />
-            </Tooltip>
-          </Fab>
-        </Link>
-        <Link href="/property" underline="none">
-          {" "}
-          Properties
-        </Link>
-
-        {token ? (
-          <>
-            <li>
-              <Button
-                id="basic-button"
-                aria-controls={open ? "basic-menu" : undefined}
+    <StyledAppBar position="fixed" sx={{}}>
+      <StyledToolbar>
+        <NavLink href="/" underline="none">
+          <Typography variant="h6" component="div">
+            homer
+          </Typography>
+        </NavLink>
+        <NavItems>
+          <NavLink href="/property" underline="none">
+            <Home size={20} />
+            Properties
+          </NavLink>
+          <Tooltip title="Add Property">
+            <IconButton color="inherit" component={Link} href="/postProperty">
+              <PlusCircle size={20} />
+            </IconButton>
+          </Tooltip>
+          {token ? (
+            <>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
                 aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-                onClick={handleClick}
+                onClick={handleMenu}
+                color="inherit"
               >
                 <Avatar src="/broken-image.jpg" />
-              </Button>
-              {"   "}
+              </IconButton>
               <Menu
-                id="basic-menu"
+                id="menu-appbar"
                 anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                  "aria-labelledby": "basic-button",
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
                 }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My Account</MenuItem>
-                <MenuItem onClick={handleClose}>
-                  <Link href="/dashboard" underline="none">
-                    Dashboard
-                  </Link>
+                <MenuItem onClick={handleClose} component={Link} href="/profile">
+                  <User size={16} style={{ marginRight: '0.5rem' }} />
+                  Profile
+                </MenuItem>
+                <MenuItem onClick={handleClose} component={Link} href="/account">
+                  <Settings size={16} style={{ marginRight: '0.5rem' }} />
+                  My Account
+                </MenuItem>
+                <MenuItem onClick={handleClose} component={Link} href="/dashboard">
+                  <Home size={16} style={{ marginRight: '0.5rem' }} />
+                  Dashboard
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
-                  <Logout />
-                  <ExitToApp />
+                  <LogOut size={16} style={{ marginRight: '0.5rem' }} />
+                  Logout
                 </MenuItem>
               </Menu>
-            </li>
-            <li></li>
-          </>
-        ) : (
-          <>
-            <li></li> <li></li>
-            <Button
-              id="basic-button"
-              aria-controls={open ? "basic-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
-              onClick={handleClick}
-            >
-              <Avatar src="/broken-image.jpg" />
-            </Button>{" "}
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              <MenuItem onClick={handleClose}>
-                <Link href="/login" underline="none">
-                  Login
-                </Link>
-              </MenuItem>
-              <MenuItem onClick={handleClose}>
-                <Link href="signup" underline="none">
-                  Signup
-                </Link>
-              </MenuItem>
-            </Menu>
-          </>
-        )}
-      </ul>
-    </nav>
+            </>
+          ) : (
+            <>
+              <Button color="inherit" component={Link} href="/login">
+                Login
+              </Button>
+              <Button color="inherit" component={Link} href="/signup">
+                Signup
+              </Button>
+            </>
+          )}
+        </NavItems>
+      </StyledToolbar>
+    </StyledAppBar>
   );
-}
+};
 
 export default MainNavBar;
