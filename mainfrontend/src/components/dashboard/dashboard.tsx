@@ -41,6 +41,8 @@ const Dashboard = () => {
     (state) => state.properties
   );
 
+  console.log("Dashboard Properties", properties)
+
   const { units, loading: unitsLoading } = useSelector((state) => state.units);
 
 
@@ -91,7 +93,7 @@ const Dashboard = () => {
         const related_property = properties.find(
           (property) => property.id === booked_unit.unit_property
         );
-        return related_property.category || "Unknown Category";
+        return related_property ? related_property.category : "Unknown Category";
       }
     }
     if (booking.property && properties) {

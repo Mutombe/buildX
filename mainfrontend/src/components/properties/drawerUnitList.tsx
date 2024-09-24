@@ -66,12 +66,12 @@ const DrawerUnitList = ({ property }) => {
                         <Typography
                           level="body-sm"
                           sx={{
-                            backgroundColor: "rgba(0,0,0,0.6)",
-                            padding: "4px 8px",
-                            borderRadius: "4px",
+                          
+                            padding: "0",
+                            borderRadius: "3px",
                           }}
                         >
-                          {image.name}
+                          {image.name ? image.name : "View"}
                         </Typography>
                       </Carousel.Caption>
                     </Carousel.Item>

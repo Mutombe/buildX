@@ -1,214 +1,132 @@
-import { useState } from "react";
-import {
-  Button,
-  Skeleton,
-  Typography,
-  Drawer,
-  Box,
-  Divider,
-  IconButton,
-} from "@mui/material";
-import { Card, Carousel } from "react-bootstrap";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
-import CloseIcon from "@mui/icons-material/Close";
-import "./css/properties.css";
-import { useNavigate } from "react-router-dom";
-import ImagePreviewModal from "../image-preview/imagePreview";
-import DrawerUnitList from "./drawerUnitList";
-import SubscriptionButton from "./propertySubscription";
-import { togglePinProperty } from "../../redux/propertySlice";
-import { useDispatch } from "react-redux";
-import PushPinIcon from "@mui/icons-material/PushPin";
-import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined";
+import React, { useState } from 'react';
+import { Card, CardContent, CardMedia, Typography, Button, IconButton, Box } from '@mui/material';
+import { ChevronLeft, ChevronRight, MapPin, Info } from 'lucide-react';
+import { PushPin } from '@mui/icons-material';
+import { styled } from '@mui/system';
+import { Chip as JoyChip } from '@mui/joy';
 
-const PropertyCard = ({ property }) => {
-  const [showModal, setShowModal] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [drawerOpen, setDrawerOpen] = useState(false);
+const StyledCard = styled(Card)({
+  maxWidth: 345,
+  transition: 'box-shadow 0.3s',
+  '&:hover': {
+    boxShadow: '0 8px 16px 0 rgba(0,0,0,0.2)',
+  },
+});
 
-  const handleShow = () => setShowModal(true);
-  const handleClose = () => setShowModal(false);
+const ImageContainer = styled(Box)({
+  position: 'relative',
+  height: 200,
+});
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+const CarouselButton = styled(IconButton)({
+  position: 'absolute',
+  top: '50%',
+  transform: 'translateY(-50%)',
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  color: 'white',
+  '&:hover': {
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+});
 
-  const handlePinToggle = () => {
-    dispatch(togglePinProperty(property.id));
+const EnhancedPropertyCard = ({ property }) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) => 
+      prevIndex === property.images.length - 1 ? 0 : prevIndex + 1
+    );
   };
 
-  const toggleDrawer = (open) => (event) => {
-    if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
-    }
-    setDrawerOpen(open);
+  const prevImage = () => {
+    setCurrentImageIndex((prevIndex) => 
+      prevIndex === 0 ? property.images.length - 1 : prevIndex - 1
+    );
   };
-
-  const drawerContent = (
-    <Box sx={{ width: 300, p: 3 }} role="presentation">
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={2}
-      >
-        <Typography variant="h6">{property.name}</Typography>
-        <IconButton onClick={toggleDrawer(false)}>
-          <CloseIcon />
-        </IconButton>
-      </Box>
-      <Divider />
-      <Box my={2}>
-        <Typography variant="body1" gutterBottom>
-          <FmdGoodOutlinedIcon sx={{ mr: 1, verticalAlign: "middle" }} />
-          {property.location}
-        </Typography>
-        <Typography variant="body2" color="text.secondary" gutterBottom>
-          <strong>{property.category}</strong>
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Booked <strong>{property.booked_count}</strong> times
-        </Typography>
-      </Box>
-      <Divider />
-      <Box my={2}>
-        <DrawerUnitList property={property} />
-      </Box>
-    </Box>
-  );
 
   return (
-    <>
-      <Card
-        style={{ width: "18rem", boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}
-        className="mb-3"
-      >
-        <Card.Body style={{ padding: 0 }}>
-          {property.has_images ? (
-            <Carousel fade interval={null} indicators={false}>
-              {property.images.map((image, index) => (
-                <Carousel.Item
-                  key={image.id}
-                  onClick={() => {
-                    setCurrentIndex(index);
-                    handleShow();
-                  }}
-                  style={{ cursor: "pointer" }}
-                >
-                  <img
-                    className="d-block w-100"
-                    src={image.file}
-                    alt={image.name}
-                    style={{ height: "200px", objectFit: "cover" }}
-                  />
-                  <Carousel.Caption>
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        backgroundColor: "rgba(0,0,0,0.5)",
-                        padding: "2px 6px",
-                        borderRadius: "4px",
-                      }}
-                    >
-                      {image.name}
-                    </Typography>
-                  </Carousel.Caption>
-                </Carousel.Item>
-              ))}
-            </Carousel>
-          ) : (
-            <Skeleton
-              variant="rectangular"
-              width="100%"
-              height={200}
-              animation="wave"
+    <StyledCard>
+      <ImageContainer>
+        {property.has_images ? (
+          <>
+            <CardMedia
+              component="img"
+              height="200"
+              image={property.images[currentImageIndex].file}
+              alt={property.images[currentImageIndex].name || "Property"}
             />
-          )}
-          <Box p={2}>
-            <Typography variant="h6" gutterBottom>
-              {property.name.length > 20
-                ? `${property.name.substr(0, 20)}...`
-                : property.name}
+            <CarouselButton onClick={prevImage} sx={{ left: 8 }}>
+              <ChevronLeft />
+            </CarouselButton>
+            <CarouselButton onClick={nextImage} sx={{ right: 8 }}>
+              <ChevronRight />
+            </CarouselButton>
+          </>
+        ) : (
+          <Box
+            height={200}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            bgcolor="grey.200"
+          >
+            <Typography variant="body2" color="text.secondary">
+              No image available
             </Typography>
-            <SubscriptionButton property_id={property.id} />
-            <Typography variant="body2" color="text.secondary" gutterBottom>
-              <FmdGoodOutlinedIcon
-                sx={{ fontSize: 16, verticalAlign: "text-bottom", mr: 0.5 }}
-              />
-              {property.location}
-            </Typography>
-            {property.has_units ? (
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={() => navigate(`/property/${property.id}/units`)}
-                fullWidth
-                sx={{ mt: 1 }}
-              >
-                View Units
-              </Button>
-            ) : (
-              <>
-                <Typography variant="body2" color="text.secondary" gutterBottom>
-                  Booked <strong>{property.booked_count}</strong> times ·{" "}
-                  <strong>{property.category}</strong>
-                </Typography>
-                <Button
-                  variant="contained"
-                  size="small"
-                  onClick={() => navigate(`/book/properties/${property.id}/`)}
-                  fullWidth
-                  sx={{ mt: 1 }}
-                >
-                  Book Property
-                </Button>
-              </>
-            )}
-            <Button
-              variant="text"
-              size="small"
-              startIcon={<ExpandMoreIcon />}
-              onClick={toggleDrawer(true)}
-              fullWidth
-              sx={{ mt: 1 }}
-            >
+          </Box>
+        )}
+      </ImageContainer>
+      <CardContent>
+        <Typography gutterBottom variant="h6" component="div" noWrap>
+          {property.name}
+        </Typography>
+        <Box display="flex" alignItems="center" mb={1}>
+          <MapPin size={16} style={{ marginRight: 4 }} />
+          <Typography variant="body2" color="text.secondary">
+            {property.location}
+          </Typography>
+        </Box>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+          <JoyChip
+            variant="soft"
+            color="primary"
+            size="sm"
+          >
+            {property.category}
+          </JoyChip>
+          <Typography variant="body2" color="text.secondary">
+            Booked {property.booked_count} times
+          </Typography>
+        </Box>
+        {property.has_units ? (
+          <Box display="flex" gap={1}>
+            <Button variant="contained" color="primary" fullWidth startIcon={<Info />}>
+              View Units
+            </Button>
+            <Button variant="outlined" color="primary" fullWidth>
               Details
             </Button>
           </Box>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            p={1}
-          >
-            <Typography variant="body2" color="text.secondary">
-              {property.pinned ? "Pinned" : "Not Pinned"}
-            </Typography>
-            <IconButton
-              onClick={handlePinToggle}
-              color={property.pinned ? "primary" : "default"}
-            >
-              {property.pinned ? <PushPinIcon /> : <PushPinOutlinedIcon />}
-            </IconButton>
-          </Box>
-        </Card.Body>
-
-        <ImagePreviewModal
-          show={showModal}
-          onHide={handleClose}
-          images={property.images}
-          currentIndex={currentIndex}
-          setCurrentIndex={setCurrentIndex}
-        />
-        <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
-          {drawerContent}
-        </Drawer>
-      </Card>
-    </>
+        ) : (
+          <Button variant="contained" color="primary" fullWidth>
+            Book Property
+          </Button>
+        )}
+      </CardContent>
+      <Box display="flex" justifyContent="space-between" alignItems="center" px={2} pb={2}>
+        <JoyChip
+          variant={property.pinned ? "solid" : "soft"}
+          color={property.pinned ? "primary" : "neutral"}
+          size="sm"
+        >
+          {property.pinned ? "Pinned" : "Not Pinned"}
+        </JoyChip>
+        <IconButton color={property.pinned ? "primary" : "default"}>
+          <PushPin />
+        </IconButton>
+      </Box>
+    </StyledCard>
   );
 };
 
-export default PropertyCard;
+export default EnhancedPropertyCard;

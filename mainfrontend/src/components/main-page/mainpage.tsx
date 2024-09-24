@@ -322,7 +322,7 @@ export default function LandingPage() {
               }}
             >
               <img
-                src="https://github.com/user-attachments/assets/0eceef67-7b6e-4abf-b1fa-efe56dec106d"
+                src="https://private-user-images.githubusercontent.com/99067471/369719067-72687cf7-bdd2-45b9-9e17-ecfd979fa153.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MjcwNDEzNzUsIm5iZiI6MTcyNzA0MTA3NSwicGF0aCI6Ii85OTA2NzQ3MS8zNjk3MTkwNjctNzI2ODdjZjctYmRkMi00NWI5LTllMTctZWNmZDk3OWZhMTUzLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDA5MjIlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwOTIyVDIxMzc1NVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTE1NjM3NmFkY2YwZmJlNDQ5YWVkOWYyZDRkZjhlNjhkYTMxYjRkNGU0YTJiMWM1ZDc4NGM1NWJhZTk2YTcyYmUmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.rmc6CDZHSR_xyxHsn5DzTEY5H6HAZlPAqM3THXaigHg"
                 alt="Happy tenants"
                 style={{ objectFit: "cover", width: "100%", height: "100%" }}
               />
