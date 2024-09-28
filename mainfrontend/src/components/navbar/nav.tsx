@@ -48,7 +48,7 @@ const MainNavBar = () => {
           </Typography>
         </NavLink>
         <NavItems>
-          <NavLink href="/property" underline="none">
+          <NavLink href="/properties" underline="none">
             <Home size={20} />
             Properties
           </NavLink>

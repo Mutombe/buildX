@@ -172,7 +172,7 @@ const Dashboard = () => {
 
   return (
     
-    <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
+    <Box sx={{ width: "100%", bgcolor: "background.paper", marginTop: "40px" }}>
       <Typography style={{marginTop: '5px', marginLeft: '5px'}} variant="h6">Dashboard</Typography>
       <Tabs value={value} onChange={handleChange} aria-label="dashboard tabs">
         <Tab label="Properties" />

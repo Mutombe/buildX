@@ -1,72 +1,54 @@
-@media (min-width: 700px) {
-    .css-dbvmxu-JoyCard-root {
-        --Icon-color: var(--joy-palette-text-icon);
-        --Card-childRadius: max((var(--Card-radius) - var(--variant-borderWidth, 0px)) - var(--Card-padding), min(var(--Card-padding) / 2,(var(--Card-radius) - var(--variant-borderWidth, 0px)) / 2));
-        --AspectRatio-radius: var(--Card-childRadius);
-        --unstable_actionMargin: calc(-1* var(--variant-borderWidth, 0px));
-        --unstable_actionRadius: var(--Card-radius);
-        --CardCover-radius: calc(var(--Card-radius) - var(--variant-borderWidth, 0px));
-        --CardOverflow-offset: calc(-1* var(--Card-padding));
-        --CardOverflow-radius: calc(var(--Card-radius) - var(--variant-borderWidth, 0px));
-        --Divider-inset: calc(-1* var(--Card-padding));
-        --Card-radius: var(--joy-radius-md);
-        --Card-padding: 1rem;
-        width: max-content;
-        margin-right: 100px;
-        gap: 0.75rem 1rem;
-        padding: inherit;
-        border-radius: var(--Card-radius);
-        background-color: var(--joy-palette-background-surface);
-        position: relative;
-        display: -webkit-box;
-        display: -webkit-flex;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-flex-direction: column;
-        -ms-flex-direction: column;
-        flex-direction: column;
-        font-family: var(--joy-fontFamily-body, "Inter", var(--joy-fontFamily-fallback, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"));
-        font-size: var(--joy-fontSize-md, 1rem);
-        line-height: var(--joy-lineHeight-md, 1.5);
-        color: var(--variant-outlinedColor, var(--joy-palette-neutral-outlinedColor, var(--joy-palette-neutral-700, #32383E)));
-        --variant-borderWidth: 1px;
-        border: var(--variant-borderWidth) solid;
-        border-color: var(--variant-outlinedBorder, var(--joy-palette-neutral-outlinedBorder, var(--joy-palette-neutral-300, #CDD7E1)));
-    }
-  }
-
-
-
-  @media (max-width: 400) {
-        .css-l7l8sp-JoyGrid-root {
-            -webkit-box-flex: 0;
-            -webkit-flex-grow: 0;
-            -ms-flex-positive: 0;
-            flex-grow: 0;
-            -webkit-flex-basis: auto;
-            -ms-flex-preferred-size: auto;
-            flex-basis: auto;
-            width: calc(100%* 12 / var(--Grid-columns));
-            min-width: 0;
-            box-sizing: border-box;
-            padding: calc(var(--Grid-rowSpacing) / 2) calc(var(--Grid-columnSpacing) / 2);
-        }
-  }
-
-  @media (min-width: 600px) {
-  .css-l7l8sp-JoyGrid-root {
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    -webkit-flex-basis: auto;
-    -ms-flex-preferred-size: auto;
-    flex-basis: auto;
-    width: calc(100%* 12 / var(--Grid-columns));
-    min-width: 0;
-    box-sizing: border-box;
-    padding: calc(var(--Grid-rowSpacing) / 2) calc(var(--Grid-columnSpacing) / 2);
+.unit-list-container {
+  padding: 16px;
 }
+
+.unit-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: #79afff 0px 4px 8px;
+  transition: box-shadow 0.3s ease;
+}
+
+.unit-card:hover {
+  box-shadow: #79afff 0px 6px 12px;
+}
+
+.unit-card-content {
+  flex-grow: 1;
+  padding: 16px;
+}
+
+.unit-chip-container {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.book-unit-button {
+  width: 100%;
+  border-radius: 20px;
+  margin-top: auto;
+}
+
+@media (max-width: 600px) {
+  .unit-grid-item {
+    flex-basis: 100%;
+    max-width: 100%;
   }
-  
+}
+
+@media (min-width: 601px) and (max-width: 960px) {
+  .unit-grid-item {
+    flex-basis: 50%;
+    max-width: 50%;
+  }
+}
+
+@media (min-width: 961px) {
+  .unit-grid-item {
+    flex-basis: 33.33%;
+    max-width: 33.33%;
+  }
+}
 

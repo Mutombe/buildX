@@ -2,7 +2,7 @@ import PropertyUploadForm from "./propertyForm";
 
 function AddProperty() {
   return (
-    <div className="App">
+    <div className="A">
       <PropertyUploadForm />
     </div>
   );

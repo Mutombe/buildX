@@ -8,6 +8,7 @@
 }
 
 .main-content {
+    padding-top: 100px;
     width: inherit;
     flex: 1;
 }

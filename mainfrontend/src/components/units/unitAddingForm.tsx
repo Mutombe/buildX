@@ -60,7 +60,7 @@ const UnitForm = ({ propertyId }) => {
 
   return (
     <div>
-      <Form.Group controlId="unitName">
+      <Form.Group controlId="unitName" style={{}}>
         <strong>
           Adding Unit
           <span>
