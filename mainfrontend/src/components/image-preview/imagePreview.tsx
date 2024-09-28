@@ -30,7 +30,7 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
   const handleNext = () => setCurrentIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0));
 
   return (
-    <Modal show={show} onHide={onHide} size="xl" sx={{ borderRadius: '10px' }} centered>
+    <Modal show={show} onHide={onHide} size="xl" sx={{ borderRadius: '10px', marginTop: '100px' }} centered>
       <Modal.Body className="p-0">
         <Box sx={{ position: 'relative', bgcolor: 'black', height: '90vh', borderRadius: '10px' }}>
           <IconButton

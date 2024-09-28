@@ -25,7 +25,7 @@ const UnitList = () => {
   };
 
   return (
-    <Box className="unit-list-container">
+    <Box className="unit-list-container" sx={{marginTop: "100px", marginLeft: "10px", marginRight: "10px"}}>
       <Typography variant="h4" sx={{ mb: 3 }}>Property Units</Typography>
       <Grid container spacing={3}>
         {units.map((unit) => (

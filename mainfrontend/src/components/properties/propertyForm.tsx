@@ -71,7 +71,7 @@ const PropertyUploadForm = () => {
       const result = await dispatch(uploadProperty(formData)).unwrap();
       if (result.id) {
         setPropertyId(result.id);
-        localStorage.setItem("propertyId", result.id);
+        localStorage.setItem("propertId", result.id);
         if (saveAndAddAnother) {
           setPropertyCount(propertyCount + 1);
           resetForm();
@@ -219,7 +219,7 @@ const PropertyUploadForm = () => {
           <Modal.Title>Add Units</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <UnitForm propertyId={localStorage.getItem("propertyId")} />
+          <UnitForm property={localStorage.getItem("propertyId")} />
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={handleModalClose}>Close</Button>

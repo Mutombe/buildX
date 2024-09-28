@@ -6,7 +6,7 @@ import unitReducer from "./unitSlice";
 import bookingReducer from "./bookingSlice";
 import subscriptionReducer from "./subscriptionSlice";
 
-const store: any = configureStore({
+const store = configureStore({
   reducer: {
     auth: authReducer,
     properties: propertyReducer,
@@ -17,4 +17,10 @@ const store: any = configureStore({
   },
 });
 
+
+export type RootState = ReturnType<typeof store.getState>;
+
+export type AppDispatch = typeof store.dispatch;
+
 export default store;
+

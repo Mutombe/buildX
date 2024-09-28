@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { addUnit } from "../../redux/unitSlice";
 import useForm from "../../hooks/useForm";
 import useImages from "../../hooks/useImages";
-import { Badge, Button, Stack } from "@mui/material";
+import { Badge, Button, Stack, Typography } from "@mui/material";
 import ExtensionIcon from "@mui/icons-material/Extension";
 
 const UnitForm = ({ propertyId }) => {
@@ -62,7 +62,7 @@ const UnitForm = ({ propertyId }) => {
     <div>
       <Form.Group controlId="unitName" style={{}}>
         <strong>
-          Adding Unit
+        <Typography variant="h6">Adding Units for{property.name}</Typography>
           <span>
             <Badge badgeContent={unitCount} color="primary">
               <ExtensionIcon />

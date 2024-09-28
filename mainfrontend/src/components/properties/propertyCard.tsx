@@ -252,10 +252,10 @@ const PropertyCard = ({ property }) => {
 
         <ImagePreviewModal
           show={showModal}
-          onHide={handleClose}
+          onHide={() => handleClose()}
           images={property.images}
           currentIndex={currentIndex}
-          setCurrentIndex={setCurrentIndex}
+          setCurrentIndex={setCurrentIndex}        
         />
         <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
           {drawerContent}
