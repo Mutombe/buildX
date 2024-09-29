@@ -25,12 +25,12 @@ import { Info } from "@mui/icons-material";
 import { Boxes, MapPin } from "lucide-react";
 
 const PropertyCard = ({ property }) => {
-  const [showModal, setShowModal] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [show, setShow] = useState(false);
 
-  const handleShow = () => setShowModal(true);
-  const handleClose = () => setShowModal(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -251,8 +251,8 @@ const PropertyCard = ({ property }) => {
         </Card.Body>
 
         <ImagePreviewModal
-          show={showModal}
-          onHide={() => handleClose()}
+          show={show}
+          onHide={handleClose}
           images={property.images}
           currentIndex={currentIndex}
           setCurrentIndex={setCurrentIndex}        

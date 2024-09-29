@@ -30,7 +30,7 @@ const UnitList = () => {
       <Grid container spacing={3}>
         {units.map((unit) => (
           <Grid item key={unit.id} xs={12} sm={6} md={4} className="unit-grid-item">
-            <Card className="unit-card">
+            <Card className="unit-card" sx={{ boxShadow: "#79afff 0px 4px 8px"}}>
               <CardContent className="unit-card-content">
                 <Typography variant="h6" gutterBottom>
                   {unit.name}
@@ -60,6 +60,7 @@ const UnitList = () => {
                   startIcon={<Boxes size={20} />}
                   endIcon={<ArrowForwardIcon />}
                   className="book-unit-button"
+                  sx={{ mt: 2 }}
                   onClick={() => handleBookUnit(unit.id)}
                 >
                   Book Unit

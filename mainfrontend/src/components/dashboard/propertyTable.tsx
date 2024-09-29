@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { motion } from "framer-motion";
 import {
   Table,
   TableBody,
@@ -14,8 +15,11 @@ import {
   Button,
   Skeleton,
   Typography,
+  Snackbar,
   Box,
   Divider,
+  Card,
+  CardContent,
 } from "@mui/material";
 import { Chip } from "@mui/joy";
 import EditIcon from "@mui/icons-material/Edit";
@@ -48,6 +52,8 @@ export function PropertyTable() {
   const [previewModalShow, setPreviewModalShow] = useState(false);
   const [currentImages, setCurrentImages] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [warningMessage, setWarningMessage] = useState("");
 
   useEffect(() => {
     dispatch(fetchUserProperties());
@@ -79,14 +85,22 @@ export function PropertyTable() {
 
   const handleDeleteAllUnits = () => {
     if (selectedProperty) {
-      selectedProperty.units.forEach((unit) => dispatch(deleteUnit(unit.id)));
+      if (
+        window.confirm(
+          "Are you sure you want to delete all units? This action cannot be undone."
+        )
+      ) {
+        selectedProperty?.units.forEach((unit) =>
+          dispatch(deleteUnit(unit.id))
+        );
+      }
     }
   };
 
   const handleAddMoreUnits = () => {
     setShowUnitAddingModal(true);
     setOpenDrawer(false);
-  }
+  };
 
   const handleModalClose = () => {
     setShowUnitAddingModal(false);
@@ -218,64 +232,85 @@ export function PropertyTable() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {selectedProperty?.units.map((unit) => (
-                  <TableRow key={unit.id}>
-                    <TableCell>{unit.name}</TableCell>
-                    <TableCell>
-                      <Chip
-                        variant="soft"
-                        color={unit.occupied ? "warning" : "success"}
-                        size="sm"
-                      >
-                        {unit.occupied ? "Occupied" : "Available"}
-                      </Chip>
-                    </TableCell>
-                    <TableCell>
-                      <IconButton onClick={() => handleUnitEditClick(unit)}>
-                        <EditIcon color="primary" />
-                      </IconButton>
-                    </TableCell>
-                    <TableCell>
-                      <IconButton onClick={() => handleUnitDelete(unit.id)}>
-                        <DeleteRoundedIcon color="error" />
-                      </IconButton>
+                {selectedProperty?.units.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={4} style={{ textAlign: "center" }}>
+                      <Card variant="outlined" style={{ margin: "20px 0" }}>
+                        <CardContent>
+                          <Typography variant="h6" color="textSecondary">
+                            No Units Available
+                          </Typography>
+                          <Typography color="textSecondary">
+                            This property currently has no units. You can add
+                            new units by clicking the button below.
+                          </Typography>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleAddMoreUnits}
+                            style={{ marginTop: "10px" }}
+                          >
+                            Add Unit
+                          </Button>
+                        </CardContent>
+                      </Card>
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : (
+                  selectedProperty?.units.map((unit) => (
+                    <TableRow key={unit.id}>
+                      <TableCell>{unit.name}</TableCell>
+                      <TableCell>
+                        <Chip
+                          variant="soft"
+                          color={unit.occupied ? "warning" : "success"}
+                          size="sm"
+                        >
+                          {unit.occupied ? "Occupied" : "Available"}
+                        </Chip>
+                      </TableCell>
+                      <TableCell>
+                        <IconButton onClick={() => handleUnitEditClick(unit)}>
+                          <EditIcon color="primary" />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell>
+                        <IconButton onClick={() => handleUnitDelete(unit.id)}>
+                          <DeleteRoundedIcon color="error" />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </TableContainer>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            mb={2}
-          >
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => handleAddMoreUnits()}
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "20px",
-              }}
+          {selectedProperty?.units.length !== 0 && (
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              mb={2}
             >
-              Add More
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={handleDeleteAllUnits}
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "20px",
-              }}
-            >
-              Delete All Units
-            </Button>
-          </Box>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAddMoreUnits}
+                style={{ marginTop: "20px" }}
+              >
+                Add More
+              </Button>
+
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleDeleteAllUnits}
+                style={{ marginTop: "20px" }}
+              >
+                Delete All Units
+              </Button>
+            </Box>
+          )}
         </div>
       </Drawer>
 
@@ -320,6 +355,13 @@ export function PropertyTable() {
         images={currentImages}
         currentIndex={currentImageIndex}
         setCurrentIndex={setCurrentImageIndex}
+      />
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={() => setOpenSnackbar(false)}
+        message={warningMessage}
       />
     </>
   );
