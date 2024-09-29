@@ -45,6 +45,19 @@ export const updateUnit = createAsyncThunk(
   }
 );
 
+export const deleteUnit = createAsyncThunk(
+  "units/deleteUnit",
+  async (id, { rejectWithValue }) => {
+    try {
+      await authAxios.delete(`user/properties/units/${id}/`);
+      return id;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+
 const unitSlice = createSlice({
   name: "units",
   initialState: {
@@ -91,6 +104,11 @@ const unitSlice = createSlice({
       .addCase(updateUnit.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(deleteUnit.fulfilled, (state, action) => {
+        state.units = state.units.filter(
+          (unit: any) => unit.id !== action.payload
+        );
       });
   },
 });

@@ -23,15 +23,14 @@ import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined";
 import { Chip } from "@mui/joy";
 import { Info } from "@mui/icons-material";
 import { Boxes, MapPin } from "lucide-react";
-import ApartmentIcon from "@mui/icons-material/Apartment";
 
 const PropertyCard = ({ property }) => {
-  const [showModal, setShowModal] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [show, setShow] = useState(false);
 
-  const handleShow = () => setShowModal(true);
-  const handleClose = () => setShowModal(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -51,7 +50,7 @@ const PropertyCard = ({ property }) => {
   };
 
   const drawerContent = (
-    <Box sx={{ width: 300, p: 3 }} role="presentation">
+    <Box sx={{ width: 300, p: 3 }} role="presentation" >
       <Box
         display="flex"
         justifyContent="space-between"
@@ -91,7 +90,7 @@ const PropertyCard = ({ property }) => {
   return (
     <>
       <Card
-        style={{ width: "18rem", boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}
+        style={{ width: "18rem", boxShadow: "#79afff 0px 4px 8px" }}
         className="mb-3"
       >
         <Card.Body style={{ padding: 0 }}>
@@ -252,11 +251,11 @@ const PropertyCard = ({ property }) => {
         </Card.Body>
 
         <ImagePreviewModal
-          show={showModal}
+          show={show}
           onHide={handleClose}
           images={property.images}
           currentIndex={currentIndex}
-          setCurrentIndex={setCurrentIndex}
+          setCurrentIndex={setCurrentIndex}        
         />
         <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
           {drawerContent}

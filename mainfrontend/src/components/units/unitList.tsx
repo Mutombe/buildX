@@ -1,89 +1,66 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchPropertyUnits } from "../../redux/propertySlice";
-import { CssVarsProvider } from "@mui/joy/styles";
-import Grid from "@mui/joy/Grid";
-import Card from "@mui/joy/Card";
-import CardContent from "@mui/joy/CardContent";
-import Typography from "@mui/joy/Typography";
-import Button from "@mui/joy/Button";
-import Chip from "@mui/joy/Chip";
-import HomeIcon from "@mui/icons-material/Home";
+import { Box, Typography, Button, Card, CardContent, Grid } from "@mui/material";
+import { Chip } from "@mui/joy";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { fetchProperties } from "../../redux/propertySlice";
 import LocalAtmIcon from "@mui/icons-material/LocalAtm";
-import "./css/unitList.css";
+import { Boxes } from "lucide-react";
 
 const UnitList = () => {
   const { propertyId } = useParams();
   const dispatch = useDispatch();
   const units = useSelector((state) => state.properties.units);
-  const properties = useSelector((state) =>
-    state.properties.properties.find((property) => property.id === propertyId)
-  );
   const navigate = useNavigate();
-  console.log("...", properties);
 
   useEffect(() => {
     dispatch(fetchPropertyUnits(propertyId));
   }, [propertyId, dispatch]);
-
-  useEffect(() => {
-    dispatch(fetchProperties());
-  }, [dispatch]);
 
   const handleBookUnit = (unitId) => {
     navigate(`/book/unit/${unitId}/`);
   };
 
   return (
-    <CssVarsProvider>
-      <Typography level="h2" sx={{ mb: 2 }}></Typography>
-      <Grid container spacing={2} sx={{ flexGrow: 1 }}>
+    <Box className="unit-list-container" sx={{marginTop: "100px", marginLeft: "10px", marginRight: "10px"}}>
+      <Typography variant="h4" sx={{ mb: 3 }}>Property Units</Typography>
+      <Grid container spacing={3}>
         {units.map((unit) => (
-          <Grid key={unit.id} xs={12} sm={6} md={4}>
-            <Card
-              variant="outlined"
-              sx={{
-                "&:hover": {
-                  boxShadow: "md",
-                  borderColor: "neutral.outlinedHoverBorder",
-                },
-              }}
-            >
-              <CardContent>
-                <Typography level="h2" fontSize="md" sx={{ mb: 0.5 }}>
+          <Grid item key={unit.id} xs={12} sm={6} md={4} className="unit-grid-item">
+            <Card className="unit-card" sx={{ boxShadow: "#79afff 0px 4px 8px"}}>
+              <CardContent className="unit-card-content">
+                <Typography variant="h6" gutterBottom>
                   {unit.name}
                 </Typography>
-                <Typography
-                  level="h4"
-                  fontSize="md"
-                  sx={{ mb: 0.5 }}
-                ></Typography>
-                <Typography level="body2" sx={{ mb: 1 }}>
+                <Typography variant="body2" color="text.secondary" gutterBottom>
                   Rented: {unit.booked_count} times
                 </Typography>
-                <Chip
-                  variant="outlined"
-                  color={unit.occupied ? "warning" : "success"}
-                  startDecorator={
-                    unit.occupied ? <CancelIcon /> : <CheckCircleIcon />
-                  }
-                >
-                  {unit.occupied ? "Occupied" : "Vacant"}
-                </Chip>
-                <Chip startDecorator={<LocalAtmIcon />}>
-                  {unit.price_per_month ? unit.price_per_month : "Unspecificed"}
-                </Chip>
+                <Box className="unit-chip-container">
+                  <Chip
+                    variant={unit.occupied ? "solid" : "soft"}
+                    color={unit.occupied ? "warning" : "success"}
+                    startDecorator={unit.occupied ? <CancelIcon /> : <CheckCircleIcon />}
+                  >
+                    {unit.occupied ? "Occupied" : "Vacant"}
+                  </Chip>
+                  <Chip
+                    variant="soft"
+                    color="primary"
+                    startDecorator={<LocalAtmIcon />}
+                  >
+                    {unit.price_per_month ? `$${unit.price_per_month}/month` : "Unspecified"}
+                  </Chip>
+                </Box>
                 <Button
-                  variant="solid"
+                  variant="contained"
                   color="primary"
-                  startDecorator={<HomeIcon />}
-                  endDecorator={<ArrowForwardIcon />}
-                  sx={{ mt: 2, width: "100%" }}
+                  startIcon={<Boxes size={20} />}
+                  endIcon={<ArrowForwardIcon />}
+                  className="book-unit-button"
+                  sx={{ mt: 2 }}
                   onClick={() => handleBookUnit(unit.id)}
                 >
                   Book Unit
@@ -93,7 +70,7 @@ const UnitList = () => {
           </Grid>
         ))}
       </Grid>
-    </CssVarsProvider>
+    </Box>
   );
 };
 

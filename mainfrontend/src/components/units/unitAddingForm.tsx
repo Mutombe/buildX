@@ -1,14 +1,21 @@
 import { useState } from "react";
 import { Form, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addUnit } from "../../redux/unitSlice";
 import useForm from "../../hooks/useForm";
 import useImages from "../../hooks/useImages";
-import { Badge, Button, Stack } from "@mui/material";
+import { Badge, Button, Stack, Typography } from "@mui/material";
 import ExtensionIcon from "@mui/icons-material/Extension";
+import { makeSelectItemById } from "../../redux/selectors";
+import { RootState } from "../../redux/store";
 
 const UnitForm = ({ propertyId }) => {
+  
+  const properties = useSelector((state: RootState) => state.properties.userProperties);
+  const propertyDetails = properties?.find(property => property.id === propertyId)
+  console.log("Properties", properties);
+
   const initialUnitData = {
     name: "",
     price_per_month: "",
@@ -60,9 +67,9 @@ const UnitForm = ({ propertyId }) => {
 
   return (
     <div>
-      <Form.Group controlId="unitName">
+      <Form.Group controlId="unitName" style={{}}>
         <strong>
-          Adding Unit
+        <Typography variant="h6">Adding Units for</Typography>
           <span>
             <Badge badgeContent={unitCount} color="primary">
               <ExtensionIcon />

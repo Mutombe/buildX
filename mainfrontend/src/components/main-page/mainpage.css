@@ -1,3 +1,50 @@
 .MuiBox-root.css-17wx4fw {
     width: 100%;
 }
+
+@media (max-width: 600px) {
+  .MuiGrid-root {
+    flex-direction: column;
+  }
+
+  .MuiGrid-item {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .MuiTypography-h1 {
+    font-size: 2rem !important;
+  }
+
+  .MuiTypography-h4 {
+    font-size: 1.2rem !important;
+  }
+
+  .MuiButton-root {
+    width: 100%;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 960px) {
+  .MuiTypography-h1 {
+    font-size: 2.5rem !important;
+  }
+
+  .MuiTypography-h4 {
+    font-size: 1.3rem !important;
+  }
+}
+
+.feature-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-card-content {
+  flex-grow: 1;
+}
+
+.property-type-card {
+  height: 100%;
+}

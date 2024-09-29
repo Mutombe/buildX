@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from "react";
 import {
-  Modal,
-  ModalDialog,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
   TextField,
   Checkbox,
-  Button,
+  FormControlLabel,
   Typography,
   Stack,
   IconButton,
-} from "@mui/joy";
-import { useSelector, useDispatch } from "react-redux";
-import ImageIcon from "@mui/icons-material/Image";
+} from "@mui/material";
+import { useDispatch } from "react-redux";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { updateUnit } from "../../redux/unitSlice";
 import useImages from "../../hooks/useImages";
-import useForm from "../../hooks/useForm";
 
 interface EditUnitModalProps {
   open: boolean;
@@ -22,17 +23,12 @@ interface EditUnitModalProps {
   unit: any;
 }
 
-const EditUnitModal: React.FC<EditUnitModalProps> = ({
-  open,
-  onClose,
-  unit,
-}) => {
-  //const { loading, error } = useSelector((state) => state.unit);
-
-  const { images, setImages, handleImageChange, removeImage, resetImages } =
-    useImages();
+const EditUnitModal: React.FC<EditUnitModalProps> = ({ open, onClose, unit }) => {
   const dispatch = useDispatch();
-  const [initialUnitData, setInitialUnitData] = useState({
+  const { images, setImages, handleImageChange, removeImage, resetImages } = useImages();
+
+  // Form state initialization based on passed unit data
+  const [formData, setFormData] = useState({
     name: "",
     kitchen: false,
     bathroom: false,
@@ -44,7 +40,7 @@ const EditUnitModal: React.FC<EditUnitModalProps> = ({
 
   useEffect(() => {
     if (unit) {
-      setInitialUnitData({
+      setFormData({
         name: unit.name || "",
         kitchen: unit.kitchen || false,
         bathroom: unit.bathroom || false,
@@ -53,125 +49,110 @@ const EditUnitModal: React.FC<EditUnitModalProps> = ({
         solar: unit.solar || false,
         price_per_month: unit.price_per_month || "",
       });
-      setImages([...unit.images]);
+      
+      // Set unit images with preview URLs
+      const unitImagesWithPreview = unit.images.map((image) => ({
+        file: image, // Assuming 'image' is the file object; if it's a URL, adjust as necessary
+        preview: image, // If 'image' is a URL, keep it as is; otherwise, create a URL using URL.createObjectURL()
+      }));
+      setImages(unitImagesWithPreview); // Set unit images with previews
     }
-  }, [unit]);
+  }, [unit, setImages]);
 
-  const {
-    values: unitData,
-    handleChange,
-    resetForm,
-  } = useForm(initialUnitData);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setFormData({ ...formData, [name]: checked });
+  };
 
   const handleSave = () => {
-    const unitData = new FormData();
-    Object.entries(initialUnitData).forEach(([key, value]) => {
-      unitData.append(key, value);
+    const updatedUnitData = new FormData();
+
+    Object.entries(formData).forEach(([key, value]) => {
+      updatedUnitData.append(key, value.toString());
     });
 
-    // Add new images to formData
     images.forEach((image) => {
-      unitData.append("images", image.file);
+      updatedUnitData.append("images", image.file);
     });
-    dispatch(updateUnit({ id: unitId, unitData: unitData }));
-    resetForm();
+
+    dispatch(updateUnit({ id: unit.id, unitData: updatedUnitData }));
     resetImages();
     onClose();
   };
 
-  // Render modal form
   return (
-    <Modal open={open} onClose={onClose}>
-      <ModalDialog>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
+      <DialogTitle>Edit Unit</DialogTitle>
+      <DialogContent>
         <Stack spacing={2}>
-          <Typography level="h5">Edit Unit</Typography>
           <TextField
-            name="name"
             label="Unit Name"
-            value={initialUnitData.name}
-            onChange={handleChange}
-          />
-          <Checkbox
-            name="kitchen"
-            checked={initialUnitData.kitchen}
-            onChange={handleChange}
-          >
-            Kitchen
-          </Checkbox>
-          <Checkbox
-            name="bathroom"
-            checked={initialUnitData.bathroom}
-            onChange={handleChange}
-          >
-            Bathroom
-          </Checkbox>
-          <Checkbox
-            name="toilet"
-            checked={initialUnitData.toilet}
-            onChange={handleChange}
-          >
-            Toilet
-          </Checkbox>
-          <Checkbox
-            name="water"
-            checked={initialUnitData.water}
-            onChange={handleChange}
-          >
-            Water
-          </Checkbox>
-          <Checkbox
-            name="solar"
-            checked={initialUnitData.solar}
-            onChange={handleChange}
-          >
-            Solar
-          </Checkbox>
-          <TextField
-            name="price_per_month"
-            label="Price per Month"
-            type="number"
-            value={initialUnitData.price_per_month}
-            onChange={handleChange}
+            name="name"
+            value={formData.name}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
           />
 
-          {/* Display current images */}
-          <Typography level="h6">Current Images</Typography>
+          {/* Checkbox Fields */}
+          {["kitchen", "bathroom", "toilet", "water", "solar"].map((field) => (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name={field}
+                  checked={formData[field]}
+                  onChange={handleCheckboxChange}
+                />
+              }
+              label={field.charAt(0).toUpperCase() + field.slice(1)}
+              key={field}
+            />
+          ))}
+
+          <TextField
+            label="Price per Month"
+            name="price_per_month"
+            type="number"
+            value={formData.price_per_month}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
+          />
+
+          {/* Image Handling */}
+          <Typography variant="h6">Current Images</Typography>
           <Stack spacing={1}>
             {images.map((image, index) => (
               <Stack direction="row" alignItems="center" key={index}>
-                <img src={image.file} alt={`unit-img-${index}`} width={80} />
-                <IconButton onClick={() => removeImage(index)} color="danger">
+                <img src={image.preview} alt={`unit-img-${index}`} width={80} />
+                <IconButton onClick={() => removeImage(index)} color="error">
                   <DeleteIcon />
                 </IconButton>
               </Stack>
             ))}
           </Stack>
 
-          {/* Upload new images */}
-          <Typography level="h6">Add New Images</Typography>
-          <Button
-            variant="outlined"
-            component="label"
-            startDecorator={<ImageIcon />}
-          >
+          <Typography variant="h6">Add New Images</Typography>
+          <Button variant="outlined" component="label">
             Upload Images
-            <input
-              type="file"
-              hidden
-              multiple
-              accept="image/*"
-              onChange={handleImageChange}
-            />
+            <input type="file" hidden multiple accept="image/*" onChange={handleImageChange} />
           </Button>
-          <Stack direction="row" spacing={2}>
-            <Button onClick={handleSave}>Save</Button>
-            <Button variant="outlined" onClick={onClose}>
-              Cancel
-            </Button>
-          </Stack>
         </Stack>
-      </ModalDialog>
-    </Modal>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} color="secondary">
+          Cancel
+        </Button>
+        <Button onClick={handleSave} color="primary">
+          Save Changes
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

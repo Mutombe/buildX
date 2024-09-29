@@ -33,30 +33,6 @@ import {
 } from "@mui/icons-material";
 import "./mainpage.css";
 
-const ColorSchemePicker = () => {
-  const { mode, setMode } = useColorScheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
-
-  return (
-    <IconButton
-      variant="outlined"
-      onClick={() => {
-        setMode(mode === "light" ? "dark" : "light");
-      }}
-    >
-      {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
-    </IconButton>
-  );
-};
-
 const FeatureCard = ({ icon: Icon, title, description }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -123,7 +99,7 @@ export default function LandingPage() {
       >
         <Box
           sx={{
-            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+            background: "black",
             color: "white",
             pt: 2,
             pb: { xs: 8, md: 12 },
@@ -144,7 +120,6 @@ export default function LandingPage() {
               <Typography level="h4" component="h1" sx={{ color: "white" }}>
                 Homer
               </Typography>
-              <ColorSchemePicker />
             </Box>
 
             <Grid container spacing={4} alignItems="center">
@@ -157,6 +132,7 @@ export default function LandingPage() {
                     fontSize: { xs: "2.5rem", md: "3.5rem" },
                     fontWeight: "bold",
                     textShadow: "2px 2px 4px rgba(0,0,0,0.1)",
+                    color: "white",
                   }}
                 >
                   Revolutionize Your Property Experience
@@ -186,32 +162,6 @@ export default function LandingPage() {
                 </Button>
               </Grid>
               <Grid xs={12} md={6}>
-                <AspectRatio
-                  ratio="16/9"
-                  sx={{
-                    mt: { xs: 4, md: 0 },
-                    borderRadius: "md",
-                    overflow: "hidden",
-                    boxShadow: "lg",
-                    transform:
-                      "perspective(1000px) rotateY(-15deg) rotateX(5deg) rotate(1deg) scale(0.9)",
-                    transition: "transform 0.3s ease-in-out",
-                    "&:hover": {
-                      transform:
-                        "perspective(1000px) rotateY(-5deg) rotateX(5deg) rotate(1deg) scale(0.95)",
-                    },
-                  }}
-                >
-                  <img
-                    src="https://github.com/user-attachments/assets/0eceef67-7b6e-4abf-b1fa-efe56dec106d"
-                    alt="Modern apartment interior"
-                    style={{
-                      objectFit: "cover",
-                      width: "100%",
-                      height: "100%",
-                    }}
-                  />
-                </AspectRatio>
               </Grid>
             </Grid>
           </Container>
@@ -313,20 +263,6 @@ export default function LandingPage() {
                 </ListItem>
               </List>
             </Box>
-            <AspectRatio
-              ratio="4/3"
-              sx={{
-                width: { xs: "100%", md: "50%" },
-                borderRadius: "md",
-                overflow: "hidden",
-              }}
-            >
-              <img
-                src="https://private-user-images.githubusercontent.com/99067471/369719067-72687cf7-bdd2-45b9-9e17-ecfd979fa153.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MjcwNDEzNzUsIm5iZiI6MTcyNzA0MTA3NSwicGF0aCI6Ii85OTA2NzQ3MS8zNjk3MTkwNjctNzI2ODdjZjctYmRkMi00NWI5LTllMTctZWNmZDk3OWZhMTUzLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDA5MjIlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwOTIyVDIxMzc1NVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTE1NjM3NmFkY2YwZmJlNDQ5YWVkOWYyZDRkZjhlNjhkYTMxYjRkNGU0YTJiMWM1ZDc4NGM1NWJhZTk2YTcyYmUmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.rmc6CDZHSR_xyxHsn5DzTEY5H6HAZlPAqM3THXaigHg"
-                alt="Happy tenants"
-                style={{ objectFit: "cover", width: "100%", height: "100%" }}
-              />
-            </AspectRatio>
           </Box>
 
           <Box sx={{ textAlign: "center", mb: 8 }}>
